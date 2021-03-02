@@ -1,21 +1,22 @@
 {
   "name": "l01-s01",
   "version": "1.0.0",
-  "description": "ACMEMarket REST API",
+  "description": "ACME EXPLORER REST API",
   "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/alejandrofdez-us/ACME-Market.git"
   },
-  "author": "afdez@us.es, cmuller@us.es",
+  "author": "Alfredo Fuentes, Rodrigo Calvo, José Enrique Sánchez",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/alejandrofdez-us/ACME-Market/issues"
+    "url": "https://github.com/jossanlop/ACME-Explorer-6"
   },
-  "homepage": "https://github.com/alejandrofdez-us/ACME-Market#readme",
+  "homepage": "https://github.com/jossanlop/ACME-Explorer-6",
   "dependencies": {
     "express": "^4.16.4",
     "mongoose": "^5.4.8"
