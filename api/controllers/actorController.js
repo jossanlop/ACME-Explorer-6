@@ -27,8 +27,7 @@ exports.list_all_actors = function(req, res) {
 */
 exports.create_an_actor = function(req, res) {
   var new_actor = new Actor(req.body);
-  console.log(new_actor);
-  console.log(req.body);
+  //Check the user for role  
   new_actor.save(function(err, actor) {
     if (err){
       if(err.name=='ValidationError') {
@@ -57,7 +56,6 @@ exports.read_an_actor = function(req, res) {
 
 /*
   EVERYONE: edit data
-
 */
 exports.update_an_actor = function(req, res) {
     //Check that the user is the proper actor and if not: res.status(403); "an access token is valid, but requires more privileges"
