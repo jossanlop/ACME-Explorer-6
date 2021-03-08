@@ -8,6 +8,6 @@ module.exports = function(app) {
 
   app.route('/actors/:actorId')
     .get(actors.read_an_actor)
-	.put(actors.update_an_actor)
+	  .put(actors.update_an_actor)
     .delete(actors.delete_an_actor);
 };

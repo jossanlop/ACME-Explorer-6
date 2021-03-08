@@ -24,20 +24,20 @@ var ActorSchema = new Schema({
     type : String,
     default : "en"
   },
-  phone: {
+  phone: { //Optional
     type: String,
     required: 'Kindly enter the phone number'
   },
-  address:{
+  address:{ //Optional
     type: String
   },
-  photo: {
-    data: Buffer, contentType: String
-  },
+  // photo: {
+  //   data: Buffer, contentType: String
+  // },
   role: [{
     type: String,
     required: 'Kindly enter the user role(s)',
-    enum: ['CUSTOMER', 'CLERK', 'ADMINISTRATOR']
+    enum: ['UNAUTHENTICATED','MANAGER','ADMINISTRATOR','EXPLORER']
   }],
   validated:{
     type: Boolean,

@@ -3,6 +3,7 @@
 var mongoose = require('mongoose'),
   Actor = mongoose.model('Actors');
 
+
 exports.list_all_actors = function(req, res) {
     Actor.find({}, function(err, actors) {
         if (err){
@@ -14,8 +15,14 @@ exports.list_all_actors = function(req, res) {
     });
 };
 
+/*
+ UNAUTHENTICATED: as explorer
+ ADMINISTRATOR: create managers
+*/
 exports.create_an_actor = function(req, res) {
   var new_actor = new Actor(req.body);
+  console.log(new_actor);
+  console.log(req.body);
   new_actor.save(function(err, actor) {
     if (err){
       res.send(err);
@@ -37,6 +44,10 @@ exports.read_an_actor = function(req, res) {
   });
 };
 
+/*
+  EVERYONE: edit data
+
+*/
 exports.update_an_actor = function(req, res) {
     Actor.findOneAndUpdate({_id: req.params.actorId}, req.body, {new: true}, function(err, actor) {
         if (err){
