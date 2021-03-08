@@ -3,6 +3,7 @@ var express = require('express'),
   port = process.env.PORT || 8080,
   mongoose = require('mongoose'),
   Actor = require('./api/models/actorModel'),
+  Trip = require('./api/models/tripModel'),
 //   Item = require('./api/models/itemModel'),
 //   Order = require('./api/models/orderModel'),
   bodyParser = require('body-parser');
@@ -29,11 +30,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 var routesActors = require('./api/routes/actorRoutes');
+var routesTrips = require('./api/routes/tripRoutes');
 // var routesItems = require('./api/routes/itemRoutes'); 
 // var routesOrders = require('./api/routes/orderRoutes');
 
 
 routesActors(app);
+routesTrips(app);
 // routesItems(app);
 // routesOrders(app);
 

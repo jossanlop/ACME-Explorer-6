@@ -1,7 +1,7 @@
 
 'use strict';
 var mongoose = require('mongoose');
-var Schema = mongoose.Schema
+var Schema = mongoose.Schema;
 
 var TripSchema = new Schema({
     ticker: {
@@ -10,9 +10,9 @@ var TripSchema = new Schema({
      //This validation does not run after middleware pre-save
      validate: {
         validator: function(v) {
-            return /\d{6}-\w{6}/.test(v);
+            return /\d{4}-\w{4}/.test(v);
         },
-        message: 'ticker is not valid!, Pattern("\d(6)-\w(6)")'
+        message: 'ticker is not valid!, Pattern("\d(4)-\w(4)")'
       }
     },
     title: {
