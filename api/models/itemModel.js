@@ -1,6 +1,7 @@
 'use strict';
 var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+var Schema = mongoose.Schema
+const generate = require('nanoid/generate');
 
 var CategorySchema = new Schema({
   name: {
@@ -25,8 +26,8 @@ var CommentSchema = new Schema({
     type: String,
     required: 'Kindly enter the title of the comment'
   },
-    author:{
-      type: String
+  author:{
+    type: String
   },
   commentText: {
     type: String,
@@ -45,7 +46,15 @@ var CommentSchema = new Schema({
 
 var ItemSchema = new Schema({
   sku: {
-    type: String
+    type: String,
+    unique: true,
+    //This validation is not executed after the middleware pre-save
+    validate: {
+      validator: function(v) {
+          return /^\w{6}$/.test(v);
+      },
+      message: 'sku is not valid!, Pattern("^\w{6}$")'
+    }
   },
   deleted: {
     type: Boolean,
@@ -82,5 +91,14 @@ var ItemSchema = new Schema({
   }
 },  { strict: false });
 
+// Execute before each item.save() call
+ItemSchema.pre('save', function(callback) {
+  var new_item = this;
+  new_item.sku = generate('1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 6);
+  callback();
+});
 module.exports = mongoose.model('Items', ItemSchema);
 module.exports = mongoose.model('Categories', CategorySchema);
+
+
+

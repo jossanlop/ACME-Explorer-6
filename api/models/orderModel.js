@@ -2,9 +2,18 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
+const generate = require('nanoid/generate');
+const dateFormat = require('dateformat');
+
 var OrderedItemSchema = new Schema({
   sku: {
-   type: String
+   type: String,
+   validate: {
+    validator: function(v) {
+        return /^\w{6}$/.test(v);
+    },
+    message: 'sku is not valid!, Pattern("^\w{6}$")'
+    }
   },
   name: {
     type: String,
@@ -26,7 +35,15 @@ var OrderedItemSchema = new Schema({
 
 var OrderSchema = new mongoose.Schema({
   ticker: {
-   type: String
+   type: String,
+   unique: true,
+   //This validation does not run after middleware pre-save
+   validate: {
+      validator: function(v) {
+          return /\d{6}-\w{6}/.test(v);
+      },
+      message: 'ticker is not valid!, Pattern("\d(6)-\w(6)")'
+    }
   },
   consumerName:{
     type: String,
@@ -61,4 +78,15 @@ var OrderSchema = new mongoose.Schema({
   orderedItems: [OrderedItemSchema]
 }, { strict: false });
 
+
+// Execute before each item.save() call
+OrderSchema.pre('save', function(callback) {
+  var new_order = this;
+  var date = new Date;
+  var day=dateFormat(new Date(), "yymmdd");
+
+  var generated_ticker = [day, generate('1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 6)].join('-')
+  new_order.ticker = generated_ticker;
+  callback();
+});
 module.exports = mongoose.model('Orders', OrderSchema);
