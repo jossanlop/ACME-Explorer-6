@@ -16,25 +16,30 @@ var TripSchema = new Schema({
       }
     },
     title: {
-      type: String
+      type: String,
+      required: 'Kindly enter the title of the Trip'
     },
     description: {
-      type: String
+      type: String,
+      required:'Kindly enter the description of the Trip'
     },
     price: {
-      type: String
-    },
+        type: Number,
+        required: 'Kindly enter the item Trip',
+        min: 0
+      },
     reuirements: 
     [String],
     start_date: {
-      type: String
+        type: Date
     },
     end_date: {
-      type: String
+      type: Date
     }
     ,
-    picture_url: {
-      type: String
+    picture: {
+        data: Buffer,
+        contentType: String
     }
   });
   
