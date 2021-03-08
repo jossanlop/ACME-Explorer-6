@@ -28,7 +28,7 @@ exports.create_an_trip = function(req, res) {
       }
     }
     else{
-      res.json(Trip);
+      res.status(200).json(Trip);
     }
   });
 };
@@ -42,19 +42,20 @@ exports.search_list_all_trips = function(req, res) {
 };
 
 exports.read_an_trip = function(req, res) {
-    Trip.findById(req.params.TripId, function(err, Trip) {
+    console.log(req.params.tripId);
+    Trip.findOne({ticker:req.params.tripId}, function(err, Trip) {
       if (err){
         res.status(500).send(err);
       }
       else{
-        res.json(Trip);
+        res.status(200).json(Trip);
       }
     });
 };
 
 exports.update_an_trip = function(req, res) {
   //Check that the user is administrator if it is updating more things than comments and if not: res.status(403); "an access token is valid, but requires more privileges"
-    Trip.findOneAndUpdate({_id: req.params.tripId}, req.body, {new: true}, function(err, Trip) {
+    Trip.findOneAndUpdate({ticker: req.params.tripId}, req.body, {new: true}, function(err, Trip) {
       if (err){
         if(err.name=='ValidationError') {
             res.status(422).send(err);
@@ -71,84 +72,84 @@ exports.update_an_trip = function(req, res) {
 
 exports.delete_an_trip = function(req, res) {
   //Check if the user is an administrator and if not: res.status(403); "an access token is valid, but requires more privileges"
-    Trip.deleteOne({_id: req.params.TripId}, function(err, Trip) {
+  Trip.deleteOne({ticker: req.params.tripId}, function(err, Trip) {
         if (err){
             res.status(500).send(err);
         }
         else{
-            res.json({ message: 'Trip successfully deleted' });
+            res.json({ message: 'Trip successfully deleted'});
         }
     });
 };
 
 
 /*---------------Application----------------------*/
-var mongoose = require('mongoose'),
-Application = mongoose.model('Applications');
+// var mongoose = require('mongoose'),
+// Application = mongoose.model('Applications');
 
-exports.list_all_Applications = function(req, res) {
-  Application.find({}, function(err, apps) {
-    if (err){
-      res.status(500).send(err);
-    }
-    else{
-      res.json(apps);
-    }
-  });
-};
+// exports.list_all_Applications = function(req, res) {
+//   Application.find({}, function(err, apps) {
+//     if (err){
+//       res.status(500).send(err);
+//     }
+//     else{
+//       res.json(apps);
+//     }
+//   });
+// };
 
-exports.create_a_Application = function(req, res) {
-  var new_app = new Application(req.body);
-  new_app.save(function(err, app) {
-    if (err){
-      if(err.name=='ValidationError') {
-          res.status(422).send(err);
-      }
-      else{
-        res.status(500).send(err);
-      }
-    }
-    else{
-      res.json(categ);
-    }
-  });
-};
+// exports.create_a_Application = function(req, res) {
+//   var new_app = new Application(req.body);
+//   new_app.save(function(err, app) {
+//     if (err){
+//       if(err.name=='ValidationError') {
+//           res.status(422).send(err);
+//       }
+//       else{
+//         res.status(500).send(err);
+//       }
+//     }
+//     else{
+//       res.json(categ);
+//     }
+//   });
+// };
 
 
-exports.read_a_Application = function(req, res) {
-  Application.findById(req.params.categId, function(err, categ) {
-    if (err){
-      res.status(500).send(err);
-    }
-    else{
-      res.json(categ);
-    }
-  });
-};
+// exports.read_a_Application = function(req, res) {
+//   Application.findById(req.params.categId, function(err, categ) {
+//     if (err){
+//       res.status(500).send(err);
+//     }
+//     else{
+//       res.json(categ);
+//     }
+//   });
+// };
 
-exports.update_a_Application = function(req, res) {
-  Application.findOneAndUpdate({_id: req.params.categId}, req.body, {new: true}, function(err, categ) {
-    if (err){
-      if(err.name=='ValidationError') {
-        res.status(422).send(err);
-      }
-      else{
-        res.status(500).send(err);
-      }
-    }
-    else{
-      res.json(categ);
-  }
-  });
-};
+// exports.update_a_Application = function(req, res) {
+//   Application.findOneAndUpdate({_id: req.params.categId}, req.body, {new: true}, function(err, categ) {
+//     if (err){
+//       if(err.name=='ValidationError') {
+//         res.status(422).send(err);
+//       }
+//       else{
+//         res.status(500).send(err);
+//       }
+//     }
+//     else{
+//       res.json(categ);
+//   }
+//   });
+// };
 
-exports.delete_a_Application = function(req, res) {
-  Application.deleteOne({_id: req.params.categId}, function(err, categ) {
-    if (err){
-      res.status(500).send(err);
-    }
-    else{
-      res.json({ message: 'Application successfully deleted' });
-    }
-  });
-};
+// exports.delete_a_Application = function(req, res) {
+//   Application.deleteOne({_id: req.params.categId}, function(err, categ) {
+//     if (err){
+//       res.status(500).send(err);
+//     }
+//     else{
+//       res.json({ message: 'Application successfully deleted' });
+//     }
+//   });
+// };
