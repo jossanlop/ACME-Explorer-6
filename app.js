@@ -2,7 +2,7 @@ var express = require('express'),
   app = express(),
   port = process.env.PORT || 8080,
   mongoose = require('mongoose'),
-  Actor = require('./api/models/actorModel'),
+//   Actor = require('./api/models/actorModel'),
 //   Item = require('./api/models/itemModel'),
 //   Order = require('./api/models/orderModel'),
   bodyParser = require('body-parser');
@@ -31,12 +31,12 @@ app.use(bodyParser.json());
 var routesActors = require('./api/routes/actorRoutes');
 // var routesItems = require('./api/routes/itemRoutes'); 
 // var routesOrders = require('./api/routes/orderRoutes');
-
+var routesApplications = require('./api/routes/applicationRoutes');
 
 routesActors(app);
 // routesItems(app);
 // routesOrders(app);
-
+routesApplications(app);
 
 console.log("Connecting DB to: " + mongoDBURI);
 mongoose.connection.on("open", function (err, conn) {
