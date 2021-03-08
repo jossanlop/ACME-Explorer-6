@@ -19,6 +19,6 @@
   "homepage": "https://github.com/jossanlop/ACME-Explorer-6",
   "dependencies": {
     "express": "^4.16.4",
-    "mongoose": "^5.4.8"
+    "mongoose": "^5.11.19"
   }
 }
