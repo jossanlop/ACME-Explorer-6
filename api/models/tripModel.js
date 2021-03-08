@@ -10,9 +10,9 @@ var TripSchema = new Schema({
      //This validation does not run after middleware pre-save
      validate: {
         validator: function(v) {
-            return /\d{4}-\w{4}/.test(v);
+            return /\d{6}-\w{4}/.test(v);
         },
-        message: 'ticker is not valid!, Pattern("\d(4)-\w(4)")'
+        message: 'ticker is not valid!, Pattern("\d(6)-\w(4)")'
       }
     },
     title: {
@@ -31,10 +31,12 @@ var TripSchema = new Schema({
     reuirements: 
     [String],
     start_date: {
-        type: Date
+        type: Date,
+        required: 'Kindly enter the start date of the Trip'
     },
     end_date: {
-      type: Date
+      type: Date,
+      required: 'Kindly enter the end date of the Trip'
     }
     ,
     picture: {
@@ -42,6 +44,15 @@ var TripSchema = new Schema({
         contentType: String
     }
   });
+ 
   
+  TripSchema.pre('save', function(callback) {
+    var new_order = this;
+    var date = new Date;
+    var day=dateFormat(new Date(), "yymmdd");
+  
+    var generated_ticker = [day, generate('1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 6)].join('-')
+    new_order.ticker = generated_ticker;
+    callback();
+  });
   module.exports = mongoose.model('Trips', TripSchema);
-  
