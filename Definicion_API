@@ -79,7 +79,7 @@ V1/USERS/{id}/APPLICATIONS/SEARCH/?[STATUS]
 
 V1/USERS/{id}/APPLICATIONS/{ID}
 
-PUT v1/users/{id}/applications/{id} 
+PUT v1/users/{id}/applications/{id}
 ---- SE MODIFICA ESTADO DE APPLICATION CON ESTADOS:
 ---- "DUE" --> "ACCEPTED" (se considera pagado)
 ---- "PENDING" / "ACCEPTED" --> "CANCELLED" (cancelado por explorer)
