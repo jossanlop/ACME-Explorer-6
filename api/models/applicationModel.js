@@ -8,7 +8,8 @@ const dateFormat = require('dateformat');
 var ApplicationSchema = new Schema({
   create_date: {
    type: Date,
-   required: "Create date required"
+   required: "Create date required",
+   default: Date.now
 /*    validate: {
     validator: function(v) {
         return ;
@@ -17,16 +18,17 @@ var ApplicationSchema = new Schema({
     } */
   },
   explorer_id: {
-    type: Number,
+    type: String,
     required: "Explorer_id required"
   },
   trip_id: {
-    type: Number,
+    type: String,
     required: "Trip_id required"
   },
   Status: {
     type: String,
-    required: 'Status required'
+    required: 'Status required',
+    default: 'PENDING'
   },
   comments: {
     type: String
