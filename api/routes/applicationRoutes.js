@@ -4,10 +4,10 @@ module.exports = function(app) {
   
   
   /**
-   * Post an order 
+   * Post an application 
    *    RequiredRoles: to be a customer
    *
-   * @section orders
+   * @section applications
    * @type get post
    * @url /v1/applications
   */
@@ -16,13 +16,13 @@ module.exports = function(app) {
 	  .post(application.create_an_application);
   
   /**
-   * Search engine for orders
-   * Get orders depending on params
+   * Search engine for applications
+   * Get applications depending on params
    *    RequiredRoles: Clerk
    *
-   * @section orders
+   * @section applications
    * @type get
-   * @url /v1/orders/search
+   * @url /v1/applications/search
    * @param {string} clerkId
    * @param {string} asigned (true|false)
    * @param {string} delivered (true|false)
@@ -32,41 +32,41 @@ module.exports = function(app) {
 
 
   /**
-   * Delete an order if it is not delivered
-   *    RequiredRoles: to be the customer that posted the order
-   * Put an order with the proper clerk assignment (only if the order has not previously assigned); 
+   * Delete an application if it is not delivered
+   *    RequiredRoles: to be the customer that posted the application
+   * Put an application with the proper clerk assignment (only if the application has not previously assigned); 
    * also to update the delivery moment.
    *    RequiredRoles: clerk
-   * Get an specific order.
+   * Get an specific application.
    *    RequiredRoles: to be a proper customer
    * 
-   * @section orders
+   * @section applications
    * @type put delete
-   * @url /v1/orders/:orderId
+   * @url /v1/applications/:applicationId
   */
-  app.route('/v1/applications/:applicationsId')
-    //.get(application.read_an_application) 
-    //.put(application.update_an_application) 
-    //.delete(application.delete_an_application);
+  app.route('/v1/applications/:applicationId')
+    .get(application.read_an_application) 
+    .put(application.update_an_application) 
+    .delete(application.delete_an_application);
 
   /**
-   * Get my orders.
+   * Get my applications.
    *    RequiredRoles: to be a proper customer
    * 
-   * @section myorders
+   * @section myapplications
    * @type get
-   * @url /v1/myorders/:actorId
+   * @url /v1/myapplications/:actorId
   */
   app.route('/v1/myapplications')
     //.get(application.list_my_applications); //añadir ownership para el explorer
 
       /**
-   * Get my orders.
+   * Get my applications.
    *    RequiredRoles: to be a proper customer
    * 
-   * @section myorders
+   * @section myapplications
    * @type get
-   * @url /v1/myorders/:actorId
+   * @url /v1/myapplications/:actorId
   */
   app.route('/v1/tripapplications')
     //.get(application.list_trip_applications); //añadir ownership para el trip

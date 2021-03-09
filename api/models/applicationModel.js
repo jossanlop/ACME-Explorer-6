@@ -5,6 +5,20 @@ var Schema = mongoose.Schema;
 //const generate = require('nanoid/generate');
 const dateFormat = require('dateformat');
 
+
+var StageSchema = new Schema({
+  title: {
+    type: String,
+    required: "Stage title required"
+  },
+  description: [String],
+  price:{
+    type: Number,
+    required: "Stage price required"
+  }
+})
+
+
 var ApplicationSchema = new Schema({
   create_date: {
    type: Date,
@@ -28,9 +42,8 @@ var ApplicationSchema = new Schema({
     type: String,
     required: 'Status required'
   },
-  comments: {
-    type: String
-  }
+  Stages: [StageSchema],
+  comments: [String]
 }, { strict: false });
 
 
