@@ -2,6 +2,9 @@
 'use strict';
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+const dateFormat = require('dateformat');
+var en = require("nanoid-good/locale/en"); // you should add locale of your preferred language
+var customAlphabet  = require("nanoid-good").customAlphabet(en);
 
 var TripSchema = new Schema({
     ticker: {
@@ -47,12 +50,13 @@ var TripSchema = new Schema({
  
   
   TripSchema.pre('save', function(callback) {
-    var new_order = this;
+    var new_trip = this;
     var date = new Date;
-    var day=dateFormat(new Date(), "yymmdd");
-  
-    var generated_ticker = [day, generate('1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 6)].join('-')
-    new_order.ticker = generated_ticker;
+    var day=dateFormat(date, "yymmdd");
+    var generator = customAlphabet('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 4);
+    var generatedTickerPart = generator();
+    var generated_ticker = [day, generatedTickerPart].join('-');
+    new_trip.ticker = generated_ticker;
     callback();
   });
   module.exports = mongoose.model('Trips', TripSchema);

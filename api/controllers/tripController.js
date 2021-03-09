@@ -24,11 +24,12 @@ exports.create_an_trip = function(req, res) {
           res.status(422).send(err);
       }
       else{
+        console.log(trip);
         res.status(500).send(err);
       }
     }
     else{
-      res.status(200).json(Trip);
+      res.status(200).json(trip);
     }
   });
 };
