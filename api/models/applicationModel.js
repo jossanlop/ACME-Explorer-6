@@ -2,7 +2,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-const generate = require('nanoid/generate');
+//const generate = require('nanoid/generate');
 const dateFormat = require('dateformat');
 
 var ApplicationSchema = new Schema({

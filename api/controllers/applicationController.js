@@ -2,15 +2,15 @@
 
 
 var mongoose = require('mongoose'),
-  Order = mongoose.model('Applications');
+  Application = mongoose.model('Applications');
 
 exports.list_all_applications = function(req, res) {
-  Order.find({}, function(err, order) {
+    Application.find({}, function(err, application) {
     if (err){
       res.status(500).send(err);
     }
     else{
-      res.json(order);
+      res.json(application);
     }
   });
 };
@@ -38,13 +38,13 @@ exports.search_orders = function(req, res) {
   console.log('Searching orders depending on params');
   res.send('Orders returned from the orders search');
 };
+*/
 
-
-exports.create_an_order = function(req, res) {
+exports.create_an_application = function(req, res) {
   //Check that user is a Customer and if not: res.status(403); "an access token is valid, but requires more privileges"
-  var new_order = new Order(req.body);
+  var new_application = new Application(req.body);
 
-  new_order.save(function(err, order) {
+  new_application.save(function(err, application) {
     if (err){
       if(err.name=='ValidationError') {
           res.status(422).send(err);
@@ -54,12 +54,12 @@ exports.create_an_order = function(req, res) {
       }
     }
     else{
-      res.json(order);
+      res.json(application);
     }
   });
 };
 
-
+/*
 exports.read_an_order = function(req, res) {
   Order.findById(req.params.orderId, function(err, order) {
     if (err){

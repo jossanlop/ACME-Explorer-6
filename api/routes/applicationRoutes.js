@@ -12,7 +12,7 @@ module.exports = function(app) {
    * @url /v1/applications
   */
   app.route('/v1/applications')
-	  .get(order.list_all_applications)
+	  .get(application.list_all_applications)
 	  .post(application.create_an_application);
   
   /**
@@ -28,7 +28,7 @@ module.exports = function(app) {
    * @param {string} delivered (true|false)
   */
   app.route('/v1/applications/search')
-    .get(application.search_applications);
+    //.get(application.search_applications);
 
 
   /**
@@ -45,9 +45,9 @@ module.exports = function(app) {
    * @url /v1/orders/:orderId
   */
   app.route('/v1/applications/:applicationsId')
-    .get(application.read_an_application) 
-    .put(application.update_an_application) 
-    .delete(application.delete_an_application);
+    //.get(application.read_an_application) 
+    //.put(application.update_an_application) 
+    //.delete(application.delete_an_application);
 
   /**
    * Get my orders.
@@ -58,7 +58,7 @@ module.exports = function(app) {
    * @url /v1/myorders/:actorId
   */
   app.route('/v1/myapplications')
-    .get(application.list_my_applications); //añadir ownership para el explorer
+    //.get(application.list_my_applications); //añadir ownership para el explorer
 
       /**
    * Get my orders.
@@ -69,5 +69,5 @@ module.exports = function(app) {
    * @url /v1/myorders/:actorId
   */
   app.route('/v1/tripapplications')
-  .get(application.list_trip_applications); //añadir ownership para el trip
+    //.get(application.list_trip_applications); //añadir ownership para el trip
 };
