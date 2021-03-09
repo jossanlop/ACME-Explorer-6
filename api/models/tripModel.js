@@ -6,6 +6,19 @@ const dateFormat = require('dateformat');
 var en = require("nanoid-good/locale/en"); // you should add locale of your preferred language
 var customAlphabet  = require("nanoid-good").customAlphabet(en);
 
+
+var StageSchema = new Schema({
+  title: {
+    type: String,
+    required: "Stage title required"
+  },
+  description: [String],
+  price:{
+    type: Number,
+    required: "Stage price required"
+  }
+})
+
 var TripSchema = new Schema({
     ticker: {
       type: String,
@@ -40,8 +53,8 @@ var TripSchema = new Schema({
     end_date: {
       type: Date,
       required: 'Kindly enter the end date of the Trip'
-    }
-    ,
+    },  
+    stages: [StageSchema],
     picture: {
         data: Buffer,
         contentType: String
