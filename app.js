@@ -5,7 +5,7 @@ var express = require('express'),
   Actor = require('./api/models/actorModel'),
   Trip = require('./api/models/tripModel'),
 //   Item = require('./api/models/itemModel'),
-//   Order = require('./api/models/orderModel'),
+  Application = require('./api/models/applicationModel.js'),
   bodyParser = require('body-parser');
 
 // MongoDB URI building
@@ -33,18 +33,18 @@ var routesActors = require('./api/routes/actorRoutes');
 var routesTrips = require('./api/routes/tripRoutes');
 // var routesItems = require('./api/routes/itemRoutes'); 
 // var routesOrders = require('./api/routes/orderRoutes');
-
+var routesApplications = require('./api/routes/applicationRoutes');
 
 routesActors(app);
 routesTrips(app);
 // routesItems(app);
 // routesOrders(app);
-
+routesApplications(app);
 
 console.log("Connecting DB to: " + mongoDBURI);
 mongoose.connection.on("open", function (err, conn) {
     app.listen(port, function () {
-        console.log('ACME-Market RESTful API server started on: ' + port);
+        console.log('ACME-Explorer RESTful API server started on: ' + port);
     });
 });
 
