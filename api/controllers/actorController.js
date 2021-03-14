@@ -1,7 +1,8 @@
 'use strict';
 /*---------------ACTOR----------------------*/
 var mongoose = require('mongoose'),
-  Actor = mongoose.model('Actors');
+  Actor = mongoose.model('Actors'),
+  Trip = mongoose.model('Trips');
 
 
 exports.list_all_actors = function(req, res) {
@@ -96,4 +97,19 @@ exports.delete_an_actor = function(req, res) {
             res.json({ message: 'Actor successfully deleted' });
         }
     });
+};
+
+exports.finder = function(req, res) {
+  // todos los trips son mostrados en caso de que sea null
+  if(req.params.tripKey == null){
+    res.json(tripController.list_all_trips());
+  }
+  Trip.findOne({key: req.params.tripKey} , function(err, actor) {
+    if (err){
+      res.status(500).send(err);
+    }
+    else{
+      res.status(200).json(actor,{ message: 'Actor successfully found' });
+    }
+  });
 };

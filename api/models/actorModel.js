@@ -42,7 +42,7 @@ var ActorSchema = new Schema({
   role: [{
     type: String,
     required: 'Kindly enter the user role(s)',
-    enum: ['UNAUTHENTICATED','MANAGER','ADMINISTRATOR','EXPLORER']
+    enum: ['UNAUTHENTICATED','MANAGER','ADMINISTRATOR','EXPLORER','SPONSORS']
   }],
   validated:{
     type: Boolean,
@@ -51,6 +51,10 @@ var ActorSchema = new Schema({
   created: {
     type: Date,
     default: Date.now
+  },
+  finder: {
+    type: String,
+    default: null
   }
 }, { strict: false });
 
