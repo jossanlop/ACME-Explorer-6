@@ -5,14 +5,82 @@ var mongoose = require('mongoose'),
   Trip = mongoose.model('Trips');
 
 exports.list_all_trips = function(req, res) {
-  Trip.find({},function(err, list_all_trips) {
+
+  if (JSON.stringify(req.query).length===2){ //si query vacío
+    Trip.find({},function(err, list_all_trips) {
+      if (err){
+        res.status(500).send(err);
+      }
+      else{
+        res.json(list_all_trips);
+      }
+    });
+  // Finder for explorers
+  }else{ //si tienes query params
+    if(!isNaN(req.query.minPrice)){
+     req.query.minPrice = parseInt(req.query.minPrice);
+    }
+    if(!isNaN(req.query.maxPrice)){
+      req.query.maxPrice = parseInt(req.query.maxPrice);
+     }
+     if(!isNaN(req.query.minDate)){
+      req.query.maxPrice = new Date(req.query.minDate);
+     }
+     if(!isNaN(req.query.maxDate)){
+      req.query.maxPrice = new Date(req.query.maxDate);
+     }
+     console.log(req.query);
+     Trip.find( {$or: [
+      //Si el precio esta en su range
+      {price:
+        {
+          $lte: req.query.maxPrice,
+          $gte: req.query.minPrice
+        }
+      },
+      //Si el date esta en su range
+      {start_date:
+        {
+          $lte: req.query.maxDate,
+          $gte: req.query.minDate
+        }
+      },
+      //Si el keyWord está dentro de ticker, title o description
+      {$or: [
+        { ticker: 
+          { 
+            $regex: `${req.query.keyWord}`, 
+            $options: "i" 
+          }
+        },
+        { title:
+          { 
+            $regex: `${req.query.keyWord}`, 
+            $options: "i" 
+          }
+        },
+        { description:
+          { 
+            $regex: `${req.query.keyWord}`, 
+            $options: "i" 
+          }
+        }
+      ]}
+      ]
+    }
+  ,function(err, trip) {
     if (err){
+      console.log("Params: "+JSON.stringify(req.query));
+      console.error(err);
       res.status(500).send(err);
     }
     else{
-      res.json(list_all_trips);
+      console.log("Trips successfully found");
+      console.log(trip);
+      res.status(200).send(trip);
     }
   });
+  }
 };
 
 exports.create_an_trip = function(req, res) {
@@ -36,7 +104,7 @@ exports.create_an_trip = function(req, res) {
 
 exports.search_list_all_trips = function(req, res) {
   //Check if Application param exists (Application: req.query.Application)
-  //Check if keyword param exists (keyword: req.query.keyword)
+  //Check if keyword param exists (keyword: `{req.query.keyword}`)
   //Search depending on params but only if deleted = false
   console.log('Searching an Trip depending on params');
   res.send('Trip returned from the Trip search');

@@ -1,5 +1,6 @@
 'use strict';
 module.exports = function(app) {
+  var trips = require('../controllers/tripController');
   var actors = require('../controllers/actorController');
 
   /**
@@ -17,6 +18,13 @@ module.exports = function(app) {
   app.route('/v1/actors')
 	  .get(actors.list_all_actors)
 	  .post(actors.create_an_actor);
+
+/**
+ * Gets a trip defined by a key word, start & end date and min & max price
+ * If null => return all trips
+ */
+ app.route('/v1/actors/search/') //TO-DO, verificar que funciona con querys (desde postman va bien) 
+    .get(trips.list_all_trips);
 
   /**
    * Put an actor
