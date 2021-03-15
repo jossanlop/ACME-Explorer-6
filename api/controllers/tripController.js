@@ -2,7 +2,10 @@
 
 /*---------------Trip----------------------*/
 var mongoose = require('mongoose'),
+  // finderCollection = mongoose.model('finderCollectionSchema'),
   Trip = mongoose.model('Trips');
+
+
 
 exports.list_all_trips = function(req, res) {
 
@@ -15,7 +18,9 @@ exports.list_all_trips = function(req, res) {
         res.json(list_all_trips);
       }
     });
-  // Finder for explorers
+  // Finder for explorers: generar coleccion extra que guarde registros (resultados+timestamps) de busquedas por usuarios (en una ed=coleccion)
+  // Guardar query params + resultados 
+  // Ventaja: no tener que llamar al find siempre
   }else{ //si tienes query params
     if(!isNaN(req.query.minPrice)){
      req.query.minPrice = parseInt(req.query.minPrice);
@@ -55,7 +60,7 @@ exports.list_all_trips = function(req, res) {
         },
         { title:
           { 
-            $regex: `${req.query.keyWord}`, 
+            $regex: `${req.query.keyWord}`,
             $options: "i" 
           }
         },
@@ -77,6 +82,7 @@ exports.list_all_trips = function(req, res) {
     else{
       console.log("Trips successfully found");
       console.log(trip);
+      finderCollectionSchema
       res.status(200).send(trip);
     }
   });
