@@ -52,8 +52,7 @@ var TripSchema = new Schema({
     },
     end_date: {
       type: Date,
-      required: 'Kindly enter the end date of the Trip',
-      validate: [datesValidation, "End-date should be after start date"]
+      required: 'Kindly enter the end date of the Trip'
     },  
     stages: [StageSchema],
     picture: {
@@ -62,37 +61,20 @@ var TripSchema = new Schema({
     },
     canceled: {
       type: Boolean,
-      default: false,
-      validate: [cancelValidation, "Should especify the reason why is being cancelled"]
-    },
+      default: false    },
     cancelReason:
     {
-      type: String,
-      validate: [cancelValidation2, "Reason only required when the trip is canceled"]
-    }
+      type: String}
   });
  
-  function datesValidation(value)
-  {
-    return this.start_date <= value;
-  }
 
-  function datesValidation4Update(end, start)
+  function datesValidation(end, start)
   {
     if(end <= start)
       return new Error('End-date should be after start date');
   }
 
-  function cancelValidation(value)
-  {
-    if(value)
-      if(!!this.cancelReason)
-        return true;
-
-    return false;
-  }
-
-  function cancelValidationUpd(value, cancelReason)
+  function cancelValidation(value, cancelReason)
   {
     if(value)
       if(!(!!cancelReason))
@@ -106,33 +88,22 @@ var TripSchema = new Schema({
         return new Error("Should especify the reason why is being cancelled");
       }
   }
- 
 
-  function cancelValidation2(value)
-  {
-    if(!!value)
-      if(!this.canceled)
-        return true;
-
-    return false;
-  }
 
   //pre update
-  TripSchema.pre('findOneAndUpdate', function(callback) {
+  TripSchema.pre('save, findOneAndUpdate', function(callback) {
 
-    var err=cancelValidationUpd(this.getUpdate().canceled, this.getUpdate().cancelReason);
+    var err=cancelValidation(this.getUpdate().canceled, this.getUpdate().cancelReason);
     if(err)
     {
         err.name='ValidationError';
         return callback(err);
     }
-    err=datesValidation4Update(this.getUpdate().end_date, this.getUpdate().start_date);
+    err=datesValidation(this.getUpdate().end_date, this.getUpdate().start_date);
     if(err){
         err.name='ValidationError';
         return callback(err);
     }
-    
-    
     
     callback();
     

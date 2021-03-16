@@ -50,7 +50,7 @@ function rejectValidationUpd(value)
 }
 
 //pre update
-TripSchema.pre('findOneAndUpdate', function(callback) {
+ApplicationSchema.pre('findOneAndUpdate', function(callback) {
 
   var err=rejectValidationUpd(this.getUpdate().rejectReason);
   if(err)
