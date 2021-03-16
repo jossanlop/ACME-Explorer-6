@@ -37,22 +37,14 @@ var ApplicationSchema = new Schema({
 function rejectValidation(value)
 {
     if(this.status == 'REJECTED')
-      return !!value; 
-
-    return true;
-}
-
-function rejectValidationUpd(value)
-{
-    if(this.status == 'REJECTED')
       if(!(!!value)) 
         return new Error("Should especify the reason of rejection");
 }
 
 //pre update
-TripSchema.pre('findOneAndUpdate', function(callback) {
+ApplicationSchema.pre('save, findOneAndUpdate', function(callback) {
 
-  var err=rejectValidationUpd(this.getUpdate().rejectReason);
+  var err=rejectValidation(this.getUpdate().rejectReason);
   if(err)
   {
       err.name='ValidationError';
