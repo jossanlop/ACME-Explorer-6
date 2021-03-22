@@ -49,6 +49,7 @@ var routesTrips = require('./api/routes/tripRoutes');
 var routesApplications = require('./api/routes/applicationRoutes');
 var routesFinders = require('./api/routes/finderCollectionRoutes');
 var routesLogin = require('./api/routes/loginRoutes');
+var routesSponsorships = require('./api/routes/SponsorshipRoutes');
 
 routesLogin(app);
 routesActors(app);
@@ -57,6 +58,7 @@ routesTrips(app);
 // routesOrders(app);
 routesApplications(app);
 routesFinders(app);
+routesSponsorships(app);
 
 console.log("Connecting DB to: " + mongoDBURI);
 mongoose.connection.on("open", function (err, conn) {
