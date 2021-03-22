@@ -18,9 +18,11 @@
   },
   "homepage": "https://github.com/jossanlop/ACME-Explorer-6.git",
   "dependencies": {
+    "admin": "^1.4.1",
     "bcrypt": "^5.0.1",
     "dateformat": "^3.0.3",
     "express": "^4.16.4",
+    "firebase": "^8.3.1",
     "mongoose": "^5.4.8",
     "nanoid": "^3.1.20",
     "nanoid-good": "^3.1.0"
