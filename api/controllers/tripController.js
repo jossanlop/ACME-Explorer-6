@@ -34,7 +34,6 @@ exports.list_all_trips = function(req, res) {
      if(!isNaN(req.query.maxDate)){
       req.query.maxPrice = new Date(req.query.maxDate);
      }
-     console.log(req.query);
      Trip.find( {$or: [
       //Si el precio esta en su range
       {price:
@@ -82,7 +81,6 @@ exports.list_all_trips = function(req, res) {
     else{
       console.log("Trips successfully found");
       console.log(trip);
-      finderCollectionSchema
       res.status(200).send(trip);
     }
   });
