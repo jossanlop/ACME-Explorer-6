@@ -2,6 +2,7 @@
 module.exports = function(app) {
   var trips = require('../controllers/tripController');
   var actors = require('../controllers/actorController');
+  var authController = require('../controllers/authController');
 
   /**
    * Get an actor who is clerk (any role)

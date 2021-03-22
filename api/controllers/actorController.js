@@ -1,10 +1,12 @@
 'use strict';
 /*---------------ACTOR----------------------*/
 var mongoose = require('mongoose'),
-  var admin = require('firebase-admin');
-  Actor = mongoose.model('Actors');
+  Actor = mongoose.model('Actors'),
   Trip = mongoose.model('Trips');
 
+
+
+var admin = require('firebase-admin');
 
 exports.list_all_actors = function(req, res) {
     //Check if the role param exist
@@ -49,6 +51,7 @@ exports.login_an_actor = async function(req, res) {
   console.log('starting login an actor');
   var emailParam = req.query.email;
   var password = req.query.password;
+  console.log(req.query);
   Actor.findOne({ email: emailParam }, function (err, actor) {
       if (err) { res.send(err); }
 

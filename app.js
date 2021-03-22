@@ -8,7 +8,7 @@ var express = require('express'),
   Application = require('./api/models/applicationModel.js'),
   finderCollection = require('./api/models/finderCollectionModel.js'),
   admin = require('firebase-admin'),
-  serviceAccount = require('./'),
+  serviceAccount = require('./acme-explorer-41761-firebase-adminsdk-fdl4t-69d28db65f.json'),
   bodyParser = require('body-parser');
 
 
@@ -48,7 +48,9 @@ var routesTrips = require('./api/routes/tripRoutes');
 // var routesOrders = require('./api/routes/orderRoutes');
 var routesApplications = require('./api/routes/applicationRoutes');
 var routesFinders = require('./api/routes/finderCollectionRoutes');
+var routesLogin = require('./api/routes/loginRoutes');
 
+routesLogin(app);
 routesActors(app);
 routesTrips(app);
 // routesItems(app);
