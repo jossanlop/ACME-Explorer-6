@@ -19,6 +19,29 @@ var StageSchema = new Schema({
   }
 })
 
+var SponsorshipSchema = new Schema({
+  sponsor_id: {
+    type: Schema.Types.ObjectId,
+    required: "Sponsor_id required"
+  },
+  banner:{
+      type:String,
+      required: "Banner is required"
+  },
+  link:{
+    type:String,
+    required: "Link is required"
+  },
+  payed:{
+    type:String,
+    default:false,
+    required: "payed is required"
+}
+}, { strict: false });
+
+module.exports = mongoose.model('Sponsorships', SponsorshipSchema);
+
+
 var TripSchema = new Schema({
     ticker: {
       type: String,
@@ -54,6 +77,7 @@ var TripSchema = new Schema({
       required: 'Kindly enter the end date of the Trip'
     },  
     stages: [StageSchema],
+    sponsorship: [SponsorshipSchema],
     picture: {
         data: Buffer,
         contentType: String
