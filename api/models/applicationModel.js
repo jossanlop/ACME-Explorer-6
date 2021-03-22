@@ -38,8 +38,16 @@ function rejectValidation(value)
 {
     if(this.status == 'REJECTED')
       if(!(!!value)) 
-        return new Error("Should especify the reason of rejection");
+        return ValidationError("Should especify the reason of rejection");
 }
+
+function ValidationError(msg)
+  {
+    var err = new Error();
+    err.name='ValidationError';
+    err.message=msg;
+    return err;
+  }
 
 //pre update
 ApplicationSchema.pre('save, findOneAndUpdate', function(callback) {
@@ -47,7 +55,6 @@ ApplicationSchema.pre('save, findOneAndUpdate', function(callback) {
   var err=rejectValidation(this.getUpdate().rejectReason);
   if(err)
   {
-      err.name='ValidationError';
       return callback(err);
   }
 

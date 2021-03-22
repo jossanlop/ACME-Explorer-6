@@ -42,11 +42,14 @@ var ActorSchema = new Schema({
   role: [{
     type: String,
     required: 'Kindly enter the user role(s)',
-    enum: ['UNAUTHENTICATED','MANAGER','ADMINISTRATOR','EXPLORER','SPONSORS']
+    enum: ['UNAUTHENTICATED','MANAGER','ADMINISTRATOR','EXPLORER','SPONSORS'] // no seguro de un-auth
   }],
   validated:{
     type: Boolean,
     default: false
+  },
+  customToken: {
+    type: String
   },
   created: {
     type: Date,

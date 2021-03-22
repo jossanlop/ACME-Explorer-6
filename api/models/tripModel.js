@@ -41,7 +41,6 @@ var TripSchema = new Schema({
     },
     price: {
         type: Number,
-        required: 'Kindly enter the item Trip',
         min: 0
       },
     requirements: 
@@ -61,17 +60,19 @@ var TripSchema = new Schema({
     },
     canceled: {
       type: Boolean,
-      default: false    },
+      default: false    
+    },
     cancelReason:
     {
       type: String}
   });
  
+  TripSchema.index({title : 'text', description: 'text', ticker: 'text'});
 
   function datesValidation(end, start)
   {
     if(end <= start)
-      return new Error('End-date should be after start date');
+      return ValidationError('End-date should be after start date');
   }
 
   function cancelValidation(value, cancelReason)
@@ -81,27 +82,31 @@ var TripSchema = new Schema({
       {
         return new Error("Should especify the reason why is being cancelled");
       }
-    
-      if(!value)
+  
+    if(!value)
       if(!!cancelReason)
       {
-        return new Error("Should especify the reason why is being cancelled");
+        return ValidationError("Should especify the reason why is being cancelled");
       }
   }
 
+  function ValidationError(msg)
+  {
+    var err = new Error();
+    err.name='ValidationError';
+    err.message=msg;
+    return err;
+  }
 
   //pre update
-  TripSchema.pre('save, findOneAndUpdate', function(callback) {
-
+  TripSchema.pre('findOneAndUpdate', function(callback) {
     var err=cancelValidation(this.getUpdate().canceled, this.getUpdate().cancelReason);
     if(err)
     {
-        err.name='ValidationError';
         return callback(err);
     }
     err=datesValidation(this.getUpdate().end_date, this.getUpdate().start_date);
     if(err){
-        err.name='ValidationError';
         return callback(err);
     }
     
@@ -111,8 +116,7 @@ var TripSchema = new Schema({
 
 
   TripSchema.pre('save', function(callback) {
-    var new_trip = this;
-    
+        var new_trip = this;
     //generate ticker
     var date = new Date;
     var day=dateFormat(date, "yymmdd");
@@ -125,6 +129,16 @@ var TripSchema = new Schema({
     var aux=0;
     new_trip.stages.forEach(stgs => aux+=stgs.price )
     new_trip.price=aux;
+    
+    var err=cancelValidation(new_trip.canceled, new_trip.cancelReason);
+    if(err)
+    {
+      return callback(err);
+    }
+    err=datesValidation(new_trip.end_date, new_trip.start_date);
+    if(err){
+      return callback(err);
+    }
 
     callback();
   });
