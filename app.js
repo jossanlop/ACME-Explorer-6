@@ -7,7 +7,10 @@ var express = require('express'),
 //   Item = require('./api/models/itemModel'),
   Application = require('./api/models/applicationModel.js'),
   finderCollection = require('./api/models/finderCollectionModel.js'),
+  admin = require('firebase-admin'),
+  serviceAccount = require('./'),
   bodyParser = require('body-parser');
+
 
 // MongoDB URI building
 var mongoDBUser = process.env.mongoDBUser || "myUser";
@@ -34,6 +37,10 @@ mongoose.connect(mongoDBURI, {
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
 
 var routesActors = require('./api/routes/actorRoutes');
 var routesTrips = require('./api/routes/tripRoutes');

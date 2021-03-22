@@ -1,7 +1,8 @@
 'use strict';
 /*---------------ACTOR----------------------*/
 var mongoose = require('mongoose'),
-  Actor = mongoose.model('Actors'),
+  var admin = require('firebase-admin');
+  Actor = mongoose.model('Actors');
   Trip = mongoose.model('Trips');
 
 
