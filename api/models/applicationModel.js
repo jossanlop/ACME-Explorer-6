@@ -2,48 +2,57 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-//const generate = require('nanoid/generate');
-const dateFormat = require('dateformat');
-
 var ApplicationSchema = new Schema({
   create_date: {
    type: Date,
    required: "Create date required",
    default: Date.now
-/*    validate: {
-    validator: function(v) {
-        return ;
-    },
-    message: ''
-    } */
   },
   explorer_id: {
-    type: String,
+    type: Schema.Types.ObjectId,
     required: "Explorer_id required"
   },
   trip_id: {
-    type: String,
+    type: Schema.Types.ObjectId,
     required: "Trip_id required"
   },
-  Status: {
+  manager_id: {
+    type: Schema.Types.ObjectId,
+    required: "Trip_id required"
+  },
+  status: {
     type: String,
     required: 'Status required',
-    default: 'PENDING'
+    default: 'PENDING',
+    enum: ['PENDING','DUE','REJECTED','EXPLORER', 'ACCEPTED', 'CANCELLED']
   },
-  comments: [String]
+  comments: [String],
+  rejectReason:
+  {
+    type: String,
+    validate: [rejectValidation, 'Should especify the reason of rejection']
+  }
 }, { strict: false });
 
+function rejectValidation(value)
+{
+    if(this.status == 'REJECTED')
+      if(!(!!value)) 
+        return new Error("Should especify the reason of rejection");
+}
 
-// Execute before each item.save() call
-/* OrderSchema.pre('save', function(callback) {
-  var new_order = this;
-  var date = new Date;
-  var day=dateFormat(new Date(), "yymmdd");
+//pre update
+ApplicationSchema.pre('save, findOneAndUpdate', function(callback) {
 
-  var generated_ticker = [day, generate('1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 6)].join('-')
-  new_order.ticker = generated_ticker;
+  var err=rejectValidation(this.getUpdate().rejectReason);
+  if(err)
+  {
+      err.name='ValidationError';
+      return callback(err);
+  }
+
   callback();
-}); */
+});
 
 
 module.exports = mongoose.model('Applications', ApplicationSchema);
