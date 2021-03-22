@@ -41,6 +41,22 @@ module.exports = function(app) {
 	  .put(actors.update_an_actor)
     //.delete(actors.delete_an_actor);
 
+   /**
+   * Put an actor
+   *    RequiredRoles: to be the proper actor
+   * Get an actor
+   *    RequiredRoles: any
+	 *
+	 * @section actors
+	 * @type get put
+	 * @url /v2/actors/:actorId
+  */  
+    app.route('/v2/actors/:actorId')
+    .get(actors.read_an_actor)
+    .put(authController.verifyUser(["ADMIN",
+                                    "EXPLORER",
+                                    "MANAGER"]),actors.update_a_verified_actor)
+
   /**
 	 * Put to Validate a clerk by actorId
    *    RequiredRole: Administrator
