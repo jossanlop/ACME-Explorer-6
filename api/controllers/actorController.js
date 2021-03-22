@@ -123,6 +123,49 @@ exports.update_an_actor = function(req, res) {
     });
 };
 
+exports.update_a_verified_actor = function(req, res) {
+  //Customer and Clerks can update theirselves, administrators can update any actor
+  console.log('Starting to update the actor...');
+  Actor.findById(req.params.actorId, async function(err, actor) {
+    if (err){
+      res.send(err);
+    }
+    else{
+      console.log('actor: '+actor);
+      var idToken = req.headers['idtoken'];//WE NEED the FireBase custom token in the req.header['idToken']... it is created by FireBase!!
+      if (actor.role.includes('CUSTOMER') || actor.role.includes('CLERK')){
+        var authenticatedUserId = await authController.getUserId(idToken);
+        if (authenticatedUserId == req.params.actorId){
+          Actor.findOneAndUpdate({_id: req.params.actorId}, req.body, {new: true}, function(err, actor) {
+            if (err){
+              res.send(err);
+            }
+            else{
+              res.json(actor);
+            }
+          });
+        } else{
+          res.status(403); //Auth error
+          res.send('The Actor is trying to update an Actor that is not himself!');
+        }    
+      } else if (actor.role.includes('ADMINISTRATOR')){
+          Actor.findOneAndUpdate({_id: req.params.actorId}, req.body, {new: true}, function(err, actor) {
+            if (err){
+              res.send(err);
+            }
+            else{
+              res.json(actor);
+            }
+          });
+      } else {
+        res.status(405); //Not allowed
+        res.send('The Actor has unidentified roles');
+      }
+    }
+  });
+  
+  };
+
 exports.validate_an_actor = function(req, res) {
     //Check that the user is an Administrator and if not: res.status(403); "an access token is valid, but requires more privileges"
     console.log("Validating an actor with id: "+req.params.actorId)
