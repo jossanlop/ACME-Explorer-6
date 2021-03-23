@@ -24,7 +24,7 @@ module.exports = function(app) {
  * Gets a trip defined by a key word, start & end date and min & max price
  * If null => return all trips
  */
- app.route('/v1/actors/search/') //TO-DO, verificar que funciona con querys (desde postman va bien) 
+ app.route('/v1/actors/search/')
     .get(trips.list_all_trips);
 
   /**

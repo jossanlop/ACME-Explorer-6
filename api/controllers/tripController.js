@@ -2,10 +2,8 @@
 
 /*---------------Trip----------------------*/
 var mongoose = require('mongoose'),
-  // finderCollection = mongoose.model('finderCollectionSchema'),
-  Trip = mongoose.model('Trips');
-
-
+  Trip = mongoose.model('Trips'),
+  finderCollection = mongoose.model('finderSchema');
 
 exports.list_all_trips = function(req, res) {
 
@@ -29,11 +27,41 @@ exports.list_all_trips = function(req, res) {
       req.query.maxPrice = parseInt(req.query.maxPrice);
      }
      if(!isNaN(req.query.minDate)){
-      req.query.maxPrice = new Date(req.query.minDate);
+      req.query.minDate = new Date(req.query.minDate);
      }
      if(!isNaN(req.query.maxDate)){
-      req.query.maxPrice = new Date(req.query.maxDate);
+      req.query.maxDate = new Date(req.query.maxDate);
      }
+
+    //Guardamos un nuevo finder aquí con los query Params
+    //guardar cacheado resultados d eun primera búsqeuda -> mirar requisitos 
+  var new_finder= new finderCollection(req.query);
+  console.log("\nQuery:"+JSON.stringify(req.query)+"\n");
+  new_finder.save(function(err, finder){
+    if (err){
+        console.log("A new finder could not be added: 500");
+        console.log(finder);
+        // res.status(500).send(err);
+        console.log(err);
+    }
+    else{
+      console.log("Added new finder correctly");
+      // new_finder.dateRange.push(req.query.minDate, req.query.maxDate);
+      if(!isNaN(req.query.minPrice)&&!isNaN(req.query.maxPrice)){
+        console.log("hay prices");
+        new_finder.priceRange.push(req.query.minPrice, req.query.maxPrice);
+        console.log(new_finder);
+      }
+      if(!isNaN(req.query.minDate)&&!isNaN(req.query.maxDate)){
+        console.log("hay dates");
+        new_finder.dateRange.push(req.query.minDate, req.query.maxDate);
+        console.log(new_finder);
+      }
+      console.log(finder);
+      // res.status(200).json(finder);
+    }
+  });
+
      Trip.find( {$or: [
       //Si el precio esta en su range
       {price:

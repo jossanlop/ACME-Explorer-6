@@ -11,5 +11,5 @@ module.exports = function(app) {
 	 * @url /v1/finderCollection
   */
 app.route('/v1/finderCollection')
-   .get(finderCollection.list_all_finders);
+  .get(finderCollection.list_all_finders);
 }

@@ -2,7 +2,7 @@
 
 /*---------------finderCollection----------------------*/
 var mongoose = require('mongoose'),
-  finderCollection = mongoose.model('FinderCollection');
+  finderCollection = mongoose.model('finderSchema');
 
 exports.list_all_finders = function(req, res) {
     finderCollection.find({},function(err, list_all_finders) {

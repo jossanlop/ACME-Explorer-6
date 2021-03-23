@@ -140,7 +140,7 @@ var TripSchema = new Schema({
 
 
   TripSchema.pre('save', function(callback) {
-        var new_trip = this;
+    var new_trip = this;
     //generate ticker
     var date = new Date;
     var day=dateFormat(date, "yymmdd");
