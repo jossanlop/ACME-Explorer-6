@@ -1,3 +1,4 @@
+var cors = require('cors');
 var express = require('express'),
   app = express(),
   port = process.env.PORT || 8080,
@@ -10,7 +11,7 @@ var express = require('express'),
   admin = require('firebase-admin'),
   serviceAccount = require('./acme-explorer-41761-firebase-adminsdk-fdl4t-69d28db65f.json'),
   bodyParser = require('body-parser');
-
+  app.use(cors());
 
 // MongoDB URI building
 var mongoDBUser = process.env.mongoDBUser || "myUser";
