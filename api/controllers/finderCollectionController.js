@@ -32,3 +32,27 @@ exports.create_a_finder = function(req, res) {
       }
     });
   };
+
+exports.delete_a_finder = function(req, res) {
+  //Check if the user is an MANAGER and if not: res.status(403); "an access token is valid, but requires more privileges"
+  finderCollection.deleteOne({keyword: req.params.keyword}, function(err, Finder) {
+        if (err){
+            res.status(500).send(err);
+        }
+        else{
+            res.json({ message: 'Finder successfully deleted'});
+        }
+    });
+  };
+
+  exports.delete_all_finders = function(req, res) {
+    //Check if the user is an MANAGER and if not: res.status(403); "an access token is valid, but requires more privileges"
+    finderCollection.deleteMany({}, function(err, Finder) {
+          if (err){
+              res.status(500).send(err);
+          }
+          else{
+              res.json({ message: 'Finders successfully deleted'});
+          }
+      });
+  };

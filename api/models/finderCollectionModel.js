@@ -14,7 +14,7 @@ var finderSchema =  new Schema({ //Cada búsqueda tendrá: usuario, query de fil
         default: null
     },
     dateRange:{
-        type: [Date],
+        type: [String],
         default: null
     },
     results:{
