@@ -38,7 +38,7 @@ function rejectValidation(value)
 {
     if(this.status == 'REJECTED')
       if(!(!!value)) 
-        return ValidationError("Should especify the reason of rejection");
+        return ValidationError("Should specify the reason of rejection");
 }
 
 function ValidationError(msg)
@@ -49,29 +49,28 @@ function ValidationError(msg)
     return err;
   }
 
-//pre update
-ApplicationSchema.pre('save', function(callback) {
-  //Añadir cofigo para asignar un manager 
-  var err=rejectValidation(this.rejectReason);
-  if(err)
-  {
-      return callback(err);
-  }
+// //pre update
+// ApplicationSchema.pre('save', function(callback) {
+//   //Añadir codigo para asignar un manager ??
+//   var err=rejectValidation(this.rejectReason);
+//   if(err)
+//   {
+//       return callback(err);
+//   }
+//   callback();
+// });
 
-  callback();
-});
 
+// ApplicationSchema.pre('findOneAndUpdate', function(callback) {
 
-ApplicationSchema.pre('findOneAndUpdate', function(callback) {
+//   var err=rejectValidation(this.getUpdate().rejectReason);
+//   if(err)
+//   {
+//       return callback(err);
+//   }
 
-  var err=rejectValidation(this.getUpdate().rejectReason);
-  if(err)
-  {
-      return callback(err);
-  }
-
-  callback();
-});
+//   callback();
+// });
 
 module.exports = mongoose.model('Applications', ApplicationSchema);
 

@@ -36,20 +36,20 @@ exports.list_all_trips = function(req, res) {
     //Guardamos un nuevo finder aquí con los query Params
     //guardar cacheado resultados d eun primera búsqeuda -> mirar requisitos 
   var new_finder= new finderCollection(req.query);
-  console.log("\nQuery:"+JSON.stringify(req.query)+"\n");
+  // console.log("\nQuery:"+JSON.stringify(req.query)+"\n");
   // new_finder.dateRange.push(req.query.minDate, req.query.maxDate);
   if(!isNaN(req.query.minPrice)&&!isNaN(req.query.maxPrice)){
-    console.log("hay prices");
+    // console.log("hay prices");
     new_finder.priceRange.push(req.query.minPrice, req.query.maxPrice);
-    console.log(new_finder);
+    // console.log(new_finder);
   }
-  console.log(req.query.minDate);
-  console.log(req.query.minDate);
+  // console.log(req.query.minDate);
+  // console.log(req.query.minDate);
   if(req.query.minDate&&req.query.maxDate){
-    console.log("hay dates");
+    // console.log("hay dates");
     // new_finder.dateRange.push(4);
     new_finder.dateRange.push(String(req.query.minDate), String(req.query.maxDate));
-    console.log(new_finder);
+    // console.log(new_finder);
   }
   new_finder.save(function(err, finder){
     if (err){
@@ -59,8 +59,8 @@ exports.list_all_trips = function(req, res) {
         console.log(err);
     }
     else{
-      console.log("Added new finder correctly");
-      console.log(new_finder);
+      // console.log("Added new finder correctly");
+      // console.log(new_finder);
       // res.status(200).json(finder);
     }
   });
@@ -110,7 +110,7 @@ exports.list_all_trips = function(req, res) {
       res.status(500).send(err);
     }
     else{
-      console.log("Trips successfully found");
+      // console.log("Trips successfully found");
       // console.log(trip);
       res.status(200).send(trip);
     }
@@ -146,7 +146,7 @@ exports.search_list_all_trips = function(req, res) {
 };
 
 exports.read_an_trip = function(req, res) {
-    console.log(req.params.tripId);
+    // console.log(req.params.tripId);
     Trip.findOne({ticker:req.params.tripId}, function(err, Trip) {
       if (err){
         res.status(500).send(err);
