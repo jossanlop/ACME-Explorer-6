@@ -44,18 +44,20 @@ exports.search_applications = function(req, res) {
 exports.create_an_application = function(req, res) {
   //Check that user is a Customer and if not: res.status(403); "an access token is valid, but requires more privileges"
   var new_application = new Application(req.body);
-
   new_application.save(function(err, application) {
     if (err){
       if(err.name=='ValidationError') {
           res.status(422).send(err);
       }
       else{
+        console.log(application);
+        console.log(err);
+
         res.status(500).send(err);
       }
     }
     else{
-      res.json(application);
+      res.status(200).json(application);
     }
   });
 };
