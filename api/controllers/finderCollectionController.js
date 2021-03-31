@@ -5,6 +5,9 @@ var mongoose = require('mongoose'),
   finderCollection = mongoose.model('finderSchema');
 
 exports.list_all_finders = function(req, res) {
+  //Necesitamos id de usuario del token
+  id=req.headers["idJuanlu"];
+  if (JSON.stringify(req.query.id)!==null){
     finderCollection.find({},function(err, list_all_finders) {
         if (err){
           res.status(500).send(err);
@@ -13,7 +16,17 @@ exports.list_all_finders = function(req, res) {
           res.json(list_all_finders);
         }
       });
-}
+    }else{
+      finderCollection.find({id: id }, function(err, list_all_finders) {
+        if (err){
+          res.status(500).send(err);
+        }
+        else{
+          res.json(list_all_finders);
+        }
+      });
+    }
+};
 
 exports.create_a_finder = function(req, res) {
     var new_finder= new finderCollection(req.body);
