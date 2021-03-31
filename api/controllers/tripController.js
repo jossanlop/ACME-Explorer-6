@@ -159,8 +159,6 @@ exports.read_an_trip = function(req, res) {
 
 exports.update_an_trip = function(req, res) {
   //Check that the user is MANAGER if it is updating more things than comments and if not: res.status(403); "an access token is valid, but requires more privileges"
-
-  
     Trip.findOneAndUpdate({ticker: req.params.tripId}, req.body, {new: true, runValidators:true }, function(err, Trip) {
       if (err){
         if(err.name=='ValidationError') {
