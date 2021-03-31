@@ -144,7 +144,7 @@ var TripSchema = new Schema({
     //generate ticker
     var date = new Date;
     var day=dateFormat(date, "yymmdd");
-    var generator = customAlphabet('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 4);
+    var generator = customAlphabet('ABCDEFGHIJKLMNOPQRSTUVWXYZ', 4);
     var generatedTickerPart = generator();
     var generated_ticker = [day, generatedTickerPart].join('-');
     new_trip.ticker = generated_ticker;

@@ -34,11 +34,20 @@ var ApplicationSchema = new Schema({
   }
 }, { strict: false });
 
-function rejectValidation(value)
+function rejectValidation(status, value)
 {
-    if(this.status == 'REJECTED')
+    if(status != 'REJECTED')
+    {  
+      if(!!value) 
+        return ValidationError("Should not especify the reason of rejection");
+    }
+    else if(status === 'REJECTED' )
+    {  
       if(!(!!value)) 
         return ValidationError("Should especify the reason of rejection");
+    }
+      else
+        return null;
 }
 
 function ValidationError(msg)
@@ -49,29 +58,16 @@ function ValidationError(msg)
     return err;
   }
 
-//pre update
-ApplicationSchema.pre('save', function(callback) {
-  //Añadir cofigo para asignar un manager 
-  var err=rejectValidation(this.rejectReason);
-  if(err)
-  {
-      return callback(err);
-  }
-
-  callback();
-});
-
 
 ApplicationSchema.pre('findOneAndUpdate', function(callback) {
-
-  var err=rejectValidation(this.getUpdate().rejectReason);
+  var err=rejectValidation(this.getUpdate().status, this.getUpdate().rejectReason);
   if(err)
   {
       return callback(err);
   }
 
-  callback();
-});
+//   callback();
+// });
 
 module.exports = mongoose.model('Applications', ApplicationSchema);
 
