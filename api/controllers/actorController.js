@@ -134,7 +134,6 @@ exports.update_a_verified_actor = function(req, res) {
       res.send(err);
     }
     else{
-      console.log('actor: '+actor);
       var idToken = req.headers['idtoken'];//WE NEED the FireBase custom token in the req.header['idToken']... it is created by FireBase!!
       if (actor.role.includes('CUSTOMER') || actor.role.includes('CLERK')){
         var authenticatedUserId = await authController.getUserId(idToken);

@@ -66,8 +66,7 @@ ApplicationSchema.pre('findOneAndUpdate', function(callback) {
       return callback(err);
   }
 
-//   callback();
-// });
+  callback();
+ });
 
 module.exports = mongoose.model('Applications', ApplicationSchema);
-

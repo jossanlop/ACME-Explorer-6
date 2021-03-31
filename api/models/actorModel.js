@@ -58,6 +58,10 @@ var ActorSchema = new Schema({
   finder: {
     type: String,
     default: null
+  }, 
+  banned:{
+    type: Boolean,
+    default : false
   }
 }, { strict: false });
 
