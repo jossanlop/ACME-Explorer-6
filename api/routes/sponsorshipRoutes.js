@@ -1,6 +1,7 @@
 'use strict';
 module.exports = function(app) {
   var sponsorships = require('../controllers/sponsorshipController');
+  var authController = require('../controllers/authController');
 
   /**
    * Get a sponsorship 
