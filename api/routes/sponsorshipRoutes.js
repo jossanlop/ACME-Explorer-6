@@ -14,7 +14,7 @@ module.exports = function(app) {
 	 * @url /v1/sponsorships
   */
   app.route('/v1/sponsorships')
-	  .get(sponsorships.list_all_sponsorships)
+    .get(sponsorships.list_my_sponsorships)
 	  .post(sponsorships.create_an_sponsorship);
 
 /**

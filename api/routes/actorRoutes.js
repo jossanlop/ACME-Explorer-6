@@ -56,7 +56,7 @@ module.exports = function(app) {
     .get(actors.read_an_actor)
     .put(authController.verifyUser(["ADMIN",
                                     "EXPLORER",
-                                    "MANAGER"]),actors.update_a_verified_actor)
+                                    "MANAGER", "SPONSORS"]), actors.update_a_verified_actor)
 
   /**
 	 * Put to Validate a clerk by actorId
