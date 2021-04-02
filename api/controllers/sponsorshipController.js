@@ -86,25 +86,6 @@ exports.create_an_sponsorship = function(req, res) {
     }
   });
 
-    /*
-    Sponsorship.findOne({_id: req.params.sponsorshipId}, async function(err, sponsorship) {
-      var idToken = req.headers['idtoken'];//WE NEED the FireBase custom token in the req.header['idToken']... it is created by FireBase!!
-      var authenticatedUserId = await authController.getUserId(idToken);
-      console.log( req.query.sponsor_Id)
-      if (authenticatedUserId == req.query.sponsor_Id){
-
-      if (err){
-        res.status(500).send(err);
-      }
-      else{
-        res.json(sponsorship);
-      }
-    }else{
-      res.status(403); //Auth error
-      res.send('The Actor is trying to update an Actor that is not himself!');
-    }  
-    });*/
- 
 }; 
 
 
@@ -133,7 +114,7 @@ exports.update_an_sponsorship = function(req, res) {
       }
       else{
         res.status(403); //Auth error
-        res.send('The Sponsor trying to read is not the owner of this Sponsorship');
+        res.send('The Sponsor trying to update is not the owner of this Sponsorship');
       } 
     }
   });  
@@ -169,7 +150,7 @@ exports.delete_an_sponsorship = function(req, res) {
       }
       else{
         res.status(403); //Auth error
-        res.send('The Sponsor trying to read is not the owner of this Sponsorship');
+        res.send('The Sponsor trying to delete is not the owner of this Sponsorship');
       } 
     }
   });
