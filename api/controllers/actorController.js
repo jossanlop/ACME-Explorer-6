@@ -96,6 +96,7 @@ exports.login_an_actor = async function(req, res) {
 };
 
 exports.read_an_actor = function(req, res) {
+  console.log('Starting to read the actor...');
   Actor.findById(req.params.actorId, function(err, actor) {
     if (err){
       res.status(500).send(err);
@@ -110,6 +111,7 @@ exports.read_an_actor = function(req, res) {
   EVERYONE: edit data
 */
 exports.update_an_actor = function(req, res) {
+  console.log('Starting to update the actor...');
     //Check that the user is the proper actor and if not: res.status(403); "an access token is valid, but requires more privileges"
     Actor.findOneAndUpdate({_id: req.params.actorId}, req.body, {new: true}, function(err, actor) {
       if (err){
@@ -128,12 +130,14 @@ exports.update_an_actor = function(req, res) {
 
 exports.update_a_verified_actor = function(req, res) {
   //Customer and Clerks can update theirselves, administrators can update any actor
-  console.log('Starting to update the actor...');
+  console.log('Starting to update the actor v2...');
   Actor.findById(req.params.actorId, async function(err, actor) {
     if (err){
       res.send(err);
     }
     else{
+      console.log(req.headers);
+      console.log(actor);
       var idToken = req.headers['idtoken'];//WE NEED the FireBase custom token in the req.header['idToken']... it is created by FireBase!!
       if (actor.role.includes('EXPLORER') || actor.role.includes('MANAGER') || actor.role.includes('SPONSORS')){
         var authenticatedUserId = await authController.getUserId(idToken);
@@ -143,6 +147,7 @@ exports.update_a_verified_actor = function(req, res) {
               res.send(err);
             }
             else{
+              console.log(req.headers);
               res.json(actor);
             }
           });
