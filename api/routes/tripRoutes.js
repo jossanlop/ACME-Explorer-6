@@ -16,6 +16,7 @@ module.exports = function(app) {
   */
   app.route('/v1/trips')
 	  .get(trips.list_all_trips)
+    .get(trips.search_list_all_trips)
 	  .post(trips.create_an_trip);
 
   /**
@@ -31,7 +32,7 @@ module.exports = function(app) {
   .get(trips.list_all_trips)
   .post(authController.verifyUser(["MANAGER"]), trips.create_an_trip)
   .delete(authController.verifyUser(["MANAGER"]), trips.delete_an_trip)
-  .update(authController.verifyUser(["MANAGER"]), trips.update_an_trip);
+  .put(authController.verifyUser(["MANAGER"]), trips.update_an_trip);
 
   /**
    * Put an trip

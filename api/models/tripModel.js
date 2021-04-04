@@ -72,6 +72,10 @@ var TripSchema = new Schema({
         type: Date,
         required: 'Kindly enter the start date of the Trip'
     },
+    publish: {
+      type: Boolean,
+      required: 'Kindly enter if this trip is published'
+    },
     end_date: {
       type: Date,
       required: 'Kindly enter the end date of the Trip'
