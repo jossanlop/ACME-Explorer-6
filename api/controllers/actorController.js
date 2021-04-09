@@ -4,8 +4,10 @@ var mongoose = require('mongoose'),
   Actor = mongoose.model('Actors'),
   Trip = mongoose.model('Trips');
 
+var authController = require('../controllers/authController');
 
 
+const { auth } = require('firebase-admin');
 var admin = require('firebase-admin');
 
 exports.list_all_actors = function(req, res) {
@@ -31,7 +33,7 @@ exports.list_all_actors = function(req, res) {
 */
 exports.create_an_actor = function(req, res) {
   var new_actor = new Actor(req.body);
-  //Check the user for role  
+  //Check the user for role
   new_actor.save(function(err, actor) {
     if (err){
       if(err.name=='ValidationError') {
@@ -45,6 +47,87 @@ exports.create_an_actor = function(req, res) {
       res.json(actor);
     }
   });
+};
+
+exports.create_an_actor_v2 = function(req, res) {
+  //No se pueden crear administradores
+  if(req.body.role=='ADMINISTRATOR'){
+    return res.status(422).json({ reason: "Can't create an admin user" });
+  }
+  //Primero comprobamos si existe un token de un actor ADMINISTRADOR
+  const headerToken = req.headers.idtoken;
+  console.log('starting verifying idToken');
+  var idToken = req.headers['idtoken'];
+  console.log('idToken: '+idToken);
+
+  console.log(headerToken);
+
+  if(!headerToken){
+    if(req.body.role=="MANAGER"){
+      return res.status(403).send("Only admins can create managers");
+    }
+    var new_actor = new Actor(req.body);
+    new_actor.save(function(err, actor) {
+      if (err){
+        if(err.name=='ValidationError') {
+            res.status(422).send(err);
+        }
+        else{
+          res.status(500).send(err);
+        }
+      }
+      else{
+        res.json(actor);
+      }
+    });
+  }else {
+    admin.auth().verifyIdToken(idToken).then(function(decodedToken) {
+      console.log('entra en el then de verifyIdToken: ');
+
+      var uid = decodedToken.uid;
+      var auth_time = decodedToken.auth_time;
+      var exp =  decodedToken.exp;
+      console.log('idToken verificado para el uid: '+uid);
+      console.log('auth_time: '+auth_time);
+      console.log('exp: '+exp);
+
+      Actor.findOne({ email: uid }, function (err, actor) {
+        if (err) {
+          res.send(err); 
+        }
+        else if(!actor.role=='ADMINISTRATOR'){
+          return res.status(403).json({reason: "You must be an administrator"});
+        }
+        else if(!req.body.role=='MANAGER') {
+          return res.status(422).json({reason: "New user has to be a Manager"});
+        }
+        // No actor found with that email as username
+        else if (!actor) {
+            res.status(401); //an access token isn’t provided, or is invalid
+            res.json({message: 'No actor found with the provided email as username' ,error: err});
+          }
+        else {
+            console.log('The actor exists in our DB');
+            console.log('actor: '+actor);
+            // res.status(200).json(req.body);
+          }
+        const new_actor = new Actor(req.body);
+        new_actor.save(function(err, actor){
+          if(err){ 
+            res.status(500).json({ reason: "Database error", err: err });
+          } 
+          else {
+            res.status(200).json(actor);
+          }
+        });
+      });
+    }).catch(function(err) {
+      // Handle error
+      console.log ("Error en autenticación: "+err);
+      res.status(403); //an access token is valid, but requires more privileges
+      res.json({message: 'The actor has not the required roles',error: err});
+    });
+  }
 };
 
 exports.login_an_actor = async function(req, res) {

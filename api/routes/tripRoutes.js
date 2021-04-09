@@ -60,7 +60,7 @@ module.exports = function(app) {
 	 * @type get put delete
 	 * @url /v2/trips/:tripId
   */  
-   app.route('/v2/trips/:tripId')
+   app.route('/v2/trips/:ticker')
    .get(trips.read_an_trip)
    .put(authController.verifyUser(["MANAGER"]), trips.update_an_trip)
    .delete(authController.verifyUser(["MANAGER"]), trips.delete_an_trip);

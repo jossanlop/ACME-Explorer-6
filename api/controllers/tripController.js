@@ -237,7 +237,7 @@ exports.search_list_all_trips = function(req, res) {
 
 exports.read_an_trip = function(req, res) {
     // console.log(req.params.tripId);
-    Trip.findOne({ticker:req.params.tripId}, function(err, Trip) {
+    Trip.findOne({ticker:req.params.ticker}, function(err, Trip) {
       if (err){
         res.status(500).send(err);
       }
@@ -249,25 +249,25 @@ exports.read_an_trip = function(req, res) {
 
 exports.update_an_trip = function(req, res) {
   //Check that the user is MANAGER if it is updating more things than comments and if not: res.status(403); "an access token is valid, but requires more privileges"
-    console.log(req.params);
-    Trip.findOneAndUpdate({ticker: req.params.tripId}, req.body, {new: true, runValidators:true }, function(err, Trip) {
-      if (err){
-        if(err.name=='ValidationError') {
-            res.status(422).send(err);
-        }
-        else{
-          res.status(500).send(err);
-        }
+  console.log(req.params);
+  Trip.findOneAndUpdate({ticker: req.params.ticker}, req.body, {new: true, runValidators:true }, function(err, Trip) {
+    if (err){
+      if(err.name=='ValidationError') {
+          res.status(422).send(err);
       }
       else{
-        res.json(Trip);
+        res.status(500).send(err);
       }
-    });
+    }
+    else{
+      res.json(Trip);
+    }
+  });
 };
 
 exports.delete_an_trip = function(req, res) {
   //Check if the user is an MANAGER and if not: res.status(403); "an access token is valid, but requires more privileges"
-  Trip.deleteOne({ticker: req.params.tripId}, function(err, Trip) {
+  Trip.deleteOne({ticker: req.params.ticker}, function(err, Trip) {
         if (err){
             res.status(500).send(err);
         }

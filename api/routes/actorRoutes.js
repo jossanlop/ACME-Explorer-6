@@ -54,9 +54,13 @@ module.exports = function(app) {
   */  
     app.route('/v2/actors/:actorId')
     .get(actors.read_an_actor)
-    .put(authController.verifyUser(["ADMIN",
+    .put(authController.verifyUser(["ADMINISTRATOR",
                                     "EXPLORER",
-                                    "MANAGER", "SPONSORS"]), actors.update_a_verified_actor)
+                                    "MANAGER", "SPONSORS"]), actors.update_a_verified_actor);
+    
+    app.route('/v2/actors/')
+    .post(actors.create_an_actor_v2);
+
 
   /**
 	 * Put to Validate a clerk by actorId
