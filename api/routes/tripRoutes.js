@@ -30,9 +30,7 @@ module.exports = function(app) {
   */
   app.route('/v2/trips')
   .get(trips.list_all_trips)
-  .post(authController.verifyUser(["MANAGER"]), trips.create_an_trip)
-  .delete(authController.verifyUser(["MANAGER"]), trips.delete_an_trip)
-  .put(authController.verifyUser(["MANAGER"]), trips.update_an_trip);
+  .post(authController.verifyUser(["MANAGER"]), trips.create_an_trip);
 
   /**
    * Put an trip

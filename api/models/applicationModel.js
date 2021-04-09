@@ -16,10 +16,6 @@ var ApplicationSchema = new Schema({
     type: Schema.Types.ObjectId,
     required: "Trip_id required"
   },
-  manager_id: {
-    type: Schema.Types.ObjectId,
-    required: "manager_id required"
-  },
   status: {
     type: String,
     required: 'Status required',

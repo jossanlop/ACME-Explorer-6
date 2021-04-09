@@ -73,6 +73,7 @@ var TripSchema = new Schema({
   },
   publish: {
     type: Boolean,
+    default:false,
     required: 'Kindly enter if this trip is published'
   },
   end_date: {
@@ -92,6 +93,10 @@ var TripSchema = new Schema({
   cancelReason:
   {
     type: String
+  },
+  manager_id: {
+    type: Schema.Types.ObjectId,
+    required: "manager_id required"
   }
 });
 

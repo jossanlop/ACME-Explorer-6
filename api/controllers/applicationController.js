@@ -1,7 +1,9 @@
 'use strict';
 
 var mongoose = require('mongoose'),
-  Application = mongoose.model('Applications');
+  Application = mongoose.model('Applications'),
+  Trip = mongoose.model('Trips');
+  var authController = require('../controllers/authController');
 
 //manager/administrator pueden acceder a todas las applications
 exports.list_all_applications = function(req, res) {
@@ -75,11 +77,16 @@ exports.create_an_application = function(req, res) {
 }; 
 
 
-exports.update_an_application = function(req, res) {
+exports.update_an_application =async function(req, res) {
   //Check if the application has been previously assigned or not
   //Assign the application to the proper clerk that is requesting the assigment
   //when updating delivery moment it must be checked the clerk assignment and to check if it is the proper clerk and if not: res.status(403); "an access token is valid, but requires more privileges"
-  Application.findById(req.params.applicationId, function(err, application) {
+  var idToken = req.headers['idtoken'];
+  var authenticatedUserId = await authController.getUserId(idToken);
+  Trip.findById(req.body.trip_id, function(err, trip){
+    if(String(authenticatedUserId) === String(trip.manager_id))
+    {
+      Application.findById(req.params.applicationId, function(err, application) {
     if (err){
       if(err.name=='ValidationError') {
           res.status(422).send(err);
@@ -99,6 +106,14 @@ exports.update_an_application = function(req, res) {
         });
       }
   });
+    }
+    else
+    {
+      res.status(405); //Not allowed
+      res.send('The user is trying to modify an application from other manager');
+    }
+  });
+  
 };
 
 
