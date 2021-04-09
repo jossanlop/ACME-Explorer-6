@@ -13,16 +13,16 @@ exports.getUserId = async function(idToken) {
       var uid = actorFromFB.uid;
       var auth_time = actorFromFB.auth_time;
       var exp =  actorFromFB.exp;
-      console.log('idToken verificado para el uid: '+uid);
-      console.log('auth_time: '+auth_time);
-      console.log('exp: '+exp);
+      // console.log('idToken verificado para el uid: '+uid);
+      // console.log('auth_time: '+auth_time);
+      // console.log('exp: '+exp);
 
       var mongoActor = await Actor.findOne({ email: uid });
        if (!mongoActor) { return null; }
 
         else {
             console.log('The actor exists in our DB');
-            console.log('actor: '+mongoActor);
+            // console.log('actor: '+mongoActor);
             id = mongoActor._id;
             return id;
         }
@@ -57,7 +57,7 @@ exports.verifyUser = function(requiredRoles) {
 
           else {
               console.log('The actor exists in our DB');
-              console.log('actor: '+actor);
+              // console.log('actor: '+actor);
 
               var isAuth = false;
               for (var i = 0; i < requiredRoles.length; i++) {

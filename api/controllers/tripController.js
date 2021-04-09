@@ -5,8 +5,10 @@ var mongoose = require('mongoose'),
   Trip = mongoose.model('Trips'),
   finderCollection = mongoose.model('finderSchema');
 
-exports.list_all_trips = function(req, res) {
+var authController = require('../controllers/authController');
 
+exports.list_all_trips = async function(req, res) {
+  console.log("New search of trips!...");
   if (JSON.stringify(req.query).length===2){ //si query vacío
     Trip.find({},function(err, list_all_trips) {
       if (err){
@@ -25,32 +27,27 @@ exports.list_all_trips = function(req, res) {
     }
     if(!isNaN(req.query.maxPrice)){
       req.query.maxPrice = parseInt(req.query.maxPrice);
-     }
-     if(!isNaN(req.query.minDate)){
-      // req.query.minDate = new Date(req.query.minDate);
-     }
-     if(!isNaN(req.query.maxDate)){
-      // req.query.maxDate = new Date(req.query.maxDate);
-     }
+    }
 
-    //Guardamos un nuevo finder aquí con los query Params
-    //guardar cacheado resultados d eun primera búsqeuda -> mirar requisitos 
+    //guardar cacheado resultados d eun primera búsqeuda -> mirar requisitos
+  var idToken = req.headers['idtoken'];
+  var authenticatedUserId = await authController.getUserId(idToken);
+  console.log("ID: "+authenticatedUserId);
+  console.log(req.query);
   var new_finder= new finderCollection(req.query);
+
   // console.log("\nQuery:"+JSON.stringify(req.query)+"\n");
-  // new_finder.dateRange.push(req.query.minDate, req.query.maxDate);
+
   if(!isNaN(req.query.minPrice)&&!isNaN(req.query.maxPrice)){
-    // console.log("hay prices");
     new_finder.priceRange.push(req.query.minPrice, req.query.maxPrice);
-    // console.log(new_finder);
   }
-  // console.log(req.query.minDate);
-  // console.log(req.query.minDate);
   if(req.query.minDate&&req.query.maxDate){
-    // console.log("hay dates");
-    // new_finder.dateRange.push(4);
     new_finder.dateRange.push(String(req.query.minDate), String(req.query.maxDate));
-    // console.log(new_finder);
   }
+  new_finder.user=authenticatedUserId;
+  console.log(new_finder);
+
+  //Guardamos la búsqueda realizada por el actor
   new_finder.save(function(err, finder){
     if (err){
         console.log("A new finder could not be added: 500");
@@ -64,7 +61,7 @@ exports.list_all_trips = function(req, res) {
       // res.status(200).json(finder);
     }
   });
-
+    //Resultados de búsqueda:
      Trip.find( {$or: [
       //Si el precio esta en su range
       {price:
@@ -97,7 +94,7 @@ exports.list_all_trips = function(req, res) {
         { description:
           { 
             $regex: `${req.query.keyWord}`, 
-            $options: "i" 
+            $options: "i"
           }
         }
       ]}

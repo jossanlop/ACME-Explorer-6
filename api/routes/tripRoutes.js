@@ -48,6 +48,7 @@ module.exports = function(app) {
     .get(trips.read_an_trip)
 	  .put(trips.update_an_trip)
     .delete(trips.delete_an_trip);
+    
 
   /**
    * Put an trip
