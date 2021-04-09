@@ -1,4 +1,5 @@
 var cors = require('cors');
+var bodyParser = require('body-parser');
 var express = require('express'),
   app = express(),
   port = process.env.PORT || 8080,
@@ -71,5 +72,27 @@ mongoose.connection.on("open", function (err, conn) {
 mongoose.connection.on("error", function (err, conn) {
     console.error("DB init error " + err);
 });
+
+const expressSwagger = require('express-swagger-generator')(app);
+
+const swaggerOptions = {
+  swaggerDefinition: {
+      info: {
+          description: 'This is acme explorer',
+          title: 'ACME-EXPLORER - Alfredo, Antonio, José Enrique, Rodrigo',
+          version: '1.0.0',
+      },
+      host: process.env.HOSTNAME || ('localhost:' + port),
+      basePath: '/v1/api-docs',
+      produces: [
+          "application/json",
+      ],
+      schemes: [process.env.SWAGGER_SCHEMA || 'http']
+  },
+  basedir: __dirname,
+  files: ['./api/routes/**/*.js']
+};
+
+expressSwagger(swaggerOptions);
 
 module.exports = app;
