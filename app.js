@@ -13,6 +13,26 @@ var express = require('express'),
   bodyParser = require('body-parser');
   app.use(cors());
 
+  const cron = require('node-cron');
+  cron.schedule('* * * * * *', function() {
+    console.log('running a task every second');
+    //Ahora comprobar la última fecha del último finder y si alguno tiene una diferencia mayor de una hora, se borrado
+    //1- Comprobar cada finderDeadTime de cada usuario y comporbar la diferencia del tiemstamp de ese finder con respecto a al timestamp de now
+    const aggregation = [
+      { $project: { _id:1, time:"$finderDeadTime"}}
+    ];
+    Actor.aggregate(aggregation, function(err, actors) {
+      if (err){
+        console.log(err);
+      }
+      else{
+        console.log(actors);
+      }
+  });
+    console.log(actors);
+
+  });
+
 // MongoDB URI building
 var mongoDBUser = process.env.mongoDBUser || "myUser";
 var mongoDBPass = process.env.mongoDBPass || "myUserPassword";
