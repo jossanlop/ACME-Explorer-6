@@ -24,7 +24,7 @@ module.exports = function(app) {
 	 * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
 	 * @returns {DatabaseError}                           500 - Database error
 	 */
-app.route('/v1/finderCollection')
+app.route('/v2/finderCollection')
   .get(finderCollection.list_all_finders)
   .delete(finderCollection.delete_all_finders)
   .delete(finderCollection.delete_a_finder);
