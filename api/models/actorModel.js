@@ -62,10 +62,6 @@ var ActorSchema = new Schema({
   banned:{
     type: Boolean,
     default : false
-  },
-  finderDeadTime:{
-    type: Number,
-    default: 1
   }
 }, { strict: false });
 
