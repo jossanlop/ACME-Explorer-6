@@ -149,6 +149,31 @@ exports.search_list_all_trips = function(req, res) {
   res.send('Trip returned from the Trip search');
 };
 
+exports.list_my_trips_v2 = async function(req, res)
+{
+  console.log('por qui');
+  console.log(req.params.manager_id);
+  var idToken = req.headers['idtoken'];
+  var authenticatedUserId = await authController.getUserId(idToken);
+  if(String(authenticatedUserId) === String(req.params.manager_id))
+  {
+    Trip.find(req.params, function(err, trips)
+    {
+      if(err)
+      {
+        res.status(500).send(err);
+      }
+      else
+      {
+        res.send(trips);
+      }
+    });
+  }
+  else{
+    res.status(405).send("Manager trying to list trips of other manager");
+  }
+};
+
 exports.read_an_trip = function(req, res) {
     // console.log(req.params.tripId);
     Trip.findOne({ticker:req.params.tripId}, function(err, Trip) {
@@ -161,45 +186,75 @@ exports.read_an_trip = function(req, res) {
     });
 };
 
-exports.update_an_trip = function(req, res) {
+exports.update_an_trip =async function(req, res) {
   //Check that the user is MANAGER if it is updating more things than comments and if not: res.status(403); "an access token is valid, but requires more privileges"
-    Trip.findOneAndUpdate({ticker: req.params.tripId}, req.body, {new: true, runValidators:true }, function(err, trip) {
-      if (err){
-        if(err.name=='ValidationError') {
-            res.status(422).send(err);
-        }
-        else{
-          res.status(500).send(err);
-        }
-      }
-      else{
-          if(!trip.publish)
-            res.json(trip);
-          else
-          {
-            res.status("Trying to delete a published trip");
-            res.send(403); 
+  var idToken = req.headers['idtoken'];
+  var authenticatedUserId = await authController.getUserId(idToken);
+  
+  Trip.findOne({ticker: req.params.ticker}, function(err, trip) {
+    if(String(authenticatedUserId) === String(trip.manager_id) )
+    {
+      if(!trip.publish)
+      {
+        Trip.findOneAndUpdate({ticker: req.params.ticker}, req.body, {new: true, runValidators:true }, function(err, trip2) {
+          if (err){
+            if(err.name=='ValidationError') {
+                res.status(422).send(err);
+            }
+            else{
+              res.status(500).send(err);
+            }
           }
+          else{
+                res.json(trip2);
+          }
+        });
       }
-    });
+      else
+      {
+        res.status("Trying to modify a published trip");
+        res.send(403); 
+      }
+      
+    }
+    else
+    {
+      res.status(405); //Not allowed
+      res.send('The user is trying to modify a trip from other manager'); 
+    }
+  });
+    
 };
 
-exports.delete_an_trip = function(req, res) {
+exports.delete_an_trip = async function(req, res) {
   //Check if the user is an MANAGER and if not: res.status(403); "an access token is valid, but requires more privileges"
-  Trip.deleteOne({ticker: req.params.tripId}, function(err, trip) {
+  var idToken = req.headers['idtoken'];
+  var authenticatedUserId = await authController.getUserId(idToken);
+  console.log(req.params.ticker);
+  Trip.findOne({ticker: req.params.ticker}, function(err, trip) {
+    console.log(trip);
+    if(String(authenticatedUserId) === String(trip.manager_id) )
+    {
+      if(!trip.publish)
+      {
+        Trip.deleteOne({ticker: req.params.ticker}, function(err, trip) {
         if (err){
             res.status(500).send(err);
         }
         else{
-          if(!trip.publish)
             res.json({ message: 'Trip successfully deleted'});
-          else
+        }});}
+        else
           {
             res.status("Trying to delete a published trip")
             res.send(403); 
 
+          }}
+          else
+          {
+            res.status(405); //Not allowed
+            res.send('The user is trying to deleye a trip from other manager'); 
           }
-        }
     });
 };
 

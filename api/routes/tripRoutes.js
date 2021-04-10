@@ -20,7 +20,7 @@ module.exports = function(app) {
 	  .post(trips.create_an_trip);
 
   /**
-   * Get a trip
+   * Get all trip
    * Post a trip 
    *    RequiredRoles: MANAGER
 	 *
@@ -33,9 +33,21 @@ module.exports = function(app) {
   .post(authController.verifyUser(["MANAGER"]), trips.create_an_trip);
 
   /**
+   * Get all trips of a manager
+   * Post a trip 
+   *    RequiredRoles: MANAGER
+	 *
+	 * @section trips
+	 * @type get post
+	 * @url /v2/trips
+  */
+   app.route('/v2/trips/:manager_id')
+   .get(authController.verifyUser(["MANAGER"]), trips.list_my_trips_v2);
+
+  /**
    * Put an trip
    *    RequiredRoles: to be the proper trip
-   * Get an trip
+   * Get an tripey
    *    RequiredRoles: to be the proper trip or an Administrator
 	 *
 	 * @section trips

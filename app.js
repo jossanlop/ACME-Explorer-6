@@ -6,7 +6,6 @@ var express = require('express'),
   mongoose = require('mongoose'),
   Actor = require('./api/models/actorModel'),
   Trip = require('./api/models/tripModel'),
-  //   Item = require('./api/models/itemModel'),
   Application = require('./api/models/applicationModel.js'),
   finderCollectionSchema = require('./api/models/finderCollectionModel.js'),
   admin = require('firebase-admin'),
@@ -46,21 +45,19 @@ admin.initializeApp({
 
 var routesActors = require('./api/routes/actorRoutes');
 var routesTrips = require('./api/routes/tripRoutes');
-// var routesItems = require('./api/routes/itemRoutes'); 
-// var routesOrders = require('./api/routes/orderRoutes');
 var routesApplications = require('./api/routes/applicationRoutes');
 var routesFinders = require('./api/routes/finderCollectionRoutes');
 var routesLogin = require('./api/routes/authRoutes');
 var routesSponsorships = require('./api/routes/SponsorshipRoutes');
+var routesDashboard = require('./api/routes/dashboardRoutes');
 
 routesLogin(app);
 routesActors(app);
 routesTrips(app);
-// routesItems(app);
-// routesOrders(app);
 routesApplications(app);
 routesFinders(app);
 routesSponsorships(app);
+routesDashboard(app);
 
 console.log("Connecting DB to: " + mongoDBURI);
 mongoose.connection.on("open", function (err, conn) {
