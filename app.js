@@ -50,7 +50,7 @@ var routesTrips = require('./api/routes/tripRoutes');
 // var routesOrders = require('./api/routes/orderRoutes');
 var routesApplications = require('./api/routes/applicationRoutes');
 var routesFinders = require('./api/routes/finderCollectionRoutes');
-var routesLogin = require('./api/routes/loginRoutes');
+var routesLogin = require('./api/routes/authRoutes');
 var routesSponsorships = require('./api/routes/SponsorshipRoutes');
 
 routesLogin(app);
