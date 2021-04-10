@@ -2,6 +2,7 @@
 
 module.exports = function(app) {
     var finderCollection = require('../controllers/finderCollectionController');
+	var authController = require('../controllers/authController');
     
  
 /**
@@ -24,8 +25,32 @@ module.exports = function(app) {
 	 * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
 	 * @returns {DatabaseError}                           500 - Database error
 	 */
+
+	/**
+	 * Delete one Finder
+	 * @route DELETE /finderCollection?keyword=keyword
+	 * @group Finder - System configuration parameters
+  	 * @param {string} keyWord
+	 * @returns {string}                                  200 - Every finder has been correctly removed
+	 * @returns {ValidationError}                         400 - Supplied parameters are invalid
+	 * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
+	 * @returns {DatabaseError}                           500 - Database error
+	 */
+
 app.route('/v2/finderCollection')
-  .get(finderCollection.list_all_finders)
-  .delete(finderCollection.delete_all_finders)
-  .delete(finderCollection.delete_a_finder);
+  .get(authController.verifyUser(["EXPLORER"]),finderCollection.list_all_finders)
+  .delete(authController.verifyUser(["EXPLORER"]),finderCollection.delete_a_finder);
+
+  	/**
+	 * Delete all Finders
+	 * @route DELETE /finderCollection
+	 * @group Finder - System configuration parameters
+	 * @returns {string}                                  200 - Every finder has been correctly removed
+	 * @returns {ValidationError}                         400 - Supplied parameters are invalid
+	 * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
+	 * @returns {DatabaseError}                           500 - Database error
+	 */
+
+app.route('/v2/finderCollection')
+.delete(authController.verifyUser(["EXPLORER"]),finderCollection.delete_all_finders);
 }
