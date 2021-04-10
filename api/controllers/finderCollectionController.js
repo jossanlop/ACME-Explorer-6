@@ -18,7 +18,12 @@ exports.list_all_finders = async function (req, res) {
       console.log(req.headers);
       console.log("actor:"+actor);
       var idToken = req.headers['idtoken'];
-      var authenticatedUserId = await authController.getUserId(idToken);
+      // try{
+        var authenticatedUserId = await authController.getUserId(idToken);
+      // }catch{
+      //   var authenticatedUserId = null;
+      // }
+      console.log(authenticatedUserId);
       if (JSON.stringify(authenticatedUserId) === null) {
         finderCollection.find({}, function (err, list_all_finders) {
           if (err) {
@@ -34,6 +39,7 @@ exports.list_all_finders = async function (req, res) {
             res.status(500).send(err);
           }
           else {
+            console.log("Returning finders by userId");
             res.json(list_all_finders);
           }
         });

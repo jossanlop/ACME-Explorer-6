@@ -132,15 +132,15 @@ exports.create_an_actor_v2 = function(req, res) {
 
 exports.login_an_actor = async function(req, res) {
   console.log('starting login an actor');
-  var emailParam = req.query.email;
-  var password = req.query.password;
-  console.log(req.query);
+  var emailParam = req.body.email;
+  var password = req.body.password;
+  console.log(req.body);
   Actor.findOne({ email: emailParam }, function (err, actor) {
       if (err) { res.send(err); }
 
       // No actor found with that email as username
       else if (!actor) {
-        res.status(401); //an access token isn’t provided, or is invalid
+        res.status(401);
         res.json({message: 'forbidden',error: err});
       }
 

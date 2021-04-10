@@ -4,6 +4,9 @@ var mongoose = require('mongoose'),
   Actor = mongoose.model('Actors');
 var admin = require('firebase-admin');
 
+const rp = require('request-promise');
+
+
 exports.getUserId = async function(idToken) {
   console.log('idToken: '+idToken);
   var id = null;
@@ -85,3 +88,32 @@ exports.verifyUser = function(requiredRoles) {
       });
   }
 }
+
+exports.getIdTokenByCustomToken = async (req, res) => {
+  var customToken = req.params.customToken;
+  if(!customToken){
+      return res.status(401).json({"err":"No custom token found"});
+  }
+  try {
+      var idToken = await this.getIdToken(customToken);
+      if(!idToken){
+          return res.status(401).json({"err":"No token found"});
+      }
+      res.status(200).json({"idToken":idToken});
+  }catch(err) {
+      res.status(401).json({err:err});
+  }
+}
+
+exports.getIdToken = async customToken => {
+  const res = await rp({
+    url: `https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyCustomToken?key=AIzaSyB8CbDi9cBW-8O2UNakQ-Wg_HV4-9gN_Z8`,
+    method: 'POST',
+    body: {
+      token: customToken,
+      returnSecureToken: true
+    },
+    json: true,
+  });
+  return res.idToken;
+};
