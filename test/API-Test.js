@@ -73,7 +73,8 @@ describe("API Testing", () => {
   it("Get Trips", done => {
     chai
       .request(app)
-      .get("/v1/trips")
+      .get("/v2/trips")
+      .set("Authorization",idToken)
       .end((err, res) => {
         expect(res).to.have.status(200);
         expect('Content-Type', /json/);
@@ -85,7 +86,7 @@ describe("API Testing", () => {
   it("Get Trips with Search", done => {
     chai
       .request(app)
-      .get("/v1/trips?keyWord=keyword")
+      .get("/v2/trips?keyWord=keyword")
       .end((err, res) => {
         expect(res).to.have.status(200);
         expect('Content-Type', /json/);
@@ -98,7 +99,7 @@ describe("API Testing", () => {
    it("Post Trip", done => {
     chai
       .request(app)
-      .post("/v1/trips")
+      .post("/v2/trips")
       .send({
             "title": "testing",
             "description":"desc of testing",
@@ -120,7 +121,7 @@ describe("API Testing", () => {
   it("Put Trip", done => {
     chai
       .request(app)
-      .put("/v1/trips/"+ticker)
+      .put("/v2/trips/"+ticker)
       .send({
         "title": "testingUpdated",
         "description":"desc of testing",
@@ -140,7 +141,7 @@ describe("API Testing", () => {
   it("Get Trip", done => {
     chai
       .request(app)
-      .get("/v1/trips/"+ticker)
+      .get("/v2/trips/"+ticker)
       .end((err, res) => {
         expect(res).to.have.status(200);
         expect('Content-Type', /json/);
@@ -151,7 +152,7 @@ describe("API Testing", () => {
   it("Delete Trip", done => {
     chai
       .request(app)
-      .delete("/v1/trips/"+ticker)
+      .delete("/v2/trips/"+ticker)
       .end((err, res) => {
         expect(res).to.have.status(200);
         if (err) done(err);
