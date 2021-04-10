@@ -32,6 +32,23 @@ module.exports = function(app) {
   .get(trips.list_all_trips)
   .post(authController.verifyUser(["MANAGER"]), trips.create_an_trip);
 
+  
+  /**
+   * Put an trip
+   *    RequiredRoles: to be a MANAGER
+   * Get a trip
+   *    RequiredRoles: no required roles
+	 * Delete a trip
+   *    RequiredRoles: to be a MANAGER
+	 * @section trips
+	 * @type get put delete
+	 * @url /v2/trips/:tripId
+  */  
+   app.route('/v2/trips/:ticker')
+   .get(trips.read_an_trip)
+   .put(authController.verifyUser(["MANAGER"]), trips.update_an_trip)
+   .delete(authController.verifyUser(["MANAGER"]), trips.delete_an_trip);
+
   /**
    * Get all trips of a manager
    * Post a trip 
@@ -54,25 +71,10 @@ module.exports = function(app) {
 	 * @type get put delete
 	 * @url /v1/trips/:tripId
   */  
-  app.route('/v1/trips/:tripId')
-    .get(trips.read_an_trip)
-	  .put(trips.update_an_trip)
-    .delete(trips.delete_an_trip);
+  // app.route('/v1/trips/:tripId')
+  //   .get(trips.read_an_trip)
+	//   .put(trips.update_an_trip)
+  //   .delete(trips.delete_an_trip);
 
-  /**
-   * Put an trip
-   *    RequiredRoles: to be a MANAGER
-   * Get a trip
-   *    RequiredRoles: no required roles
-	 * Delete a trip
-   *    RequiredRoles: to be a MANAGER
-	 * @section trips
-	 * @type get put delete
-	 * @url /v2/trips/:tripId
-  */  
-   app.route('/v2/trips/:ticker')
-   .get(trips.read_an_trip)
-   .put(authController.verifyUser(["MANAGER"]), trips.update_an_trip)
-   .delete(authController.verifyUser(["MANAGER"]), trips.delete_an_trip);
 
 }

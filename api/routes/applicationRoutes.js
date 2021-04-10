@@ -39,7 +39,7 @@ module.exports = function(app) {
    * @param {string} asigned (true|false)
    * @param {string} delivered (true|false)
   */
-  app.route('/v1/applications/search')
+  // app.route('/v1/applications/search')
     //.get(application.search_applications);
 
 
@@ -56,9 +56,10 @@ module.exports = function(app) {
    * @type put delete
    * @url /v1/applications/:applicationId
   */
-  app.route('/v2/applications/:applicationId').get(application.read_an_application) 
-  .put(application.update_an_application) 
-  .delete(application.delete_an_application);
+  // app.route('/v2/applications/:applicationId')
+  //   .get(application.read_an_application)
+  //   .put(application.update_an_application) 
+  //   .delete(application.delete_an_application);
 
   /**
    * Delete an application if it is not delivered
@@ -74,9 +75,9 @@ module.exports = function(app) {
    * @url /v1/applications/:applicationId
   */
    app.route('/v2/applications/:applicationId')
-   .get(authController.verifyUser(["MANAGER"]), application.read_an_application)
-    .put(authController.verifyUser(["MANAGER"]), application.update_an_application);
-//    .delete(application.delete_an_application);
+    .get(authController.verifyUser(["MANAGER"]), application.read_an_application)
+    .put(authController.verifyUser(["MANAGER"]), application.update_an_application)
+    .delete(authController.verifyUser(["MANAGER"]), application.delete_an_application);
 
 
   /**
@@ -87,7 +88,7 @@ module.exports = function(app) {
    * @type get
    * @url /v1/myapplications/:actorId
   */
-  app.route('/v1/myapplications')
+  // app.route('/v1/myapplications')
     //.get(application.list_my_applications); //añadir ownership para el explorer
 
       /**
@@ -98,6 +99,6 @@ module.exports = function(app) {
    * @type get
    * @url /v1/myapplications/:actorId
   */
-  app.route('/v1/tripapplications')
+  // app.route('/v1/tripapplications')
     //.get(application.list_trip_applications); //añadir ownership para el trip
 };

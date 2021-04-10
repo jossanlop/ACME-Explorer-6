@@ -15,15 +15,8 @@ exports.list_all_finders = async function (req, res) {
       res.send(err);
     }
     else {
-      console.log(req.headers);
-      console.log("actor:"+actor);
       var idToken = req.headers['idtoken'];
-      // try{
-        var authenticatedUserId = await authController.getUserId(idToken);
-      // }catch{
-      //   var authenticatedUserId = null;
-      // }
-      console.log(authenticatedUserId);
+      var authenticatedUserId = await authController.getUserId(idToken);
       if (JSON.stringify(authenticatedUserId) === null) {
         finderCollection.find({}, function (err, list_all_finders) {
           if (err) {

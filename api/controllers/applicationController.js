@@ -24,7 +24,7 @@ exports.list_all_applications = async function(req, res) {
               res.status(500).send(err);
             }
             else{
-              res.json(applications);
+              res.status(200).json(applications);
             }
           });
         }
@@ -119,7 +119,7 @@ exports.create_an_application = async function(req, res) {
           res.status(500).send(err);
         }
         else{
-          res.json(application);
+          res.status(200).json(application);
         }
       });
     }else
@@ -172,14 +172,10 @@ exports.update_an_application =async function(req, res) {
 
 
 exports.delete_an_application = async function(req, res) {
-  //Check if the application were delivered or not and delete it or not accordingly
-  //Check if the user is the proper customer that posted the application and if not: res.status(403); "an access token is valid, but requires more privileges"
   var idToken = req.headers['idtoken'];
   var authenticatedUserId = await authController.getUserId(idToken);
   Application.findById(req.params.applicationId, function(err, application){
-    console.log(application);
     Trip.findById(application.trip_id, function(err, trip){
-      console.log(trip);
       if(String(authenticatedUserId) === String(trip.manager_id))
       {
         Application.deleteOne({ _id: req.params.applicationId}, function(err, app) {
@@ -187,7 +183,7 @@ exports.delete_an_application = async function(req, res) {
             res.status(500).send(err);
           }
           else{
-            res.json({ message: 'Application successfully deleted' });
+            res.status(200).json({ message: 'Application successfully deleted' });
           }
         });
       }

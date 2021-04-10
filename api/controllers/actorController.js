@@ -179,13 +179,12 @@ exports.login_an_actor = async function(req, res) {
 };
 
 exports.read_an_actor = function(req, res) {
-  console.log('Starting to read the actor...');
   Actor.findById(req.params.actorId, function(err, actor) {
     if (err){
       res.status(500).send(err);
     }
     else{
-      res.json(actor);
+      res.status(200).json(actor);
     }
   });
 };
