@@ -76,7 +76,7 @@ var TripSchema = new Schema({
   },
   publish: {
     type: Boolean,
-    default:false,
+    default: false,
     required: 'Kindly enter if this trip is published'
   },
   end_date: {
@@ -169,6 +169,8 @@ TripSchema.pre('save', function (callback) {
 });
 
 module.exports = mongoose.model('Trips', TripSchema);
+// const TripExport = mongoose.model('Trips', TripSchema);
+// module.exports = TripExport;
 
 
 

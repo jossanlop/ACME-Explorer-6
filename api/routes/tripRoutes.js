@@ -59,6 +59,9 @@ module.exports = function (app) {
     .get(trips.list_all_trips)
     .post(authController.verifyUser(["MANAGER"]), trips.create_an_trip);
 
+  app.route('/v2/trips/finder')
+  .get(authController.verifyUser(["EXPLORER"]), trips.search_list_all_trips);
+
 
   /**
    * Get a Trip

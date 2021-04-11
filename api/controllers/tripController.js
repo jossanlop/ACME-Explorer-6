@@ -9,10 +9,10 @@ var mongoose = require('mongoose'),
 const { app } = require('firebase-admin');
 var authController = require('../controllers/authController');
 
-exports.list_all_trips = function (req, res) {
+exports.search_list_all_trips = function (req, res) {
 
   if (JSON.stringify(req.query).length === 2) { //si query vacío
-    Trip.find({}, function (err, list_all_trips) {
+    Trip.find({ publish: true }, function (err, list_all_trips) {
       if (err) {
         res.status(500).send(err);
       }
@@ -40,67 +40,64 @@ exports.list_all_trips = function (req, res) {
     //Guardamos un nuevo finder aquí con los query Params
     //guardar cacheado resultados d eun primera búsqeuda -> mirar requisitos 
     var new_finder = new finderCollection(req.query);
-    // console.log("\nQuery:"+JSON.stringify(req.query)+"\n");
     // new_finder.dateRange.push(req.query.minDate, req.query.maxDate);
     if (!isNaN(req.query.minPrice) && !isNaN(req.query.maxPrice)) {
-      // console.log("hay prices");
       new_finder.priceRange.push(req.query.minPrice, req.query.maxPrice);
-      // console.log(new_finder);
     }
-    // console.log(req.query.minDate);
-    // console.log(req.query.minDate);
+
     if (req.query.minDate && req.query.maxDate) {
-      // console.log("hay dates");
-      // new_finder.dateRange.push(4);
       new_finder.dateRange.push(String(req.query.minDate), String(req.query.maxDate));
-      // console.log(new_finder);
     }
 
     Trip.find({
-      $or: [
-        //Si el precio esta en su range
-        {
-          price:
-          {
-            $lte: req.query.maxPrice,
-            $gte: req.query.minPrice
-          }
-        },
-        //Si el date esta en su range
-        {
-          start_date:
-          {
-            $lte: req.query.maxDate,
-            $gte: req.query.minDate
-          }
-        },
-        //Si el keyWord está dentro de ticker, title o description
+      $and: [
+        { publish: true },
         {
           $or: [
+            //Si el precio esta en su range
             {
-              ticker:
+              price:
               {
-                $regex: `${req.query.keyWord}`,
-                $options: "i"
+                $lte: req.query.maxPrice,
+                $gte: req.query.minPrice
               }
             },
+            //Si el date esta en su range
             {
-              title:
+              start_date:
               {
-                $regex: `${req.query.keyWord}`,
-                $options: "i"
+                $lte: req.query.maxDate,
+                $gte: req.query.minDate
               }
             },
+            //Si el keyWord está dentro de ticker, title o description
             {
-              description:
-              {
-                $regex: `${req.query.keyWord}`,
-                $options: "i"
-              }
+              $or: [
+                {
+                  ticker:
+                  {
+                    $regex: `${req.query.keyWord}`,
+                    $options: "i"
+                  }
+                },
+                {
+                  title:
+                  {
+                    $regex: `${req.query.keyWord}`,
+                    $options: "i"
+                  }
+                },
+                {
+                  description:
+                  {
+                    $regex: `${req.query.keyWord}`,
+                    $options: "i"
+                  }
+                }
+              ]
             }
           ]
-        }
-      ]
+        }]
     }
       , async function (err, trips) {
         if (err) {
@@ -109,25 +106,29 @@ exports.list_all_trips = function (req, res) {
           res.status(500).send(err);
         }
         else {
-
-          // new_finder.results.push(trips); // TODO: hay que guardar resultados siendo un array
+          new_finder.results = trips;
+          
+          var aux_finderMaxNum = 10;
+          const aggregationConfigParam = [
+              {$project: {_id:0, finderMaxNum:'$finderMaxNum'}}
+          ];
           // TODO: comparar el numero de resultados con el finderMaxNum, si es mayor, cortar los resultados en finderMaxNum
-          // ConfigParam.aggregate(aggregationConfigParam, function (err, configParams) {
-          //   if (err) {
-          //     console.log(err);
-          //   }
-          //   else {
-          //     var aux_finderMinNum = configParams[0].finderMinNum
-          //     var aux_finderMaxNum = configParams[0].finderMaxNum
-          //   }
-          // });
+          var confParam = ConfigParam.aggregate(aggregationConfigParam, function (err, configParams) {
+            if (err) {
+              console.log(err);
+            } else if (configParams[0] == null) {
+                console.log("No config param stored");
+            } else {
+              aux_finderMaxNum = configParams[0].finderMaxNum
+            }
+          });
 
-          // var finderMaxNum = aux_finderMaxNum || 10;
-          // var finderMinNum = aux_finderMinNum || 1;
-
+          if(trips.length > aux_finderMaxNum){
+            trips = trips.slice(1,finderMaxNum);
+          }
           var idToken = req.headers['idtoken'];
           var authenticatedUserId = await authController.getUserId(idToken);
-          new_finder.user=authenticatedUserId;
+          new_finder.user = authenticatedUserId;
           new_finder.save(function (err, finder) {
             if (err) {
               console.log("A new finder could not be added: 500");
@@ -169,131 +170,138 @@ exports.create_an_trip = async function (req, res) {
   });
 };
 
-exports.search_list_all_trips = function (req, res) {
+exports.list_all_trips = function (req, res) {
   //Check if Application param exists (Application: req.query.Application)
   //Check if keyword param exists (keyword: `{req.query.keyword}`)
   //Search depending on params but only if deleted = false
-  console.log('Searching an Trip depending on params');
-  res.send('Trip returned from the Trip search');
-};
-
-exports.list_my_trips_v2 = async function (req, res) {
-  console.log("d locs");
-  var idToken = req.headers['idtoken'];
-  var authenticatedUserId = await authController.getUserId(idToken);
-  if (String(authenticatedUserId) === String(req.params.manager_id)) {
-    Trip.find(req.params, function (err, trips) {
+    Trip.find({ publish: true }, function (err, list_all_trips) {
       if (err) {
         res.status(500).send(err);
       }
       else {
-        res.send(trips);
+        res.status(200).json(list_all_trips);
       }
     });
-  }
-  else {
-    res.status(405).send("Manager trying to list trips of other manager");
-  }
-};
+  };
 
-exports.read_an_trip = function (req, res) {
-  Trip.findOne({ ticker: req.params.ticker }, function (err, Trip) {
-    if (err) {
-      res.status(500).send(err);
+  exports.list_my_trips_v2 = async function (req, res) {
+    console.log("d locs");
+    var idToken = req.headers['idtoken'];
+    var authenticatedUserId = await authController.getUserId(idToken);
+    if (String(authenticatedUserId) === String(req.params.manager_id)) {
+      Trip.find(req.params, function (err, trips) {
+        if (err) {
+          res.status(500).send(err);
+        }
+        else {
+          res.send(trips);
+        }
+      });
     }
     else {
-      res.status(200).json(Trip);
+      res.status(405).send("Manager trying to list trips of other manager");
     }
-  });
-};
+  };
 
-exports.update_an_trip = async function (req, res) {
-  //Check that the user is MANAGER if it is updating more things than comments and if not: res.status(403); "an access token is valid, but requires more privileges"
-  var idToken = req.headers['idtoken'];
-  var authenticatedUserId = await authController.getUserId(idToken);
+  exports.read_an_trip = function (req, res) {
+    Trip.findOne({ ticker: req.params.ticker }, function (err, Trip) {
+      if (err) {
+        res.status(500).send(err);
+      }
+      else {
+        res.status(200).json(Trip);
+      }
+    });
+  };
 
-  Trip.findOne({ ticker: req.params.ticker }, function (err, trip) {
-    if (String(authenticatedUserId) === String(trip.manager_id)) {
-      if (!trip.publish) {
-        Trip.findOneAndUpdate({ ticker: req.params.ticker }, req.body, { new: true, runValidators: true }, function (err, trip2) {
-          if (err) {
-            if (err.name == 'ValidationError') {
-              res.status(422).send(err);
+  exports.update_an_trip = async function (req, res) {
+    //Check that the user is MANAGER if it is updating more things than comments and if not: res.status(403); "an access token is valid, but requires more privileges"
+    var idToken = req.headers['idtoken'];
+    var authenticatedUserId = await authController.getUserId(idToken);
+
+    Trip.findOne({ ticker: req.params.ticker }, function (err, trip) {
+      if (String(authenticatedUserId) === String(trip.manager_id)) {
+        if (!trip.publish) {
+          Trip.findOneAndUpdate({ ticker: req.params.ticker }, req.body, { new: true, runValidators: true }, function (err, trip2) {
+            if (err) {
+              if (err.name == 'ValidationError') {
+                res.status(422).send(err);
+              }
+              else {
+                res.status(500).send(err);
+              }
             }
             else {
-              res.status(500).send(err);
+              res.json(trip2);
             }
-          }
-          else {
-            res.json(trip2);
-          }
-        });
+          });
+        }
+        else {
+          res.status("Trying to modify a published trip");
+          res.send(403);
+        }
+
       }
       else {
-        res.status("Trying to modify a published trip");
-        res.send(403);
+        res.status(405); //Not allowed
+        res.send('The user is trying to modify a trip from other manager');
       }
+    });
 
-    }
-    else {
-      res.status(405); //Not allowed
-      res.send('The user is trying to modify a trip from other manager');
-    }
-  });
+  };
 
-};
-
-exports.delete_an_trip = async function (req, res) {
-  //Check if the user is an MANAGER and if not: res.status(403); "an access token is valid, but requires more privileges"
-  var idToken = req.headers['idtoken'];
-  var authenticatedUserId = await authController.getUserId(idToken);
-  Trip.findOne({ ticker: req.params.ticker }, function (err, trip) {
-    if (String(authenticatedUserId) === String(trip.manager_id)) {
-      if (!trip.publish) {
-        Trip.deleteOne({ ticker: req.params.ticker }, function (err, trip) {
-          if (err) {
-            res.status(500).send(err);
-          }
-          else {
-            res.json({ message: 'Trip successfully deleted' });
-          }
-        });
-      }
-      else {
-        res.status("Trying to delete a published trip")
-        res.send(403);
-      }
-    }
-    else {
-      res.status(405); //Not allowed
-      res.send('The user is trying to deleye a trip from other manager');
-    }
-  });
-};
-
-exports.cancel_trip = function (req, res) {
-  Trip.findOne({ ticker: req.params.ticker }, async function (err, trip) {
-    if (err) {
-      res.status(500).send(err);
-    }
-    else {
-      if (trip.publish) {
-        if (trip.start_date < Date.now()) {
-          var applications = await Application.find({ trip_id: trip._id }, async function (err, apps) {
+  exports.delete_an_trip = async function (req, res) {
+    //Check if the user is an MANAGER and if not: res.status(403); "an access token is valid, but requires more privileges"
+    var idToken = req.headers['idtoken'];
+    var authenticatedUserId = await authController.getUserId(idToken);
+    Trip.findOne({ ticker: req.params.ticker }, function (err, trip) {
+      if (String(authenticatedUserId) === String(trip.manager_id)) {
+        if (!trip.publish) {
+          Trip.deleteOne({ ticker: req.params.ticker }, function (err, trip) {
             if (err) {
               res.status(500).send(err);
             }
             else {
-              applications = apps;
+              res.json({ message: 'Trip successfully deleted' });
             }
           });
-          var trip;
-          applications.forEach(application => {
-            if (application.status == "ACCEPTED") {
-              res.status(403).json({ message: "El trip tiene applicaciones aceptadas" });
-            }});
+        }
+        else {
+          res.status("Trying to delete a published trip")
+          res.send(403);
+        }
+      }
+      else {
+        res.status(405); //Not allowed
+        res.send('The user is trying to deleye a trip from other manager');
+      }
+    });
+  };
+
+  exports.cancel_trip = function (req, res) {
+    Trip.findOne({ ticker: req.params.ticker }, async function (err, trip) {
+      if (err) {
+        res.status(500).send(err);
+      }
+      else {
+        if (trip.publish) {
+          if (trip.start_date < Date.now()) {
+            var applications = await Application.find({ trip_id: trip._id }, async function (err, apps) {
+              if (err) {
+                res.status(500).send(err);
+              }
+              else {
+                applications = apps;
+              }
+            });
+            var trip;
+            applications.forEach(application => {
+              if (application.status == "ACCEPTED") {
+                res.status(403).json({ message: "El trip tiene applicaciones aceptadas" });
+              }
+            });
             trip.cancelled = true;
-            Trip.findOneAndUpdate({_id:trip._id},trip,function (err, trip) {
+            Trip.findOneAndUpdate({ _id: trip._id }, trip, function (err, trip) {
               if (err) {
                 if (err.name == 'ValidationError') {
                   res.status(422).send(err);
@@ -307,13 +315,13 @@ exports.cancel_trip = function (req, res) {
                 console.log("Trip cancelled!");
               }
             });
+          } else {
+            res.status(403).json({ message: "El trip no ha comenzado" });
+          }
         } else {
-          res.status(403).json({ message: "El trip no ha comenzado" });
+          res.status(403).json({ message: "El trip no ha sido publicado" });
         }
-      } else {
-        res.status(403).json({ message: "El trip no ha sido publicado" });
       }
-    }
-  });
-};
+    });
+  };
 
