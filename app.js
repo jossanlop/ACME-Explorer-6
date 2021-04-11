@@ -41,8 +41,6 @@ cron.schedule('* * * * * *', function () {
 
   // Obtenemos el time de caducidad de finders en el esquema
   var finderTimeCache = aux_finderTimeCache || 10;
-  var finderMaxNum = aux_finderMaxNum || 10;
-  var finderMinNum = aux_finderMinNum || 1;
 
 
   finderCollectionSchema.aggregate(aggregation, function (err, finders) {
