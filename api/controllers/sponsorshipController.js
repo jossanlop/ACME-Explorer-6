@@ -6,7 +6,7 @@ var mongoose = require('mongoose'),
 
 //manager/administrator pueden acceder a todas las sponsorships
 exports.list_all_sponsorships =  function(req, res) {
-      Sponsorship.find({}, function(err, sponsorship) {
+      Sponsorship.find({payed:true}, function(err, sponsorship) {
         if (err){
           res.status(500).send(err);
         }
@@ -20,7 +20,6 @@ exports.list_all_sponsorships =  function(req, res) {
 //mostrar a un explorer todas sus sponsorships
 //falta añadir ownership para el explorer
 exports.list_my_sponsorships = async function(req, res) {
-  console.log("id");
   var idToken = req.headers['idtoken'];//WE NEED the FireBase custom token in the req.header['idToken']... it is created by FireBase!!
   var authenticatedUserId = await authController.getUserId(idToken);
   Sponsorship.find({sponsor_id : authenticatedUserId}, function(err, sponsorships) {
