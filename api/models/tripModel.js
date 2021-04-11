@@ -136,7 +136,6 @@ TripSchema.pre('findOneAndUpdate', function (callback) {
   if (err) {
     return callback(err);
   }
-
   callback();
 
 });
@@ -154,7 +153,7 @@ TripSchema.pre('save', function (callback) {
 
   //compute price
   var aux = 0;
-  new_trip.stages.forEach(stgs => aux += stgs.price)
+  new_trip.stages.forEach(stgs => aux += stgs.price);
   new_trip.price = aux;
 
   var err = cancelValidation(new_trip.canceled, new_trip.cancelReason);
