@@ -68,25 +68,3 @@ exports.update_an_configParam = function (req, res) {
     }
   });
 };
-
-exports.create_an_configParam = async function (req, res) {
-  var new_configParam = new ConfigParam(req.body);
-  ConfigParam.exists({}, function (err, configParam) {
-    if (err) {
-      new_configParam.save(function (err, configParam) {
-        if (err) {
-          if (err.name == 'ValidationError') {
-            res.status(422).send(err);
-          } else {
-            console.log(configParam);
-            res.status(500).send(err);
-          }
-        } else {
-          res.status(200).json(configParam);
-        }
-      });
-    } else {
-      res.status(500).send(err);
-    }
-  });
-};
