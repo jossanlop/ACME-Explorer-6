@@ -2,6 +2,7 @@
 
 var mongoose = require('mongoose'),
   Application = mongoose.model('Applications'),
+  Actor = mongoose.model('Actors'),
   Trip = mongoose.model('Trips');
   var authController = require('../controllers/authController');
 
@@ -9,24 +10,54 @@ var mongoose = require('mongoose'),
 exports.list_all_applications = async function(req, res) {
     var idToken = req.headers['idtoken'];
     var authenticatedUserId = await authController.getUserId(idToken);
-    var applicationsResult= [];
-    console.log("user"+authenticatedUserId);
-    Application.find({}, async function(err, applications) {
-    if (err){
-      res.status(500).send(err);
-    }
-    else{
-      res.send(applications);
-      /*
-      applications.forEach(async function(app){
-        //find con and
-        await Trip.find({_id: app.trip_id}, function(err, trip_of_app){
-          applicationsResult.push(app);
-        });
-        console.log("...."+applicationsResult);
-      }).then(res.send(applicationsResult));*/
+    
+    Actor.findOne({_id:authenticatedUserId}, function(err,actor)
+    {
+      if(err)
+        res.status(500).send(err);
+      else
+      {
+        if(actor.role == "EXPLORER")
+        {
+          Application.find({explorer_id:authenticatedUserId},function(err, applications) {
+            if (err){
+              res.status(500).send(err);
+            }
+            else{
+              res.status(200).json(applications);
+            }
+          });
+        }
+        else if(actor.role == "MANAGER")
+        {
+          //if user is manager    
+          var applicationsResult= [];
+          
+          Application.find({}, async function(err, applications) {
+            if (err){
+              res.status(500).send(err);
+            }
+            else{
+              applications.forEach(async function(app, index, array){
+                //find con and { $and: [{_id: app.trip_id}, {manager_id: authenticatedUserId} ]}
+                await Trip.findOne({_id: app.trip_id}, function(err, trip_of_app){
+                  if(String(trip_of_app.manager_id) === String(authenticatedUserId))
+                  {
+                    applicationsResult.push(app);
+                  }
+                });
+                if(index == array.length-1)
+                  {
+                    res.send(applicationsResult);
+                  } 
+              }); 
+            }
+          });
+        }
       }
-    });
+    })
+    
+    
 };
 
 
@@ -94,7 +125,7 @@ exports.create_an_application = async function(req, res) {
           res.status(500).send(err);
         }
         else{
-          res.json(application);
+          res.status(200).json(application);
         }
       });
     }else
@@ -147,25 +178,26 @@ exports.update_an_application =async function(req, res) {
 
 
 exports.delete_an_application = async function(req, res) {
-  //Check if the application were delivered or not and delete it or not accordingly
-  //Check if the user is the proper customer that posted the application and if not: res.status(403); "an access token is valid, but requires more privileges"
   var idToken = req.headers['idtoken'];
   var authenticatedUserId = await authController.getUserId(idToken);
-  Trip.findById(req.body.trip_id, function(err, trip){
-    if(String(authenticatedUserId) === String(trip.manager_id))
-    {
-      Application.deleteOne({ _id: req.params.applicationId}, function(err, application) {
-        if (err){
-          res.status(500).send(err);
-        }
-        else{
-          res.json({ message: 'Application successfully deleted' });
-        }
-      });
-    }
-    else{res.status(405); //Not allowed
-      res.send('The user is trying to delete an application from other manager');}
+  Application.findById(req.params.applicationId, function(err, application){
+    Trip.findById(application.trip_id, function(err, trip){
+      if(String(authenticatedUserId) === String(trip.manager_id))
+      {
+        Application.deleteOne({ _id: req.params.applicationId}, function(err, app) {
+          if (err){
+            res.status(500).send(err);
+          }
+          else{
+            res.status(200).json({ message: 'Application successfully deleted' });
+          }
+        });
+      }
+      else{res.status(405); //Not allowed
+        res.send('The user is trying to delete an application from other manager');}
+    });
   });
+  
 };
 
 

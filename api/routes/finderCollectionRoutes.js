@@ -4,7 +4,6 @@ module.exports = function(app) {
     var finderCollection = require('../controllers/finderCollectionController');
 	var authController = require('../controllers/authController');
     
- 
 /**
  * @typedef FinderCollection
 	* @property {string} user               - Unique identifier for this configuration parameter
