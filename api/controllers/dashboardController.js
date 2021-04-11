@@ -2,6 +2,7 @@
 
 var mongoose = require('mongoose'),
   Application = mongoose.model('Applications'),
+  Finderschema = mongoose.model('finderSchema'),
   Trip = mongoose.model('Trips');
 
 //var authController = require('../controllers/authController');
@@ -213,6 +214,54 @@ exports.applicationsByStatus = async (req, res) => {
              cancelled: {$divide: ["$cancelled", "$total"]}
            }}
          ]).exec();
+
+        if (docs.length > 0) {
+            return res.status(200).json(docs);
+        } else {
+            return res.sendStatus(404);
+        }
+
+    } catch (err) {
+        res.status(500).json({ reason: "Database error" });
+    }
+};
+
+
+
+//Get the average price range that explorers indicate in their finders..
+exports.averagePriceFinders = async (req, res) => {
+    try {
+        const docs = await Finderschema.aggregate([
+            {$project:{
+              _id: 0,
+              minimun: {$arrayElemAt: ["$priceRange", 0 ]},
+              maximun: {$arrayElemAt: ["$priceRange", 1 ]}
+            }},
+            {$group:{
+              _id: 0,
+              avg_min: {$avg: "$minimun"},
+              avg_max: {$avg: "$maximun"}
+            }},  
+        ]).exec();
+
+        if (docs.length > 0) {
+            return res.status(200).json(docs);
+        } else {
+            return res.sendStatus(404);
+        }
+
+    } catch (err) {
+        res.status(500).json({ reason: "Database error" });
+    }
+};
+
+
+//Get the top 10 key words that the explorers indicate in their finders.
+exports.topTenKeywordsFinders = async (req, res) => {
+    try {
+        const docs = await Finderschema.aggregate([
+            
+        ]).exec();
 
         if (docs.length > 0) {
             return res.status(200).json(docs);
