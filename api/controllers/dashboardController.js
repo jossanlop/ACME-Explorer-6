@@ -174,18 +174,45 @@ exports.applicationsByStatus = async (req, res) => {
                         _id: "total",
                         contador: {$sum: 1}
                     }}
-                ],
-                "estados": [
-                    {$group: {
-                        _id: "$status",
-                        contador: {$sum: 1}
-                    }}
-                ]
-        }},
-        {$project: {
-          asd: { $arrayElemAt: ["$estados.contador", 1 ] }
-        }}
-        ]).exec();
+               ],
+               "PENDING": [
+                    {$match:{status:"PENDING"}},
+                    {$group: {_id: "total_pending", count: {$sum: 1}}}
+               ],
+               "DUE": [
+                    {$match:{status:"DUE"}},
+                    {$group: {_id: "total_pending", count: {$sum: 1}}}
+               ],
+               "REJECTED": [
+                    {$match:{status:"REJECTED"}},
+                    {$group: {_id: "total_pending", count: {$sum: 1}}}
+               ],
+               "ACCEPTED": [
+                    {$match:{status:"ACCEPTED"}},
+                    {$group: {_id: "total_pending", count: {$sum: 1}}}
+               ],
+               "CANCELLED": [
+                    {$match:{status:"CANCELLED"}},
+                    {$group: {_id: "total_pending", count: {$sum: 1}}}
+               ]
+             }},
+           {$project: {
+             _id: 0,
+             total: {$arrayElemAt: ["$total.contador", 0 ]}, 
+             pending: {$arrayElemAt: ["$PENDING.count", 0 ]}, 
+             due: {$arrayElemAt: ["$DUE.count", 0 ]}, 
+             rejected: {$arrayElemAt: ["$REJECTED.count", 0 ]}, 
+             accepted: {$arrayElemAt: ["$ACCEPTED.count", 0 ]}, 
+             cancelled: {$arrayElemAt: ["$CANCELLED.count", 0 ]}
+           }},
+           {$project: {
+             pending: {$divide: ["$pending", "$total"]},
+             due: {$divide: ["$due", "$total"]},
+             rejected: {$divide: ["$rejected", "$total"]},
+             accepted: {$divide: ["$accepted", "$total"]},
+             cancelled: {$divide: ["$cancelled", "$total"]}
+           }}
+         ]).exec();
 
         if (docs.length > 0) {
             return res.status(200).json(docs);
