@@ -91,8 +91,8 @@ module.exports = function (app) {
    * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
    * @returns {DatabaseError}                           500 - Database error
    */
-  app.route('/v2/trips/:ticker')
-    .get(trips.read_an_trip)
+    app.route('/v2/trips/:ticker')
+    .get(trips.read_an_trip) //SOLO EXPLORER Y MANAGER???
     .put(authController.verifyUser(["MANAGER"]), trips.update_an_trip)
     .delete(authController.verifyUser(["MANAGER"]), trips.delete_an_trip);
 
@@ -100,6 +100,7 @@ module.exports = function (app) {
    * Get all Trips from Manager
    * @route GET /trips/:manager_id
    * @group Trip - System configuration parameters
+   * @param {String} manager_id
    * @returns {string}                                  200 - Returns the configParam identifier
    * @returns {ValidationError}                         400 - Supplied parameters are invalid
    * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
