@@ -16,10 +16,10 @@ var ConfigParamSchema = new Schema({
     min: 1,
     max: 100
   },
-  finderMinNum: {
+  sponsorshipFlatRate: {
     type: Number,
-    default: 1,
-    min: 1
+    default: 0.2,
+    min: 0
   }
 });
 
