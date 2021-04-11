@@ -13,7 +13,8 @@ var ConfigParamSchema = new Schema({
   finderMaxNum: {
     type: Number,
     default: 10,
-    min: 1
+    min: 1,
+    max: 100
   },
   finderMinNum: {
     type: Number,
