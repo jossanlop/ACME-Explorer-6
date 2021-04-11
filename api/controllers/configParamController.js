@@ -52,7 +52,8 @@ exports.update_an_configParam = function (req, res) {
       ConfigParam.findOneAndUpdate({
           _id: configParamSystem[0]._id
         }, req.body, {
-          new: true
+          new: true,
+          runValidators: true
         }, function (err, configParam) {
           if (err) {
             res.status(500).send(err);
