@@ -10,23 +10,6 @@ var authController = require('../controllers/authController');
 exports.list_all_applications = async function(req, res) {
     var idToken = req.headers['idtoken'];
     var authenticatedUserId = await authController.getUserId(idToken);
-    
-    Actor.findOne({_id:authenticatedUserId}, async function(err,actor)
-    {
-      if(err)
-        res.status(500).send(err);
-      else
-      {
-        if(actor.role == "EXPLORER")
-        {
-          /*Application.find({explorer_id:authenticatedUserId},function(err, applications) {
-            if (err){
-              res.status(500).send(err);
-            }
-            else{
-              res.status(200).json(applications);
-            }
-          });*/
 
   Actor.findOne({ _id: authenticatedUserId }, async function (err, actor) {
     if (err)
@@ -224,8 +207,6 @@ exports.pay_an_application = async function(req, res) {
       res.send('The user is trying to pay an application from other manager');
     }
   });
-  
-
 };
 
 exports.read_an_application = async function (req, res) {
@@ -308,7 +289,4 @@ exports.delete_an_application = async function (req, res) {
       }
     });
   });
-
-};
-
-
+}
