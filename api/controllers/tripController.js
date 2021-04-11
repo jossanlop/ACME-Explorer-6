@@ -175,8 +175,7 @@ exports.search_list_all_trips = function (req, res) {
 };
 
 exports.list_my_trips_v2 = async function (req, res) {
-  console.log('por qui');
-  console.log(req.params.manager_id);
+  console.log("d locs");
   var idToken = req.headers['idtoken'];
   var authenticatedUserId = await authController.getUserId(idToken);
   if (String(authenticatedUserId) === String(req.params.manager_id)) {
@@ -195,6 +194,7 @@ exports.list_my_trips_v2 = async function (req, res) {
 };
 
 exports.read_an_trip = function (req, res) {
+  console.log("xaqui");
   // console.log(req.params.tripId);
   Trip.findOne({ ticker: req.params.ticker }, function (err, Trip) {
     if (err) {

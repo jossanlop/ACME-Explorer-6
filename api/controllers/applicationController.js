@@ -7,9 +7,26 @@ var mongoose = require('mongoose'),
 var authController = require('../controllers/authController');
 
 //MANAGER pueden acceder a todas las applications de su trip
-exports.list_all_applications = async function (req, res) {
-  var idToken = req.headers['idtoken'];
-  var authenticatedUserId = await authController.getUserId(idToken);
+exports.list_all_applications = async function(req, res) {
+    var idToken = req.headers['idtoken'];
+    var authenticatedUserId = await authController.getUserId(idToken);
+    
+    Actor.findOne({_id:authenticatedUserId}, async function(err,actor)
+    {
+      if(err)
+        res.status(500).send(err);
+      else
+      {
+        if(actor.role == "EXPLORER")
+        {
+          /*Application.find({explorer_id:authenticatedUserId},function(err, applications) {
+            if (err){
+              res.status(500).send(err);
+            }
+            else{
+              res.status(200).json(applications);
+            }
+          });*/
 
   Actor.findOne({ _id: authenticatedUserId }, async function (err, actor) {
     if (err)
@@ -173,6 +190,43 @@ exports.create_an_application = async function (req, res) {
   });
 };
 
+exports.pay_an_application = async function(req, res) {
+  var idToken = req.headers['idtoken'];
+  var authenticatedUserId = await authController.getUserId(idToken);
+  Application.findOne({_id:req.params.applicationId}, function(err, app) {
+    if(String(authenticatedUserId) === String(app.explorer_id))
+    {
+      if(app.status == 'DUE')
+      {
+        app.status='ACCEPTED';
+        console.log(app);
+        Application.findOneAndUpdate({_id:app._id}, app , function(err, app_upd) 
+        {
+          if(err)
+          {
+            res.status(500).send(err);
+          }
+          else
+          {
+            res.status(200).send(app_upd);
+          }
+        })
+      }
+      else
+      {
+        res.status(403); //Not allowed
+        res.send('The user is trying to pay an application with incorrect status');
+      }
+    }
+    else
+    {
+      res.status(405); //Not allowed
+      res.send('The user is trying to pay an application from other manager');
+    }
+  });
+  
+
+};
 
 exports.read_an_application = async function (req, res) {
   var idToken = req.headers['idtoken'];
