@@ -3,10 +3,24 @@
 /*---------------Trip----------------------*/
 var mongoose = require('mongoose'),
   Trip = mongoose.model('Trips'),
+  ConfigParam = require('./api/models/configParamModel'),
   finderCollection = mongoose.model('finderSchema');
 var authController = require('../controllers/authController');
 
 exports.list_all_trips = function (req, res) {
+
+  ConfigParam.aggregate(aggregationConfigParam, function (err, configParams) {
+    if (err) {
+      console.log(err);
+    }
+    else {
+      var aux_finderMinNum = configParams[0].finderMinNum
+      var aux_finderMaxNum = configParams[0].finderMaxNum
+    }
+  });
+  
+  var finderMaxNum = aux_finderMaxNum || 10;
+  var finderMinNum = aux_finderMinNum || 1;
 
   if (JSON.stringify(req.query).length === 2) { //si query vacío
     Trip.find({}, function (err, list_all_trips) {
@@ -52,19 +66,6 @@ exports.list_all_trips = function (req, res) {
       new_finder.dateRange.push(String(req.query.minDate), String(req.query.maxDate));
       // console.log(new_finder);
     }
-    new_finder.save(function (err, finder) {
-      if (err) {
-        console.log("A new finder could not be added: 500");
-        console.log(finder);
-        // res.status(500).send(err);
-        console.log(err);
-      }
-      else {
-        // console.log("Added new finder correctly");
-        // console.log(new_finder);
-        // res.status(200).json(finder);
-      }
-    });
 
     Trip.find({
       $or: [
@@ -112,7 +113,7 @@ exports.list_all_trips = function (req, res) {
         }
       ]
     }
-      , function (err, trip) {
+      , function (err, trips) {
         if (err) {
           console.log("Params: " + JSON.stringify(req.query));
           console.error(err);
@@ -120,8 +121,24 @@ exports.list_all_trips = function (req, res) {
         }
         else {
           // console.log("Trips successfully found");
-          // console.log(trip);
-          res.status(200).send(trip);
+          // console.log(trips);
+          new_finder.results.push(trips); // TODO: hay que guardar resultados siendo un array
+          
+          // TODO: comparar el numero de resultados con el finderMaxNum, si es mayor, cortar los resultados en finderMaxNum
+          new_finder.save(function (err, finder) {
+            if (err) {
+              console.log("A new finder could not be added: 500");
+              console.log(finder);
+              // res.status(500).send(err);
+              console.log(err);
+            }
+            else {
+              // console.log("Added new finder correctly");
+              // console.log(new_finder);
+              // res.status(200).json(finder);
+            }
+          });
+          res.status(200).send(trips);
         }
       });
   }

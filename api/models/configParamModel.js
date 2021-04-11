@@ -20,8 +20,6 @@ var ConfigParamSchema = new Schema({
     default: 1,
     min: 1
   }
-}, {
-  strict: false
 });
 
-module.exports = mongoose.model('ConfigParams', ConfigParamSchema);
+module.exports = mongoose.model('ConfigParam', ConfigParamSchema);

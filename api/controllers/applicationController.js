@@ -65,10 +65,16 @@ exports.list_all_applications = async function(req, res) {
 //falta añadir ownership para el explorer
 //EXPLORER
 exports.list_my_applications = async function(req, res) {
-  
   var idToken = req.headers['idtoken'];
   var authenticatedUserId = await authController.getUserId(idToken);
-  
+  Applications.find({explorer_id:authenticatedUserId},function(err, applications) {
+    if (err){
+      res.status(500).send(err);
+    }
+    else{
+      res.json(applications);
+    }
+  });
 };
 
 

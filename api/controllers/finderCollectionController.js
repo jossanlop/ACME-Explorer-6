@@ -7,7 +7,6 @@ var mongoose = require('mongoose'),
 
 var authController = require('../controllers/authController');
 
-
 exports.list_all_finders = async function (req, res) {
   //Necesitamos id de usuario del token
   Actor.findById(req.params.actorId, async function (err, actor) {
@@ -17,16 +16,7 @@ exports.list_all_finders = async function (req, res) {
     else {
       var idToken = req.headers['idtoken'];
       var authenticatedUserId = await authController.getUserId(idToken);
-      if (JSON.stringify(authenticatedUserId) === null) {
-        finderCollection.find({}, function (err, list_all_finders) {
-          if (err) {
-            res.status(500).send(err);
-          }
-          else {
-            res.json(list_all_finders);
-          }
-        });
-      } else {
+      console.log(authenticatedUserId);
         finderCollection.find({ user: authenticatedUserId }, function (err, list_all_finders) {
           if (err) {
             res.status(500).send(err);
@@ -36,14 +26,19 @@ exports.list_all_finders = async function (req, res) {
             res.json(list_all_finders);
           }
         });
-      }
     }
   });
 }
 
 exports.create_a_finder = function (req, res) {
+  var idToken = req.headers['idtoken'];
+  var authenticatedUserId = authController.getUserId(idToken);
+  console.log(authenticatedUserId);
   var new_finder = new finderCollection(req.body);
+  console.log(new_finder);
+
   new_finder.save(function (err, finder) {
+
     if (err) {
       if (err.name == 'ValidationError') {
         res.status(422).send(err);
@@ -55,6 +50,24 @@ exports.create_a_finder = function (req, res) {
     }
     else {
       res.status(200).json(finder);
+    }
+  });
+};
+
+exports.update_a_finder = function(req, res) {
+  var idToken = req.headers['idtoken'];
+  // var authenticatedUserId = await authController.getUserId(idToken);
+  Trip.findOneAndUpdate({ticker: req.params.ticker}, req.body, {new: true, runValidators:true }, function(err, Trip) {
+    if (err){
+      if(err.name=='ValidationError'){
+          res.status(422).send(err);
+      }
+      else{
+        res.status(500).send(err);
+      }
+    }
+    else{
+      res.json(Trip);
     }
   });
 };

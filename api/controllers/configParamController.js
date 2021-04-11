@@ -1,7 +1,7 @@
 'use strict';
 /*---------------ConfigParam----------------------*/
 var mongoose = require('mongoose'),
-  ConfigParam = mongoose.model('ConfigParams'),
+  ConfigParam = mongoose.model('ConfigParam');
   var authController = require('../controllers/authController');
 
 exports.create_an_configParam = async function (req, res) {
@@ -76,5 +76,3 @@ exports.update_an_configParam = function (req, res) {
     });
   };
 };
-
-// Utils

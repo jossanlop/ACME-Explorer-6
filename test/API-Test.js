@@ -108,7 +108,8 @@ describe("API Testing", () => {
   it("Get Trips", done => {
     chai
       .request(app)
-      .get("/v1/trips")
+      .get("/v2/trips")
+      .set("Authorization",idToken)
       .end((err, res) => {
         expect(res).to.have.status(200);
         expect('Content-Type', /json/);
