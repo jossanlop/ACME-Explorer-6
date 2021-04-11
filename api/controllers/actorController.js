@@ -56,12 +56,7 @@ exports.create_an_actor_v2 = function(req, res) {
   }
   //Primero comprobamos si existe un token de un actor ADMINISTRADOR
   const headerToken = req.headers.idtoken;
-  console.log('starting verifying idToken');
   var idToken = req.headers['idtoken'];
-  console.log('idToken: '+idToken);
-
-  console.log(headerToken);
-
   if(!headerToken){
     if(req.body.role=="MANAGER"){
       return res.status(403).send("Only admins can create managers");
@@ -87,9 +82,6 @@ exports.create_an_actor_v2 = function(req, res) {
       var uid = decodedToken.uid;
       var auth_time = decodedToken.auth_time;
       var exp =  decodedToken.exp;
-      console.log('idToken verificado para el uid: '+uid);
-      console.log('auth_time: '+auth_time);
-      console.log('exp: '+exp);
 
       Actor.findOne({ email: uid }, function (err, actor) {
         if (err) {
@@ -107,8 +99,6 @@ exports.create_an_actor_v2 = function(req, res) {
             res.json({message: 'No actor found with the provided email as username' ,error: err});
           }
         else {
-            console.log('The actor exists in our DB');
-            console.log('actor: '+actor);
             // res.status(200).json(req.body);
           }
         const new_actor = new Actor(req.body);

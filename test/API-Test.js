@@ -22,7 +22,7 @@ describe("API Testing", () => {
       .request(app)
       .post("/v2/login")
       .send({
-        "email": "freditoadmin@us.es",
+        "email": "admin1@us.es",
         "password": "mypass"
       })
       .end((err, res) => {
@@ -48,7 +48,7 @@ describe("API Testing", () => {
   it("Get Actors", done => {
     chai
       .request(app)
-      .get("/v1/actors")
+      .get("/v2/actors")
       .end((err, res) => {
         expect(res).to.have.status(200);
         expect('Content-Type', /json/);
@@ -60,8 +60,9 @@ describe("API Testing", () => {
   it("Post Actor", done => {
     chai
       .request(app)
-      .post("/v1/actors")
-      .send({ "name": "NewClerkName1", "surname": "NewClerkSurname1", "email": "new@fakemail11.com", "password": "$2b$05$fMPnmaTx6doE/ISNc/I1leKTQcwAegVmzMP6WtKZ2xKeFP89kOxvO", "phone": "+34612345679", "address": "myAddress", "role": "UNAUTHENTICATED" })
+      .post("/v2/actors")
+      .set("idtoken",idToken)
+      .send({ "name": "TestName1", "surname": "TestSurname1", "email": "newExplorer@fakemail11.com", "password": "mypass", "address": "myAddress", "role": "EXPLORER" })
       .end((err, res) => {
         expect(res).to.have.status(200);
         if (err) done(err);
@@ -75,6 +76,7 @@ describe("API Testing", () => {
     chai
       .request(app)
       .put("/v1/actors/" + id)
+      .set("idtoken",idToken)
       .send({ "name": "NewUPDATED", "surname": "NewUPDATED", "email": "newUPDATED@fakemail11.com", "password": "$2b$05$fMPnmaTx6doE/ISNc/I1leKTQcwAegVmzMP6WtKZ2xKeFP89kOxvO", "phone": "+34612345679", "address": "myAddress", "role": "UNAUTHENTICATED" })
       .end((err, res) => {
         expect(res).to.have.status(200);
@@ -86,6 +88,7 @@ describe("API Testing", () => {
   it("Get Actor", done => {
     chai
       .request(app)
+      .set("idtoken",idToken)
       .get("/v1/actors/" + id)
       .end((err, res) => {
         expect(res).to.have.status(200);
@@ -97,6 +100,7 @@ describe("API Testing", () => {
   it("Delete Actor", done => {
     chai
       .request(app)
+      .set("idtoken",idToken)
       .delete("/v1/actors/" + id)
       .end((err, res) => {
         expect(res).to.have.status(200);
@@ -109,7 +113,7 @@ describe("API Testing", () => {
     chai
       .request(app)
       .get("/v2/trips")
-      .set("Authorization",idToken)
+      .set("idtoken",idToken)
       .end((err, res) => {
         expect(res).to.have.status(200);
         expect('Content-Type', /json/);

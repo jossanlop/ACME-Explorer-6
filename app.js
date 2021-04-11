@@ -154,7 +154,7 @@ const swaggerOptions = {
       bearerAuth: {
         type: 'apiKey',
         in: 'header',
-        name: 'Authorization',
+        name: 'idtoken',
         description: "Introducir con formato 'Bearer &lt;idToken>'",
       }
     }
