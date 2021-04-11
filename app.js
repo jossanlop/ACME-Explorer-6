@@ -29,7 +29,8 @@ cron.schedule('0 0 */1 * * *', function () {
   ];
 
   var aux_finderTimeCache = 10;
-
+  
+  // Obtenemos el time de caducidad de finders en el esquema
   ConfigParam.aggregate(aggregationConfigParam, function (err, configParams) {
     if (err) {
       console.log(err);
@@ -40,9 +41,6 @@ cron.schedule('0 0 */1 * * *', function () {
       aux_finderTimeCache = configParams[0].finderTimeCache
     }
   });
-
-  // Obtenemos el time de caducidad de finders en el esquema
-  var finderTimeCache = aux_finderTimeCache;
 
   finderCollectionSchema.aggregate(aggregation, function (err, finders) {
     if (err) {
@@ -59,7 +57,7 @@ cron.schedule('0 0 */1 * * *', function () {
 
         //Comprobamos al diferencia entre el fidner dead tiem del sistema y las horas pasasdas desde la busqueda (del finder)
         // Borramos el finder en caso de que se cumpla
-        if (daydiff >= finderTimeCache) {
+        if (daydiff >= aux_finderTimeCache) {
           finderCollectionSchema.deleteOne({ _id: finder._id }, function (err, finder) {
             if (err) {
               // res.status(500).send(err);

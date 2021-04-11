@@ -60,8 +60,8 @@ module.exports = function(app) {
 	 * @url /v2/sponsorships/:sponsorshipId
   */  
   app.route('/v2/sponsorships/:sponsorshipId')
-    .get(authController.verifyUser(["SPONSORS","ADMINISTRATOR"]),sponsorships.read_an_sponsorship)
-    .put(authController.verifyUser(["SPONSORS"]),sponsorships.update_an_sponsorship)
-    .delete(authController.verifyUser(["SPONSORS"]),sponsorships.delete_an_sponsorship);
+    .get(authController.verifyUser(["SPONSOR","ADMINISTRATOR"]),sponsorships.read_an_sponsorship)
+    .put(authController.verifyUser(["SPONSOR"]),sponsorships.update_an_sponsorship)
+    .delete(authController.verifyUser(["SPONSOR"]),sponsorships.delete_an_sponsorship);
 
 }
