@@ -36,7 +36,7 @@ var ActorSchema = new Schema({
   role: [{
     type: String,
     required: 'Kindly enter the user role(s)',
-    enum: ['UNAUTHENTICATED','MANAGER','ADMINISTRATOR','EXPLORER','SPONSORS'] // no seguro de un-auth
+    enum: ['UNAUTHENTICATED','MANAGER','ADMINISTRATOR','EXPLORER','SPONSOR'] // no seguro de un-auth
   }],
   validated:{
     type: Boolean,
