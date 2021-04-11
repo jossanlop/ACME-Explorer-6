@@ -110,19 +110,16 @@ module.exports = function (app) {
     .get(authController.verifyUser(["MANAGER"]), trips.list_my_trips_v2);
 
   /**
-   * Put an trip
-   *    RequiredRoles: to be the proper trip
-   * Get an tripey
-   *    RequiredRoles: to be the proper trip or an Administrator
-   *
-   * @section trips
-   * @type get put delete
-   * @url /v1/trips/:tripId
-  */
-  // app.route('/v1/trips/:tripId')
-  //   .get(trips.read_an_trip)
-  //   .put(trips.update_an_trip)
-  //   .delete(trips.delete_an_trip);
-
+   * Cancel a Trips published but not started and without applications
+   * @route PUT /trips/cancel/:ticker
+   * @group Trip - System configuration parameters
+   * @param {String} ticker
+   * @returns {string}                                  200 - Returns the configParam identifier
+   * @returns {ValidationError}                         400 - Supplied parameters are invalid
+   * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
+   * @returns {DatabaseError}                           500 - Database error
+   */
+  app.route('/v2/trips/cancel/:ticker')
+  .put(authController.verifyUser(["MANAGER"]), trips.cancel_trip);
 
 }
