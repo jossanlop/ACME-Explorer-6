@@ -1,77 +1,89 @@
 'use strict';
-module.exports = function(app) {
-  var trips = require('../controllers/tripController');
-  var actors = require('../controllers/actorController');
-  var authController = require('../controllers/authController');
+module.exports = function (app) {
+	var trips = require('../controllers/tripController');
+	var actors = require('../controllers/actorController');
+	var authController = require('../controllers/authController');
 
-  /**
-   * Get an actor who is clerk (any role)
-   *    Required role: Administrator
-   * Post an actor 
-   *    RequiredRoles: None
-   *    validated if customer and not validated if clerk
-	 *
-	 * @section actors
-	 * @type get post
-	 * @url /v1/actors
-   * @param {string} role (clerk|administrator|customer) 
-  */
-  app.route('/v1/actors')
-	  .get(actors.list_all_actors)
-	  .post(actors.create_an_actor);
+	/**
+	 * @typedef Actor
+		* @property {string} name               - Unique identifier for this configuration parameter
+		* @property {string} surname  - Period that the finder is kept in cache for all users
+	  * @property {string} email  - Period that the finder is kept in cache for all users
+	  * @property {string} password  - Period that the finder is kept in cache for all users
+	  * @property {string} preferredLanguage  - Period that the finder is kept in cache for all users
+		* @property {string} phone  - Period that the finder is kept in cache for all users
+	  * @property {string} address  - Period that the finder is kept in cache for all users
+	  * @property {Array.<string>} role  - Period that the finder is kept in cache for all users
+	  */
 
-/**
- * Gets a trip defined by a key word, start & end date and min & max price
- * If null => return all trips
+	/**
+	 * Get the Actors
+	 * @route GET /actors
+	 * @group Actor - System configuration parameters
+	 * @returns {string}                                  200 - Returns the configParam identifier
+	 * @returns {ValidationError}                         400 - Supplied parameters are invalid
+	 * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
+	 * @returns {DatabaseError}                           500 - Database error
+	 */
+
+	app.route('/v2/actors')
+		.get(actors.list_all_actors);
+
+	/**
+	 * Gets a trip defined by a key word, start & end date and min & max price
+	 * If null => return all trips
+	 */
+	app.route('/v1/actors/search/')
+		.get(trips.list_all_trips);
+
+	/**
+* Get an Actor from id
+* @route GET /actor/:actorId
+* @group Actor - System configuration parameters
+* @returns {Actor}                                 200 - Returns the configParam identifier
+* @returns {ValidationError}                         400 - Supplied parameters are invalid
+* @returns {UserAuthError}                           401 - User is not authorized to perform this operation
+* @returns {DatabaseError}                           500 - Database error
+*/
+	/**
+	 * Put an Actor from id
+	 * @route PUT /actor/:actorId
+	 * @group Actor - System configuration parameters
+     * @param {Actor.Model} actor.body.required 
+     * @returns {Actor}                                 200 - Returns the configParam identifier
+	 * @returns {ValidationError}                         400 - Supplied parameters are invalid
+	 * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
+	 * @returns {DatabaseError}                           500 - Database error
+	 */
+	app.route('/v2/actors/:actorId')
+		.get(actors.read_an_actor)
+		.put(authController.verifyUser(["ADMINISTRATOR",
+			"EXPLORER",
+			"MANAGER", "SPONSORS"]), actors.update_a_verified_actor);
+	/**
+ * Post an Actor
+ * @route POST /actor/
+ * @group Actor - System configuration parameters
+* @param {Actor.Model} actor.body.required 
+* @returns {Actor}                                 200 - Returns the configParam identifier
+ * @returns {ValidationError}                         400 - Supplied parameters are invalid
+ * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
+ * @returns {DatabaseError}                           500 - Database error
  */
- app.route('/v1/actors/search/')
-    .get(trips.list_all_trips);
-
-  /**
-   * Put an actor
-   *    RequiredRoles: to be the proper actor
-   * Get an actor
-   *    RequiredRoles: to be the proper actor or an Administrator
-	 *
-	 * @section actors
-	 * @type get put
-	 * @url /v1/actors/:actorId
-  */  
-  app.route('/v1/actors/:actorId')
-    .get(actors.read_an_actor)
-	  .put(actors.update_an_actor)
-    .delete(actors.delete_an_actor);
-
-   /**
-   * Put an actor
-   *    RequiredRoles: to be the proper actor
-   * Get an actor
-   *    RequiredRoles: any
-	 *de
-	 * @section actors
-	 * @type get put
-	 * @url /v2/actors/:actorId
-  */  
-    app.route('/v2/actors/:actorId')
-    .get(actors.read_an_actor)
-    .put(authController.verifyUser(["ADMINISTRATOR",
-                                    "EXPLORER",
-                                    "MANAGER",
-                                    "SPONSORS"]), actors.update_a_verified_actor);
-    
-    app.route('/v2/actors/')
-    .post(actors.create_an_actor_v2);
+	app.route('/v2/actors/')
+		.post(actors.create_an_actor_v2);
 
 
-  /**
-	 * Put to Validate a clerk by actorId
-   *    RequiredRole: Administrator
-	 *
-	 * @section actors
-	 * @type put
-	 * @url /v1/actors/:actorId/validate
-	 * @param {string} actorId
-	*/
-  app.route('/v1/actors/:actorId/validate')
-  .put(actors.validate_an_actor)
+	/**
+	   * Put an Actor validation
+	   * @route PUT /actor/:actorId/validate
+	   * @group Actor - System configuration parameters
+	   * @param {Actor.Model} actor.body.required 
+	   * @returns {Actor}                                 200 - Returns the configParam identifier
+	   * @returns {ValidationError}                         400 - Supplied parameters are invalid
+	   * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
+	   * @returns {DatabaseError}                           500 - Database error
+	   */
+	app.route('/v1/actors/:actorId/validate')
+		.put(actors.validate_an_actor)
 };

@@ -22,6 +22,7 @@ exports.list_all_finders = async function (req, res) {
             res.status(500).send(err);
           }
           else {
+            console.log("Returning finders by userId");
             res.json(list_all_finders);
           }
         });

@@ -48,7 +48,7 @@ exports.search_sponsorships = function(req, res) {
 exports.create_an_sponsorship = function(req, res) {
   //Check that user is a Customer and if not: res.status(403); "an access token is valid, but requires more privileges"
   var new_sponsorship = new Sponsorship(req.body);
-
+  
   new_sponsorship.save(function(err, sponsorship) {
     if (err){
       if(err.name=='ValidationError') {

@@ -12,7 +12,10 @@ var StageSchema = new Schema({
     type: String,
     required: "Stage title required"
   },
-  description: [String],
+  description: {
+    type: String,
+    required: 'Kindly enter the description of the Stage'
+  },
   price: {
     type: Number,
     required: "Stage price required"
@@ -73,6 +76,7 @@ var TripSchema = new Schema({
   },
   publish: {
     type: Boolean,
+    default:false,
     required: 'Kindly enter if this trip is published'
   },
   end_date: {
@@ -81,10 +85,7 @@ var TripSchema = new Schema({
   },
   stages: [StageSchema],
   sponsorship: [SponsorshipSchema],
-  picture: {
-    data: Buffer,
-    contentType: String
-  },
+  picture: [String],
   canceled: {
     type: Boolean,
     default: false
@@ -92,6 +93,10 @@ var TripSchema = new Schema({
   cancelReason:
   {
     type: String
+  },
+  manager_id: {
+    type: Schema.Types.ObjectId,
+    required: "manager_id required"
   }
 });
 
@@ -131,7 +136,6 @@ TripSchema.pre('findOneAndUpdate', function (callback) {
   if (err) {
     return callback(err);
   }
-
   callback();
 
 });
@@ -149,7 +153,7 @@ TripSchema.pre('save', function (callback) {
 
   //compute price
   var aux = 0;
-  new_trip.stages.forEach(stgs => aux += stgs.price)
+  new_trip.stages.forEach(stgs => aux += stgs.price);
   new_trip.price = aux;
 
   var err = cancelValidation(new_trip.canceled, new_trip.cancelReason);
