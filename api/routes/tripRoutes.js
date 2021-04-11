@@ -106,7 +106,7 @@ module.exports = function (app) {
    * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
    * @returns {DatabaseError}                           500 - Database error
    */
-  app.route('/v2/trips/:manager_id')
+  app.route('/v2/trips/manager/:manager_id')
     .get(authController.verifyUser(["MANAGER"]), trips.list_my_trips_v2);
 
   /**
