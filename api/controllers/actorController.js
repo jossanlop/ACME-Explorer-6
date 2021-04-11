@@ -49,6 +49,59 @@ exports.create_an_actor = function(req, res) {
   });
 };
 
+exports.unban_an_actor = function(req, res) {
+  Actor.findOne({_id: req.params.actorId}, function(err,actor){
+    if(err){
+      res.status(500).send(err);
+    }
+    else if(actor === null)
+    {
+      res.status(404).send("Wrong actor id");
+    }
+    else
+    {
+      actor.banned=false;
+      Actor.findOneAndUpdate({_id: req.params.actorId}, actor
+        , {new: true}, function(err, actor){
+          if(err){
+            res.status(500).send(err);
+          }
+          else
+          {
+            res.status(200).send(actor);
+          }
+        });
+    }
+  });
+};
+
+
+exports.ban_an_actor = function(req, res) {
+  Actor.findOne({_id: req.params.actorId}, function(err,actor){
+    if(err){
+      res.status(500).send(err);
+    }
+    else if(actor === null)
+    {
+      res.status(404).send("Wrong actor id");
+    }
+    else
+    {
+      actor.banned=true;
+      Actor.findOneAndUpdate({_id: req.params.actorId}, actor
+        , {new: true}, function(err, actor){
+          if(err){
+            res.status(500).send(err);
+          }
+          else
+          {
+            res.status(200).send(actor);
+          }
+        });
+    }
+  });
+};
+
 exports.create_an_actor_v2 = function(req, res) {
   //No se pueden crear administradores
   if(req.body.role=='ADMINISTRATOR'){
@@ -134,7 +187,7 @@ exports.login_an_actor = async function(req, res) {
         res.json({message: 'forbidden',error: err});
       }
 
-      else if ((actor.role.includes( 'CLERK' )) && (actor.validated == false)) {
+      else if (actor.banned) {
         res.status(403); //an access token is valid, but requires more privileges
         res.json({message: 'forbidden',error: err});
       }

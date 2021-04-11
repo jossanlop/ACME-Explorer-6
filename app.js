@@ -28,22 +28,21 @@ cron.schedule('0 0 */1 * * *', function () {
     { $project: { _id: 0, finderTimeCache: "$finderTimeCache", finderMaxNum: "$finderMaxNum", finderMinNum: "$finderMinNum" } }
   ];
 
+  var aux_finderTimeCache = 10;
+
   ConfigParam.aggregate(aggregationConfigParam, function (err, configParams) {
-    if (err || configParams[0] == null) {
-      //console.log(err);
+    if (err) {
+      console.log(err);
+    } else if (configParams[0] == null) {
+      console.log("No config param stored");
     }
     else {
-      var aux_finderTimeCache = configParams[0].finderTimeCache
+      aux_finderTimeCache = configParams[0].finderTimeCache
     }
   });
 
   // Obtenemos el time de caducidad de finders en el esquema
-  var finderTimeCache = 10;
- 
- /*  if(!!aux_finderTimeCache) {
-    finderTimeCache = aux_finderTimeCache;
-  } */
-
+  var finderTimeCache = aux_finderTimeCache;
 
   finderCollectionSchema.aggregate(aggregation, function (err, finders) {
     if (err) {

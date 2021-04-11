@@ -3,24 +3,13 @@
 /*---------------Trip----------------------*/
 var mongoose = require('mongoose'),
   Trip = mongoose.model('Trips'),
+  Application = mongoose.model('Applications'),
   ConfigParam = require('../models/configParamModel'),
   finderCollection = mongoose.model('finderSchema');
+const { app } = require('firebase-admin');
 var authController = require('../controllers/authController');
 
 exports.list_all_trips = function (req, res) {
-
-  // ConfigParam.aggregate(aggregationConfigParam, function (err, configParams) {
-  //   if (err) {
-  //     console.log(err);
-  //   }
-  //   else {
-  //     var aux_finderMinNum = configParams[0].finderMinNum
-  //     var aux_finderMaxNum = configParams[0].finderMaxNum
-  //   }
-  // });
-  
-  // var finderMaxNum = aux_finderMaxNum || 10;
-  // var finderMinNum = aux_finderMinNum || 1;
 
   if (JSON.stringify(req.query).length === 2) { //si query vacío
     Trip.find({}, function (err, list_all_trips) {
@@ -120,11 +109,20 @@ exports.list_all_trips = function (req, res) {
           res.status(500).send(err);
         }
         else {
-          // console.log("Trips successfully found");
-          // console.log(trips);
           new_finder.results.push(trips); // TODO: hay que guardar resultados siendo un array
-          
           // TODO: comparar el numero de resultados con el finderMaxNum, si es mayor, cortar los resultados en finderMaxNum
+          ConfigParam.aggregate(aggregationConfigParam, function (err, configParams) {
+            if (err) {
+              console.log(err);
+            }
+            else {
+              var aux_finderMinNum = configParams[0].finderMinNum
+              var aux_finderMaxNum = configParams[0].finderMaxNum
+            }
+          });
+
+          var finderMaxNum = aux_finderMaxNum || 10;
+          var finderMinNum = aux_finderMinNum || 1;
           new_finder.save(function (err, finder) {
             if (err) {
               console.log("A new finder could not be added: 500");
@@ -194,8 +192,6 @@ exports.list_my_trips_v2 = async function (req, res) {
 };
 
 exports.read_an_trip = function (req, res) {
-  console.log("xaqui");
-  // console.log(req.params.tripId);
   Trip.findOne({ ticker: req.params.ticker }, function (err, Trip) {
     if (err) {
       res.status(500).send(err);
@@ -270,5 +266,49 @@ exports.delete_an_trip = async function (req, res) {
   });
 };
 
-// Utils
+exports.cancel_trip = function (req, res) {
+  Trip.findOne({ ticker: req.params.ticker }, async function (err, trip) {
+    if (err) {
+      res.status(500).send(err);
+    }
+    else {
+      if (trip.publish) {
+        if (trip.start_date < Date.now()) {
+          var applications = await Application.find({ trip_id: trip._id }, async function (err, apps) {
+            if (err) {
+              res.status(500).send(err);
+            }
+            else {
+              applications = apps;
+            }
+          });
+          var trip;
+          applications.forEach(application => {
+            if (application.status == "ACCEPTED") {
+              res.status(403).json({ message: "El trip tiene applicaciones aceptadas" });
+            }});
+            trip.cancelled = true;
+            Trip.findOneAndUpdate({_id:trip._id},trip,function (err, trip) {
+              if (err) {
+                if (err.name == 'ValidationError') {
+                  res.status(422).send(err);
+                }
+                else {
+                  res.status(500).send(err);
+                }
+              }
+              else {
+                res.status(200).send(trip);
+                console.log("Trip cancelled!");
+              }
+            });
+        } else {
+          res.status(403).json({ message: "El trip no ha comenzado" });
+        }
+      } else {
+        res.status(403).json({ message: "El trip no ha sido publicado" });
+      }
+    }
+  });
+};
 
