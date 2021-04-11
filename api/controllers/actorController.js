@@ -189,7 +189,7 @@ exports.login_an_actor = async function(req, res) {
 
       else if (actor.banned) {
         res.status(403); //an access token is valid, but requires more privileges
-        res.json({message: 'forbidden',error: err});
+        res.json({message: 'your account is banned, unable to login',error: err});
       }
       else{
         // Make sure the password is correct
