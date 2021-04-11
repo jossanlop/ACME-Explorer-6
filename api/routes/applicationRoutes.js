@@ -80,7 +80,10 @@ module.exports = function(app) {
     .delete(authController.verifyUser(["MANAGER"]), application.delete_an_application);
 
   app.route('/v2/applications-pay/:applicationId')
-  .put(authController.verifyUser(["EXPLORER"]), application.pay_an_application)
+  .put(authController.verifyUser(["EXPLORER"]), application.pay_an_application);
+
+  app.route('/v2/applications-cancel/:applicationId')
+  .put(authController.verifyUser(["EXPLORER"]), application.cancel_an_application);
 
   /**
    * Get my applications.
