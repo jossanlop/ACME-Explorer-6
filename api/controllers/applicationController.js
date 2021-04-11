@@ -7,26 +7,9 @@ var mongoose = require('mongoose'),
   var authController = require('../controllers/authController');
 
 //MANAGER pueden acceder a todas las applications de su trip
-exports.list_all_applications = async function(req, res) {
-    var idToken = req.headers['idtoken'];
-    var authenticatedUserId = await authController.getUserId(idToken);
-    
-    Actor.findOne({_id:authenticatedUserId}, async function(err,actor)
-    {
-      if(err)
-        res.status(500).send(err);
-      else
-      {
-        if(actor.role == "EXPLORER")
-        {
-          /*Application.find({explorer_id:authenticatedUserId},function(err, applications) {
-            if (err){
-              res.status(500).send(err);
-            }
-            else{
-              res.status(200).json(applications);
-            }
-          });*/
+exports.list_all_applications = async function (req, res) {
+  var idToken = req.headers['idtoken'];
+  var authenticatedUserId = await authController.getUserId(idToken);
 
           try{
             const apps = await Application.aggregate([
@@ -60,14 +43,13 @@ exports.list_all_applications = async function(req, res) {
             } else {
                 return res.sendStatus(404);
             }
-  
-            }
-            catch(err)
-            {
-              console.error(err);
-              res.status(500).send(err);
-            }
-  
+          ]).exec();
+
+          if (apps.length > 0) {
+            return res.status(200).json(apps);
+          } else {
+            return res.sendStatus(404);
+          }
         }
         else if(actor.role == "MANAGER")
         {
@@ -95,6 +77,34 @@ exports.list_all_applications = async function(req, res) {
             }
           });
         }
+      }
+      else if (actor.role == "MANAGER") {
+        //if user is manager    
+        var applicationsResult = [];
+
+        Application.find({}, async function (err, applications) {
+          if (err) {
+            res.status(500).send(err);
+          }
+          else {
+            applications.forEach(async function (app, index, array) {
+              //find con and { $and: [{_id: app.trip_id}, {manager_id: authenticatedUserId} ]}
+              await Trip.findOne({ _id: app.trip_id }, function (err, trip_of_app) {
+                if (err) {
+                  res.status(500).send(err);
+                }
+                if (trip_of_app != null) {
+                  if (String(trip_of_app.manager_id) === String(authenticatedUserId)) {
+                    applicationsResult.push(app);
+                  }
+                }
+              });
+              if (index == array.length - 1) {
+                res.send(applicationsResult);
+              }
+            });
+          }
+        });
       }
     })
     
@@ -148,42 +158,62 @@ exports.create_an_application = async function(req, res) {
         res.status(500).send(err);
       }
     }
-    else{
-      res.status(200).json(application);
+    else {
+      if (trip.publish) {
+        if (!(trip.start_date < Date.now() && trip.end_date > Date.now())) {
+          if (!trip.canceled) {
+            var idToken = req.headers['idtoken'];
+            var authenticatedUserId = await authController.getUserId(idToken);
+            new_application.explorer_id = authenticatedUserId;
+            new_application.save(function (err, application) {
+              if (err) {
+                if (err.name == 'ValidationError') {
+                  res.status(422).send(err);
+                }
+                else {
+                  res.status(500).send(err);
+                }
+              }
+              else {
+                res.status(200).json(application);
+              }
+            });
+          } else {
+            res.status(400).send("El trip ha sido cancelado, no puedes aplicar");
+          }
+        } else {
+          res.status(400).send("El trip ya ha comenzado, no puede aplicar");
+        }
+      } else {
+        res.status(400).send("El trip no ha sido publicado");
+      }
     }
   });
 };
 
-exports.pay_an_application = async function(req, res) {
+exports.pay_an_application = async function (req, res) {
   var idToken = req.headers['idtoken'];
   var authenticatedUserId = await authController.getUserId(idToken);
-  Application.findOne({_id:req.params.applicationId}, function(err, app) {
-    if(String(authenticatedUserId) === String(app.explorer_id))
-    {
-      if(app.status == 'DUE')
-      {
-        app.status='ACCEPTED';
+  Application.findOne({ _id: req.params.applicationId }, function (err, app) {
+    if (String(authenticatedUserId) === String(app.explorer_id)) {
+      if (app.status == 'DUE') {
+        app.status = 'ACCEPTED';
         console.log(app);
-        Application.findOneAndUpdate({_id:app._id}, app , function(err, app_upd) 
-        {
-          if(err)
-          {
+        Application.findOneAndUpdate({ _id: app._id }, app, function (err, app_upd) {
+          if (err) {
             res.status(500).send(err);
           }
-          else
-          {
+          else {
             res.status(200).send(app_upd);
           }
         })
       }
-      else
-      {
+      else {
         res.status(403); //Not allowed
         res.send('The user is trying to pay an application with incorrect status');
       }
     }
-    else
-    {
+    else {
       res.status(405); //Not allowed
       res.send('The user is trying to pay an application from other explorer');
     }
