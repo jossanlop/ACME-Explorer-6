@@ -85,10 +85,7 @@ var TripSchema = new Schema({
   },
   stages: [StageSchema],
   sponsorship: [SponsorshipSchema],
-  picture: [{
-    data: Buffer,
-    contentType: String
-  }],
+  picture: [String],
   canceled: {
     type: Boolean,
     default: false
