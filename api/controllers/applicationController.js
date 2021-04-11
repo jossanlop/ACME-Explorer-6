@@ -141,53 +141,49 @@ exports.list_all_applications = async function (req, res) {
   exports.create_an_application = async function (req, res) {
     //Check that user is a Customer and if not: res.status(403); "an access token is valid, but requires more privileges"
     var new_application = new Application(req.body);
+    var tripp;
+    Trip.findOne({ _id: new_application.trip_id }, async function (err, trip) {
+    if (err) {
+    if (err.name == 'ValidationError') {
+    res.status(422).send(err);
+    }
+    else {
+    console.log(err);
+    // res.status(500).send(err);
+    }
+    }
+    else {
+    if (trip.publish) {
+    if (!(trip.start_date < Date.now() && trip.end_date > Date.now())) {
+    if (!trip.canceled) {
     var idToken = req.headers['idtoken'];
     var authenticatedUserId = await authController.getUserId(idToken);
     new_application.explorer_id = authenticatedUserId;
-    new_application.save(async function (err, application) {
-      if (err) {
-        if (err.name == 'ValidationError') {
-          res.status(422).send(err);
-        }
-        else {
-          console.log(application);
-          console.log(err);
-
-          res.status(500).send(err);
-        }
-      }
-      else {
-        if (trip.publish) {
-          if (!(trip.start_date < Date.now() && trip.end_date > Date.now())) {
-            if (!trip.canceled) {
-              var idToken = req.headers['idtoken'];
-              var authenticatedUserId = await authController.getUserId(idToken);
-              new_application.explorer_id = authenticatedUserId;
-              new_application.save(function (err, application) {
-                if (err) {
-                  if (err.name == 'ValidationError') {
-                    res.status(422).send(err);
-                  }
-                  else {
-                    res.status(500).send(err);
-                  }
-                }
-                else {
-                  res.status(200).json(application);
-                }
-              });
-            } else {
-              res.status(400).send("El trip ha sido cancelado, no puedes aplicar");
-            }
-          } else {
-            res.status(400).send("El trip ya ha comenzado, no puede aplicar");
-          }
-        } else {
-          res.status(400).send("El trip no ha sido publicado");
-        }
-      }
+    new_application.save(function (err, application) {
+    if (err) {
+    if (err.name == 'ValidationError') {
+    res.status(422).send(err);
+    }
+    else {
+    res.status(500).send(err);
+    }
+    }
+    else {
+    res.status(200).json(application);
+    }
     });
-  };
+    } else {
+    res.status(400).send("El trip ha sido cancelado, no puedes aplicar");
+    }
+    } else {
+    res.status(400).send("El trip ya ha comenzado, no puede aplicar");
+    }
+    } else {
+    res.status(400).send("El trip no ha sido publicado");
+    }
+    }
+    });
+    };
 
   exports.pay_an_application = async function (req, res) {
     var idToken = req.headers['idtoken'];

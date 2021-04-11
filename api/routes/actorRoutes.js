@@ -59,7 +59,7 @@ module.exports = function (app) {
 		.get(actors.read_an_actor)
 		.put(authController.verifyUser(["ADMINISTRATOR",
 			"EXPLORER",
-			"MANAGER", "SPONSORS"]), actors.update_a_verified_actor);
+			"MANAGER", "SPONSOR"]), actors.update_a_verified_actor);
 
 	app.route('/v2/actors-ban/:actorId')
 	.put(authController.verifyUser(["ADMINISTRATOR"]), actors.ban_an_actor);	
