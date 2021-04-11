@@ -20,7 +20,7 @@ module.exports = function(app) {
 	  .post(trips.create_an_trip);
 
   /**
-   * Get a trip
+   * Get all trip
    * Post a trip 
    *    RequiredRoles: MANAGER
 	 *
@@ -32,21 +32,7 @@ module.exports = function(app) {
   .get(trips.list_all_trips)
   .post(authController.verifyUser(["MANAGER"]), trips.create_an_trip);
 
-  /**
-   * Put an trip
-   *    RequiredRoles: to be the proper trip
-   * Get an trip
-   *    RequiredRoles: to be the proper trip or an Administrator
-	 *
-	 * @section trips
-	 * @type get put delete
-	 * @url /v1/trips/:tripId
-  */  
-  app.route('/v1/trips/:tripId')
-    .get(trips.read_an_trip)
-	  .put(trips.update_an_trip)
-    .delete(trips.delete_an_trip);
-
+  
   /**
    * Put an trip
    *    RequiredRoles: to be a MANAGER
@@ -62,5 +48,33 @@ module.exports = function(app) {
    .get(trips.read_an_trip)
    .put(authController.verifyUser(["MANAGER"]), trips.update_an_trip)
    .delete(authController.verifyUser(["MANAGER"]), trips.delete_an_trip);
+
+  /**
+   * Get all trips of a manager
+   * Post a trip 
+   *    RequiredRoles: MANAGER
+	 *
+	 * @section trips
+	 * @type get post
+	 * @url /v2/trips
+  */
+   app.route('/v2/trips/:manager_id')
+   .get(authController.verifyUser(["MANAGER"]), trips.list_my_trips_v2);
+
+  /**
+   * Put an trip
+   *    RequiredRoles: to be the proper trip
+   * Get an tripey
+   *    RequiredRoles: to be the proper trip or an Administrator
+	 *
+	 * @section trips
+	 * @type get put delete
+	 * @url /v1/trips/:tripId
+  */  
+  // app.route('/v1/trips/:tripId')
+  //   .get(trips.read_an_trip)
+	//   .put(trips.update_an_trip)
+  //   .delete(trips.delete_an_trip);
+
 
 }

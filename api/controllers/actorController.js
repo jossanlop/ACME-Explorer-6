@@ -132,15 +132,15 @@ exports.create_an_actor_v2 = function(req, res) {
 
 exports.login_an_actor = async function(req, res) {
   console.log('starting login an actor');
-  var emailParam = req.query.email;
-  var password = req.query.password;
-  console.log(req.query);
+  var emailParam = req.body.email;
+  var password = req.body.password;
+  console.log(req.body);
   Actor.findOne({ email: emailParam }, function (err, actor) {
       if (err) { res.send(err); }
 
       // No actor found with that email as username
       else if (!actor) {
-        res.status(401); //an access token isn’t provided, or is invalid
+        res.status(401);
         res.json({message: 'forbidden',error: err});
       }
 
@@ -179,13 +179,12 @@ exports.login_an_actor = async function(req, res) {
 };
 
 exports.read_an_actor = function(req, res) {
-  console.log('Starting to read the actor...');
   Actor.findById(req.params.actorId, function(err, actor) {
     if (err){
       res.status(500).send(err);
     }
     else{
-      res.json(actor);
+      res.status(200).json(actor);
     }
   });
 };

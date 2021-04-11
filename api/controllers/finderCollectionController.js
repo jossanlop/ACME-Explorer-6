@@ -15,8 +15,6 @@ exports.list_all_finders = async function (req, res) {
       res.send(err);
     }
     else {
-      console.log(req.headers);
-      console.log("actor:"+actor);
       var idToken = req.headers['idtoken'];
       var authenticatedUserId = await authController.getUserId(idToken);
       if (JSON.stringify(authenticatedUserId) === null) {
@@ -34,6 +32,7 @@ exports.list_all_finders = async function (req, res) {
             res.status(500).send(err);
           }
           else {
+            console.log("Returning finders by userId");
             res.json(list_all_finders);
           }
         });
