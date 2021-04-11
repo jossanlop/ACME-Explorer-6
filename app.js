@@ -10,7 +10,7 @@ var express = require('express'),
   Application = require('./api/models/applicationModel.js'),
   finderCollectionSchema = require('./api/models/finderCollectionModel.js'),
   admin = require('firebase-admin'),
-  serviceAccount = require('./acme-explorer-41761-firebase-adminsdk-fdl4t-69d28db65f.json'),
+  serviceAccount = require('./env/acme-explorer-41761-firebase-adminsdk-fdl4t-69d28db65f.json'),
   bodyParser = require('body-parser');
 app.use(cors());
 
