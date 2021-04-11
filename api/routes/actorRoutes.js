@@ -60,6 +60,11 @@ module.exports = function (app) {
 		.put(authController.verifyUser(["ADMINISTRATOR",
 			"EXPLORER",
 			"MANAGER", "SPONSORS"]), actors.update_a_verified_actor);
+
+	app.route('/v2/actors-ban/:actorId')
+	.put(authController.verifyUser(["ADMINISTRATOR"]), actors.ban_an_actor);	
+	app.route('/v2/actors-unban/:actorId')
+	.put(authController.verifyUser(["ADMINISTRATOR"]), actors.unban_an_actor);	
 	/**
  * Post an Actor
  * @route POST /actor/
