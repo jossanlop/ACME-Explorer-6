@@ -16,67 +16,67 @@ app.use(cors());
 
 const cron = require('node-cron');
 // cron.schedule('0 0 */1 * * *', function () {
-// cron.schedule('* * * * * *', function () {
-//   console.log('running a task every hour');
-//   //Ahora comprobar la última fecha del último finder y si alguno tiene una diferencia mayor de una hora, se borrado
-//   //1- Comprobar cada finderDeadTime de cada usuario y comporbar la diferencia del tiemstamp de ese finder con respecto a al timestamp de now
-//   const aggregation = [
-//     { $project: { _id: 1, timestamp: "$timestamp" } }
-//   ];
+cron.schedule('0 0 */1 * * *', function () {
+  console.log('running a task every hour');
+  //Ahora comprobar la última fecha del último finder y si alguno tiene una diferencia mayor de una hora, se borrado
+  //1- Comprobar cada finderDeadTime de cada usuario y comporbar la diferencia del tiemstamp de ese finder con respecto a al timestamp de now
+  const aggregation = [
+    { $project: { _id: 1, timestamp: "$timestamp" } }
+  ];
 
-//   const aggregationConfigParam = [
-//     { $project: { _id: 0, finderTimeCache: "$finderTimeCache", finderMaxNum: "$finderMaxNum", finderMinNum: "$finderMinNum" } }
-//   ];
+  const aggregationConfigParam = [
+    { $project: { _id: 0, finderTimeCache: "$finderTimeCache", finderMaxNum: "$finderMaxNum", finderMinNum: "$finderMinNum" } }
+  ];
 
-//   ConfigParam.aggregate(aggregationConfigParam, function (err, configParams) {
-//     if (err) {
-//       console.log(err);
-//     }
-//     else {
-//       var aux_finderMinNum = configParams[0].finderMinNum
-//       var aux_finderTimeCache = configParams[0].finderTimeCache
-//       var aux_finderMaxNum = configParams[0]["finderMaxNum"]
-//     }
-//   });
+  ConfigParam.aggregate(aggregationConfigParam, function (err, configParams) {
+    if (err || configParams[0] == null) {
+      //console.log(err);
+    }
+    else {
+      var aux_finderTimeCache = configParams[0].finderTimeCache
+    }
+  });
 
-//   // Obtenemos el time de caducidad de finders en el esquema
-//   var finderTimeCache = aux_finderTimeCache || 10;
-//   var finderMaxNum = aux_finderMaxNum || 10;
-//   var finderMinNum = aux_finderMinNum || 1;
+  // Obtenemos el time de caducidad de finders en el esquema
+  var finderTimeCache = 10;
+ 
+ /*  if(!!aux_finderTimeCache) {
+    finderTimeCache = aux_finderTimeCache;
+  } */
 
 
-//   finderCollectionSchema.aggregate(aggregation, function (err, finders) {
-//     if (err) {
-//       console.log(err);
-//     }
-//     else {
-//       dateNow = new Date();
-//       hoursNow = dateNow.getHours();
-//       console.log(finders);
-//       finders.forEach((finder) => {
-//         dateFinder = new Date(finder.timestamp);
-//         var diff = dateNow.getTime() - dateFinder.getTime();
-//         var daydiff = (diff / (1000 * 60 * 60)).toFixed(0);
+  finderCollectionSchema.aggregate(aggregation, function (err, finders) {
+    if (err) {
+      console.log(err);
+    }
+    else {
+      dateNow = new Date();
+      hoursNow = dateNow.getHours();
+      console.log(finders);
+      finders.forEach((finder) => {
+        dateFinder = new Date(finder.timestamp);
+        var diff = dateNow.getTime() - dateFinder.getTime();
+        var daydiff = (diff / (1000 * 60 * 60)).toFixed(0);
 
-//         //Comprobamos al diferencia entre el fidner dead tiem del sistema y las horas pasasdas desde la busqueda (del finder)
-//         // Borramos el finder en caso de que se cumpla
-//         if (daydiff >= finderTimeCache) {
-//           finderCollectionSchema.deleteOne({ _id: finder._id }, function (err, finder) {
-//             if (err) {
-//               // res.status(500).send(err);
-//               console.log("error " + err);
-//             }
-//             else {
-//               // res.json({ message: 'Actor successfully deleted' });
-//               console.log('Finder: '+finder._id+' successfully deleted');
-//               console.log(finder);
-//             }
-//           });
-//         }
-//       });
-//     }
-//   });
-// });
+        //Comprobamos al diferencia entre el fidner dead tiem del sistema y las horas pasasdas desde la busqueda (del finder)
+        // Borramos el finder en caso de que se cumpla
+        if (daydiff >= finderTimeCache) {
+          finderCollectionSchema.deleteOne({ _id: finder._id }, function (err, finder) {
+            if (err) {
+              // res.status(500).send(err);
+              console.log("error " + err);
+            }
+            else {
+              // res.json({ message: 'Actor successfully deleted' });
+              console.log('Finder: '+finder._id+' successfully deleted');
+              console.log(finder);
+            }
+          });
+        }
+      });
+    }
+  });
+});
 
 //MongoDB URI building
 var mongoDBUser = process.env.mongoDBUser || "myUser";
