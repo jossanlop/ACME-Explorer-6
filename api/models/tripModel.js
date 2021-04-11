@@ -12,7 +12,10 @@ var StageSchema = new Schema({
     type: String,
     required: "Stage title required"
   },
-  description: [String],
+  description: {
+    type: String,
+    required: 'Kindly enter the description of the Stage'
+  },
   price: {
     type: Number,
     required: "Stage price required"
@@ -82,10 +85,10 @@ var TripSchema = new Schema({
   },
   stages: [StageSchema],
   sponsorship: [SponsorshipSchema],
-  picture: {
+  picture: [{
     data: Buffer,
     contentType: String
-  },
+  }],
   canceled: {
     type: Boolean,
     default: false
