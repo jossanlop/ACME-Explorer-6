@@ -3,24 +3,24 @@
 /*---------------Trip----------------------*/
 var mongoose = require('mongoose'),
   Trip = mongoose.model('Trips'),
-  ConfigParam = require('./api/models/configParamModel'),
+  ConfigParam = require('../models/configParamModel'),
   finderCollection = mongoose.model('finderSchema');
 var authController = require('../controllers/authController');
 
 exports.list_all_trips = function (req, res) {
 
-  ConfigParam.aggregate(aggregationConfigParam, function (err, configParams) {
-    if (err) {
-      console.log(err);
-    }
-    else {
-      var aux_finderMinNum = configParams[0].finderMinNum
-      var aux_finderMaxNum = configParams[0].finderMaxNum
-    }
-  });
+  // ConfigParam.aggregate(aggregationConfigParam, function (err, configParams) {
+  //   if (err) {
+  //     console.log(err);
+  //   }
+  //   else {
+  //     var aux_finderMinNum = configParams[0].finderMinNum
+  //     var aux_finderMaxNum = configParams[0].finderMaxNum
+  //   }
+  // });
   
-  var finderMaxNum = aux_finderMaxNum || 10;
-  var finderMinNum = aux_finderMinNum || 1;
+  // var finderMaxNum = aux_finderMaxNum || 10;
+  // var finderMinNum = aux_finderMinNum || 1;
 
   if (JSON.stringify(req.query).length === 2) { //si query vacío
     Trip.find({}, function (err, list_all_trips) {
