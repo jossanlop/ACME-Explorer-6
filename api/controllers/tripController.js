@@ -102,27 +102,32 @@ exports.list_all_trips = function (req, res) {
         }
       ]
     }
-      , function (err, trips) {
+      , async function (err, trips) {
         if (err) {
-          console.log("Params: " + JSON.stringify(req.query));
+          // console.log("Params: " + JSON.stringify(req.query));
           console.error(err);
           res.status(500).send(err);
         }
         else {
-          new_finder.results.push(trips); // TODO: hay que guardar resultados siendo un array
-          // TODO: comparar el numero de resultados con el finderMaxNum, si es mayor, cortar los resultados en finderMaxNum
-          ConfigParam.aggregate(aggregationConfigParam, function (err, configParams) {
-            if (err) {
-              console.log(err);
-            }
-            else {
-              var aux_finderMinNum = configParams[0].finderMinNum
-              var aux_finderMaxNum = configParams[0].finderMaxNum
-            }
-          });
 
-          var finderMaxNum = aux_finderMaxNum || 10;
-          var finderMinNum = aux_finderMinNum || 1;
+          // new_finder.results.push(trips); // TODO: hay que guardar resultados siendo un array
+          // TODO: comparar el numero de resultados con el finderMaxNum, si es mayor, cortar los resultados en finderMaxNum
+          // ConfigParam.aggregate(aggregationConfigParam, function (err, configParams) {
+          //   if (err) {
+          //     console.log(err);
+          //   }
+          //   else {
+          //     var aux_finderMinNum = configParams[0].finderMinNum
+          //     var aux_finderMaxNum = configParams[0].finderMaxNum
+          //   }
+          // });
+
+          // var finderMaxNum = aux_finderMaxNum || 10;
+          // var finderMinNum = aux_finderMinNum || 1;
+
+          var idToken = req.headers['idtoken'];
+          var authenticatedUserId = await authController.getUserId(idToken);
+          new_finder.user=authenticatedUserId;
           new_finder.save(function (err, finder) {
             if (err) {
               console.log("A new finder could not be added: 500");

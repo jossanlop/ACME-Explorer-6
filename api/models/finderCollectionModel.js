@@ -1,6 +1,9 @@
 'use strict';
 var mongoose = require('mongoose');
+// Trip = mongoose.model('Trips');
+
 var Schema = mongoose.Schema;
+
 var finderSchema =  new Schema({ //Cada búsqueda tendrá: usuario, query de filtro o filtro, resultados y timestamp
     user: {
         type: String,
