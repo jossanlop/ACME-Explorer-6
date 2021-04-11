@@ -20,7 +20,7 @@ var ApplicationSchema = new Schema({
     type: String,
     required: 'Status required',
     default: 'PENDING',
-    enum: ['PENDING','DUE','REJECTED','EXPLORER', 'ACCEPTED', 'CANCELLED']
+    enum: ['PENDING','DUE','REJECTED', 'ACCEPTED', 'CANCELLED']
   },
   comments: [String],
   rejectReason:

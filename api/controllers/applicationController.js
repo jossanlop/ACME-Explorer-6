@@ -19,14 +19,55 @@ exports.list_all_applications = async function(req, res) {
       {
         if(actor.role == "EXPLORER")
         {
-          Application.find({explorer_id:authenticatedUserId},function(err, applications) {
+          /*Application.find({explorer_id:authenticatedUserId},function(err, applications) {
             if (err){
               res.status(500).send(err);
             }
             else{
               res.status(200).json(applications);
             }
-          });
+          });*/
+
+          try{
+            const apps = await Application.aggregate([
+              {$match:
+                {
+                  explorer_id:authenticatedUserId
+                }
+              },
+              {$facet: {
+                "PENDING": [
+                    {$match:{status:"PENDING"}}
+                ],
+                "DUE": [
+                  {$match:{status:"DUE"}}
+                ],
+                "REJECTED": [
+                  {$match:{status:"REJECTED"}}
+                ],
+                "ACCEPTED": [
+                  {$match:{status:"ACCEPTED"}}
+                ],
+                "CANCELLED": [
+                  {$match:{status:"CANCELLED"}}
+                ]
+              
+              }}
+            ]).exec();
+            
+            if (apps.length > 0) {
+                return res.status(200).json(apps);
+            } else {
+                return res.sendStatus(404);
+            }
+  
+            }
+            catch(err)
+            {
+              console.error(err);
+              res.status(500).send(err);
+            }
+  
         }
         else if(actor.role == "MANAGER")
         {
