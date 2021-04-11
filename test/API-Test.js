@@ -121,12 +121,8 @@ describe("API Testing", () => {
   it("Get Trips with Search", done => {
     chai
       .request(app)
-<<<<<<< HEAD
-      .get("/v2/trips?keyWord=keyword")
-=======
       .get("/v1/trips?keyWord=keyword")
       .set("Authorization", idToken)
->>>>>>> f63bba0d100648110c387a253a840c06f1a50e30
       .end((err, res) => {
         expect(res).to.have.status(200);
         expect('Content-Type', /json/);
@@ -137,11 +133,7 @@ describe("API Testing", () => {
   it("Login with Admin Actor", done => {
     chai
       .request(app)
-<<<<<<< HEAD
-      .post("/v2/trips")
-=======
       .post("/v2/login")
->>>>>>> f63bba0d100648110c387a253a840c06f1a50e30
       .send({
         "email": "freditomanager@us.es",
         "password": "mypass"
@@ -194,12 +186,8 @@ describe("API Testing", () => {
   it("Put Trip", done => {
     chai
       .request(app)
-<<<<<<< HEAD
-      .put("/v2/trips/"+ticker)
-=======
       .put("/v2/trips/" + ticker)
       .set("idtoken", idToken)
->>>>>>> f63bba0d100648110c387a253a840c06f1a50e30
       .send({
         "title": "testingUpdated",
         "description": "desc of testing",
@@ -219,12 +207,8 @@ describe("API Testing", () => {
   it("Get Trip", done => {
     chai
       .request(app)
-<<<<<<< HEAD
-      .get("/v2/trips/"+ticker)
-=======
       .get("/v2/trips/" + ticker)
       .set("idtoken", idToken)
->>>>>>> f63bba0d100648110c387a253a840c06f1a50e30
       .end((err, res) => {
         expect(res).to.have.status(200);
         if (err) done(err);
@@ -235,15 +219,11 @@ describe("API Testing", () => {
   it("Login with Admin Actor", done => {
     chai
       .request(app)
-<<<<<<< HEAD
-      .delete("/v2/trips/"+ticker)
-=======
       .post("/v2/login")
       .send({
         "email": "rod@us.es",
         "password": "aaaaaa"
       })
->>>>>>> f63bba0d100648110c387a253a840c06f1a50e30
       .end((err, res) => {
         customToken = res.body.customToken;
         expect(res).to.have.status(200);
