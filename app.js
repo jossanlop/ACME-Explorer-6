@@ -16,7 +16,7 @@ app.use(cors());
 
 const cron = require('node-cron');
 // cron.schedule('0 0 */1 * * *', function () {
-cron.schedule('* * * * * *', function () {
+cron.schedule('0 0 */1 * * *', function () {
   console.log('running a task every hour');
   //Ahora comprobar la última fecha del último finder y si alguno tiene una diferencia mayor de una hora, se borrado
   //1- Comprobar cada finderDeadTime de cada usuario y comporbar la diferencia del tiemstamp de ese finder con respecto a al timestamp de now
@@ -29,18 +29,20 @@ cron.schedule('* * * * * *', function () {
   ];
 
   ConfigParam.aggregate(aggregationConfigParam, function (err, configParams) {
-    if (err) {
-      console.log(err);
+    if (err || configParams[0] == null) {
+      //console.log(err);
     }
     else {
-      var aux_finderMinNum = configParams[0].finderMinNum
       var aux_finderTimeCache = configParams[0].finderTimeCache
-      var aux_finderMaxNum = configParams[0]["finderMaxNum"]
     }
   });
 
   // Obtenemos el time de caducidad de finders en el esquema
-  var finderTimeCache = aux_finderTimeCache || 10;
+  var finderTimeCache = 10;
+ 
+ /*  if(!!aux_finderTimeCache) {
+    finderTimeCache = aux_finderTimeCache;
+  } */
 
 
   finderCollectionSchema.aggregate(aggregation, function (err, finders) {
