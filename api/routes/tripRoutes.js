@@ -44,20 +44,35 @@ module.exports = function (app) {
    * @returns {ValidationError}                         400 - Supplied parameters are invalid
    * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
    * @returns {DatabaseError}                           500 - Database error
+   * @security bearerAuth
    */
 
-    /**
-   * Post a Trips
-   * @route POST /trips
-   * @group Trip - System configuration parameters
-   * @returns {Trip.model}                                  200 - Returns the configParam identifier
-   * @returns {ValidationError}                         400 - Supplied parameters are invalid
-   * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
-   * @returns {DatabaseError}                           500 - Database error
-   */
+  /**
+ * Post a Trips
+ * @route POST /trips
+ * @group Trip - System configuration parameters
+ * @returns {Trip.model}                                  200 - Returns the configParam identifier
+ * @returns {ValidationError}                         400 - Supplied parameters are invalid
+ * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
+ * @returns {DatabaseError}                           500 - Database error
+ * @security bearerAuth
+ */
   app.route('/v2/trips')
     .get(trips.list_all_trips)
     .post(authController.verifyUser(["MANAGER"]), trips.create_an_trip);
+
+  /**
+  * Search in trips
+  * @route GET /trips/finder
+  * @group Trip - System configuration parameters
+  * @returns {string}                                  200 - Returns the configParam identifier
+  * @returns {ValidationError}                         400 - Supplied parameters are invalid
+  * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
+  * @returns {DatabaseError}                           500 - Database error
+  * @security bearerAuth
+  */
+  app.route('/v2/trips/finder')
+    .get(authController.verifyUser(["EXPLORER"]), trips.search_list_all_trips);
 
 
   /**
@@ -68,6 +83,7 @@ module.exports = function (app) {
    * @returns {ValidationError}                         400 - Supplied parameters are invalid
    * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
    * @returns {DatabaseError}                           500 - Database error
+   * @security bearerAuth
    */
 
   /**
@@ -80,18 +96,20 @@ module.exports = function (app) {
    * @returns {ValidationError}                         400 - Supplied parameters are invalid
    * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
    * @returns {DatabaseError}                           500 - Database error
+   * @security bearerAuth
    */
 
-    /**
-   * Delete a Trip
-   * @route DELETE /trips/:ticker
-   * @group Trip - System configuration parameters
-   * @param {string} ticker
-   * @returns {ValidationError}                         400 - Supplied parameters are invalid
-   * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
-   * @returns {DatabaseError}                           500 - Database error
-   */
-    app.route('/v2/trips/:ticker')
+  /**
+ * Delete a Trip
+ * @route DELETE /trips/:ticker
+ * @group Trip - System configuration parameters
+ * @param {string} ticker
+ * @returns {ValidationError}                         400 - Supplied parameters are invalid
+ * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
+ * @returns {DatabaseError}                           500 - Database error
+ * @security bearerAuth
+ */
+  app.route('/v2/trips/:ticker')
     .get(trips.read_an_trip) //SOLO EXPLORER Y MANAGER???
     .put(authController.verifyUser(["MANAGER"]), trips.update_an_trip)
     .delete(authController.verifyUser(["MANAGER"]), trips.delete_an_trip);
@@ -105,6 +123,7 @@ module.exports = function (app) {
    * @returns {ValidationError}                         400 - Supplied parameters are invalid
    * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
    * @returns {DatabaseError}                           500 - Database error
+   * @security bearerAuth
    */
   app.route('/v2/trips/manager/:manager_id')
     .get(authController.verifyUser(["MANAGER"]), trips.list_my_trips_v2);
@@ -118,8 +137,9 @@ module.exports = function (app) {
    * @returns {ValidationError}                         400 - Supplied parameters are invalid
    * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
    * @returns {DatabaseError}                           500 - Database error
+   * @security bearerAuth
    */
   app.route('/v2/trips/cancel/:ticker')
-  .put(authController.verifyUser(["MANAGER"]), trips.cancel_trip);
+    .put(authController.verifyUser(["MANAGER"]), trips.cancel_trip);
 
 }

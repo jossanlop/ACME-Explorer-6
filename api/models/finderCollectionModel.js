@@ -1,7 +1,6 @@
 'use strict';
 var mongoose = require('mongoose');
-// Trip = mongoose.model('Trips');
-
+var Trip = mongoose.model('Trips').schema;
 var Schema = mongoose.Schema;
 
 var finderSchema =  new Schema({ //Cada búsqueda tendrá: usuario, query de filtro o filtro, resultados y timestamp
@@ -21,7 +20,7 @@ var finderSchema =  new Schema({ //Cada búsqueda tendrá: usuario, query de fil
         default: null
     },
     results:{
-        type: [String]
+        type: [Trip]
     },
     timestamp: {
         type: Date,

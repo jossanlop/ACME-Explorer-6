@@ -53,5 +53,28 @@ module.exports = function(app) {
     app.route('/v1/applications-by-status')
     .get(dashboard.applicationsByStatus)
  
+    /**
+    * Get the average price range that explorers indicate in their finders
+    *    Required role: ADMINISTRATOR
+    *    
+	* @section dashboard
+	* @type get 
+	* @url /v1/average-price-finders
+    */
 
+    app.route('/v1/average-price-finders')
+    .get(dashboard.averagePriceFinders)
+
+
+    /**
+    * Get the top 10 key words that the explorers indicate in their finders.
+    *    Required role: ADMINISTRATOR
+    *    
+	* @section dashboard
+	* @type get 
+	* @url /v1/top-ten-keywords-finders
+    */
+
+    app.route('/v1/top-ten-keywords-finders')
+    .get(dashboard.topTenKeywordsFinders) 
 }
