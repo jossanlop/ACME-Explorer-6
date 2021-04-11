@@ -33,7 +33,7 @@ module.exports = function (app) {
      * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
      * @returns {DatabaseError}                           500 - Database error
      */
-     /**
+    /**
      * Create a configParam
      * @route POST /configParams
      * @group configParam - Create a system configuration parameters
@@ -48,9 +48,5 @@ module.exports = function (app) {
         .get(configParams.read_an_configParam)
         .post(authController.verifyUser(["ADMINISTRATOR"]), configParams.create_an_configParam)
         .put(authController.verifyUser(["ADMINISTRATOR"]), configParams.update_an_configParam)
-
-
-
-
 
 }

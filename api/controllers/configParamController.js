@@ -55,9 +55,9 @@ exports.update_an_configParam = function (req, res) {
 
 
   exports.create_an_configParam = async function (req, res) {
+    var new_configParam = new ConfigParam(req.body);
     ConfigParam.exists({}, function (err, configParam) {
       if (err) {
-        var new_configParam = new ConfigParam(req.body);
         new_configParam.save(function (err, configParam) {
           if (err) {
             if (err.name == 'ValidationError') {
