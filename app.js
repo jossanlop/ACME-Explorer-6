@@ -153,10 +153,11 @@ const swaggerOptions = {
       bearerAuth: {
         type: 'apiKey',
         in: 'header',
-        name: 'idtoken',
+        name: 'idToken',
         description: "Introducir con formato 'Bearer &lt;idToken>'",
       }
-    }
+    },
+    security: [ { bearerAuth: [] } ],
   },
   basedir: __dirname,
   files: ['./api/routes/*.js']

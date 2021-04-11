@@ -101,8 +101,6 @@ exports.search_list_all_trips = function (req, res) {
     }
       , async function (err, trips) {
         if (err) {
-          // console.log("Params: " + JSON.stringify(req.query));
-          console.error(err);
           res.status(500).send(err);
         }
         else {
@@ -132,12 +130,11 @@ exports.search_list_all_trips = function (req, res) {
           new_finder.save(function (err, finder) {
             if (err) {
               console.log("A new finder could not be added: 500");
-              console.log(finder);
               // res.status(500).send(err);
               console.log(err);
             }
             else {
-              // console.log("Added new finder correctly");
+              console.log("Added new finder correctly");
               // console.log(new_finder);
               // res.status(200).json(finder);
             }
