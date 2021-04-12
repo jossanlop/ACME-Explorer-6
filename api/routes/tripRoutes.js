@@ -5,18 +5,13 @@ module.exports = function (app) {
 
   /**
    * @typedef Trip
-    * @property {string} ticker               - Unique identifier for this trip
     * @property {string} title  - Title of the trip
     * @property {string} description  - Description of the trip
     * @property {integer} price  - Price of the trip
     * @property {Array.<integer>} requirements  - List of the requirements that implies the trip
     * @property {string} start_date  - Date when trip starts
-    * @property {Boolean} publish  - Boolean that indicates if the trip is published or not
-    * @property {Boolean} cancelled  - Boolean that indicates if the trip is cancelled or not
     * @property {string} end_date  - Date when trip ends
     * @property {Array.<string>} picture  - List of pictures of the trip
-    * @property {string} cancelReason  - Date when trip ends
-    * @property {integer} manager_id  - Manager that organise the trip
     * @property {Stage.model} stages  - Stages that compounds the trip
     * @property {Array.<Sponsorship.model>} sponsorship  - Sponsorships associated with the trip
   */
