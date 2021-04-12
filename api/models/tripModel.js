@@ -35,10 +35,10 @@ var SponsorshipSchema = new Schema({
     type: String,
     required: "Link is required"
   },
-  payed: {
+  paid: {
     type: Boolean,
     default: false,
-    required: "payed is required"
+    required: "paid is required"
   }
 }, { strict: false });
 
