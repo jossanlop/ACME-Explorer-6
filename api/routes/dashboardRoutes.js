@@ -2,7 +2,7 @@
 
 module.exports = function(app) {
     var dashboard = require('../controllers/dashboardController');
-
+    var authController = require('../controllers/authController');
   /**
     * Get the average, the minimum, the maximum, and the standard deviation of the
     * number of trips managed per manager.
