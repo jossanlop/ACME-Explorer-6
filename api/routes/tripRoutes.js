@@ -66,7 +66,7 @@ module.exports = function (app) {
 
   /**
   * Search in trips
-  * @route GET /trips/finder
+  * @route POST /trips/finder
   * @group Trip - System trips
   * @param {Finder.model} Finder.body.required
   * @returns {string}                                  200 - Returns the trip
@@ -76,7 +76,7 @@ module.exports = function (app) {
   * @security bearerAuth
   */
   app.route('/v2/trips/finder')
-    .get(authController.verifyUser(["EXPLORER"]), trips.search_list_all_trips);
+    .post(authController.verifyUser(["EXPLORER"]), trips.search_list_all_trips);
 
 
   /**
