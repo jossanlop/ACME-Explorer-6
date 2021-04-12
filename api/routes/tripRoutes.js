@@ -88,6 +88,7 @@ module.exports = function (app) {
    * Get a Trip
    * @route GET /trips/{ticker}
    * @group Trip - System trips
+   * @param {string} ticker.path - ticker (Trip identifier)
    * @returns {Trip.model}                                  200 - Returns the trip
    * @returns {ValidationError}                         400 - Supplied parameters are invalid
    * @returns {UserAuthError}                           401 - User is not authorized to perform this operation

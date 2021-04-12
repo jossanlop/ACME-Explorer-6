@@ -244,8 +244,8 @@ exports.reject_an_application = async function (req, res) {
     if (err) {
       res.status(500).send(err);
     } else {
-      if (trip === null) {
-        res.status(404).send("trip not found");
+      if (app === null) {
+        res.status(404).send("app not found");
       } else {
         Trip.findOne({
           _id: app.trip_id
@@ -253,6 +253,7 @@ exports.reject_an_application = async function (req, res) {
           if (String(authenticatedUserId) === String(trip.manager_id)) {
             if (app.status == 'PENDING') {
               app.status = 'REJECTED';
+              app.status = req.params.reasonWhy;
               Application.findOneAndUpdate({
                 _id: app._id
               }, app, function (err, app_upd) {
@@ -285,8 +286,8 @@ exports.due_an_application = async function (req, res) {
     if (err) {
       res.status(500).send(err);
     } else {
-      if (trip === null) {
-        res.status(404).send("trip not found");
+      if (app === null) {
+        res.status(404).send("app not found");
       } else {
         Trip.findOne({
           _id: app.trip_id
@@ -320,20 +321,27 @@ exports.due_an_application = async function (req, res) {
 exports.read_an_application = async function (req, res) {
   var idToken = req.headers['idtoken'];
   var authenticatedUserId = await authController.getUserId(idToken);
-  Trip.findById(req.body.trip_id, function (err, trip) {
-    if (String(authenticatedUserId) === String(trip.manager_id)) {
-      Application.findById(req.params.applicationId, function (err, application) {
-        if (err) {
-          res.status(500).send(err);
-        } else {
-          res.status(200).json(application);
-        }
-      });
-    } else {
-      res.status(405); //Not allowed
-      res.send('The user is trying to access an application from other manager');
+  Application.findById(req.params.applicationId, function (err, application) {
+    if (err) {
+      res.status(500).send(err);
+    } else if(application==null){
+      res.status(404).send("worng app id");
     }
-  });
+    else{
+    Trip.findOne(application.trip_id, function (err, trip) {
+      if (String(authenticatedUserId) === String(trip.manager_id)) {
+        Application.findById(req.params.applicationId, function (err, application) {
+          if (err) {
+            res.status(500).send(err);
+          } else {
+            res.status(200).json(application);
+          }
+        });
+      } else {
+        res.status(405); //Not allowed
+        res.send('The user is trying to access an application from other manager');
+      }
+    });}});
 };
 
 
