@@ -222,7 +222,7 @@ exports.login_an_actor = async function(req, res) {
 };
 
 exports.read_an_actor = function(req, res) {
-  Actor.findById(req.params.actorId, function(err, actor) {
+  Actor.find({_id:req.params.actorId}, function(err, actor) {
     if (err){
       res.status(500).send(err);
     }

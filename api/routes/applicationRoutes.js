@@ -81,9 +81,9 @@ module.exports = function (app) {
   
   /**
    * Get an application by ID. It is only available for managers, and managers only can read their applications.
-   * @route GET /applications
+   * @route GET /applications/{applicationId}
    * @group Application - System trips applications
-   * @param {string} applicationId - Application identifier
+   * @param {string} applicationId.path - Application identifier
    * @returns {Application.model}                       200 - Returns the application with the ID passed as parameter
    * @returns {ValidationError}                         400 - Supplied parameters are invalid
    * @returns {UserAuthError}                           401 - User is not authorized to perform this operation

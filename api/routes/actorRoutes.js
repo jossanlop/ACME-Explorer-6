@@ -38,17 +38,21 @@ module.exports = function (app) {
 
 	/**
 	 * Get an Actor from id
-	 * @route GET /actor/:actorId
+	 * @route GET /actors/{actorId}
 	 * @group Actor - System actors
-	 * @returns {Actor.Model}                                 200 - Returns the actor
+	 * @param {String} actorId.path
+	 * @returns {Actor.Model}                         200 - Returns the actor
 	 * @returns {ValidationError}                         400 - Supplied parameters are invalid
 	 * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
 	 * @returns {DatabaseError}                           500 - Database error
 	 */
+	 app.route('/v2/actors/:actorId')
+	 .get(actors.read_an_actor);
 	/**
 	 * Put an Actor from id
-	 * @route PUT /actor/:actorId
+	 * @route PUT /actors/:actorId
 	 * @group Actor - System actors
+	 * @param {String} actorId
 	 * @param {Actor.Model} actor.body.required 
 	 * @returns {Actor}                                 200 - Returns the actor
 	 * @returns {ValidationError}                         400 - Supplied parameters are invalid
@@ -56,7 +60,6 @@ module.exports = function (app) {
 	 * @returns {DatabaseError}                           500 - Database error
 	 */
 	app.route('/v2/actors/:actorId')
-		.get(actors.read_an_actor)
 		.put(authController.verifyUser(["ADMINISTRATOR",
 			"EXPLORER",
 			"MANAGER", "SPONSOR"
@@ -68,7 +71,7 @@ module.exports = function (app) {
 		.put(authController.verifyUser(["ADMINISTRATOR"]), actors.unban_an_actor);
 	/**
 	 * Post an Actor
-	 * @route POST /actor/
+	 * @route POST /actors/
 	 * @group Actor - System actors
 	 * @param {Actor.Model} actor.body.required 
 	 * @returns {Actor.Model}                                 200 - Returns the actor
@@ -82,7 +85,7 @@ module.exports = function (app) {
 
 	/**
 	 * Put an Actor validation
-	 * @route PUT /actor/:actorId/validate
+	 * @route PUT /actors/:actorId/validate
 	 * @group Actor - System actors
 	 * @param {Actor.Model} actor.body.required 
 	 * @returns {Actor.Model}                                 200 - Returns the actor
