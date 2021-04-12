@@ -12,8 +12,10 @@ module.exports = function(app) {
 	* @type get 
 	* @url /v1/trips-managed-per-manager
   */
+
+
     app.route('/v1/trips-managed-per-manager')
-    .get(dashboard.tripsManagedPerManager)
+    .get(authController.verifyUser(["ADMINISTRATOR"]), dashboard.tripsManagedPerManager)
  
     /**
     * Get the average, the minimum, the maximum, and the standard deviation of the
@@ -26,7 +28,7 @@ module.exports = function(app) {
     */
 
     app.route('/v1/applications-per-trip')
-    .get(dashboard.applicationsPerTrip)
+    .get(authController.verifyUser(["ADMINISTRATOR"]), dashboard.applicationsPerTrip)
 
     /**
     * Get The average, the minimum, the maximum, and the standard deviation of the
@@ -39,7 +41,7 @@ module.exports = function(app) {
     */
 
     app.route('/v1/price-per-trips')
-    .get(dashboard.pricePerTrips)
+    .get(authController.verifyUser(["ADMINISTRATOR"]), dashboard.pricePerTrips)
 
     /**
     * Get the ratio of applications grouped by status.
@@ -51,7 +53,7 @@ module.exports = function(app) {
     */
 
     app.route('/v1/applications-by-status')
-    .get(dashboard.applicationsByStatus)
+    .get(authController.verifyUser(["ADMINISTRATOR"]), dashboard.applicationsByStatus)
  
     /**
     * Get the average price range that explorers indicate in their finders
@@ -63,7 +65,7 @@ module.exports = function(app) {
     */
 
     app.route('/v1/average-price-finders')
-    .get(dashboard.averagePriceFinders)
+    .get(authController.verifyUser(["ADMINISTRATOR"]), dashboard.averagePriceFinders)
 
 
     /**
@@ -76,5 +78,74 @@ module.exports = function(app) {
     */
 
     app.route('/v1/top-ten-keywords-finders')
-    .get(dashboard.topTenKeywordsFinders) 
+    .get(authController.verifyUser(["ADMINISTRATOR"]), dashboard.topTenKeywordsFinders) 
 }
+
+/**
+    * Get the average, the minimum, the maximum, and the standard deviation of the
+    * number of trips managed per manager.
+   * @route GET /trips-managed-per-manager
+   * @group Dashboard - Analytical Data
+   * @returns {Array.<Application.model>}               200 - Returns the data
+   * @returns {ValidationError}                         404 - There is no data
+   * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
+   * @returns {DatabaseError}                           500 - Database error
+   * @security bearerAuth
+   */
+
+/**
+    * Get the average, the minimum, the maximum, and the standard deviation of the
+    *    number of applications per trip.
+   * @route GET /applications-per-trip
+   * @group Dashboard - Analytical Data
+   * @returns {Array.<Application.model>}               200 - Returns the data
+   * @returns {ValidationError}                         404 - There is no data
+   * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
+   * @returns {DatabaseError}                           500 - Database error
+   * @security bearerAuth
+   */
+
+/**
+    * Get The average, the minimum, the maximum, and the standard deviation of the
+    * price of the trips.
+   * @route GET /trips-managed-per-manager
+   * @group Dashboard - Analytical Data
+   * @returns {Array.<Application.model>}               200 - Returns the data
+   * @returns {ValidationError}                         404 - There is no data
+   * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
+   * @returns {DatabaseError}                           500 - Database error
+   * @security bearerAuth
+   */
+
+/**
+   * Get the ratio of applications grouped by status.
+   * @route GET /applications-by-status
+   * @group Dashboard - Analytical Data
+   * @returns {Array.<Application.model>}               200 - Returns the data
+   * @returns {ValidationError}                         404 - There is no data
+   * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
+   * @returns {DatabaseError}                           500 - Database error
+   * @security bearerAuth
+   */
+
+/**
+   *  Get the average price range that explorers indicate in their finders
+   * @route GET /average-price-finders
+   * @group Dashboard - Analytical Data
+   * @returns {Array.<Application.model>}               200 - Returns the data
+   * @returns {ValidationError}                         404 - There is no data
+   * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
+   * @returns {DatabaseError}                           500 - Database error
+   * @security bearerAuth
+   */
+
+/**
+   * Get the top 10 key words that the explorers indicate in their finders.
+   * @route GET /top-ten-keywords-finders
+   * @group Dashboard - Analytical Data
+   * @returns {Array.<Application.model>}               200 - Returns the data
+   * @returns {ValidationError}                         404 - There is no data
+   * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
+   * @returns {DatabaseError}                           500 - Database error
+   * @security bearerAuth
+   */
