@@ -27,7 +27,7 @@ module.exports = function (app) {
 	 */
 
 	app.route('/v2/actors')
-		.get(actors.list_all_actors);
+		.get(authController.verifyUser(["ADMINISTRATOR"]), actors.list_all_actors);
 
 	/**
 	 * Gets a trip defined by a key word, start & end date and min & max price
@@ -41,7 +41,7 @@ module.exports = function (app) {
 	 * @route GET /actors/{actorId}
 	 * @group Actor - System actors
 	 * @param {String} actorId.path
-	 * @returns {Actor.Model}                         200 - Returns the actor
+	 * @returns {Actor.model}                         200 - Returns the actor
 	 * @returns {ValidationError}                         400 - Supplied parameters are invalid
 	 * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
 	 * @returns {DatabaseError}                           500 - Database error
@@ -50,10 +50,10 @@ module.exports = function (app) {
 	 .get(actors.read_an_actor);
 	/**
 	 * Put an Actor from id
-	 * @route PUT /actors/:actorId
+	 * @route PUT /actors/{actorId}
 	 * @group Actor - System actors
-	 * @param {String} actorId
-	 * @param {Actor.Model} actor.body.required 
+	 * @param {String} actorId.path
+	 * @param {Actor.model} actor.body.required 
 	 * @returns {Actor}                                 200 - Returns the actor
 	 * @returns {ValidationError}                         400 - Supplied parameters are invalid
 	 * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
@@ -73,8 +73,8 @@ module.exports = function (app) {
 	 * Post an Actor
 	 * @route POST /actors/
 	 * @group Actor - System actors
-	 * @param {Actor.Model} actor.body.required 
-	 * @returns {Actor.Model}                                 200 - Returns the actor
+	 * @param {Actor.model} actor.body.required 
+	 * @returns {Actor.model}                                 200 - Returns the actor
 	 * @returns {ValidationError}                         400 - Supplied parameters are invalid
 	 * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
 	 * @returns {DatabaseError}                           500 - Database error
@@ -85,10 +85,11 @@ module.exports = function (app) {
 
 	/**
 	 * Put an Actor validation
-	 * @route PUT /actors/:actorId/validate
+	 * @route PUT /actors/{actorId}/validate
 	 * @group Actor - System actors
-	 * @param {Actor.Model} actor.body.required 
-	 * @returns {Actor.Model}                                 200 - Returns the actor
+	 * @param {string} actorId.path 
+	 * @param {Actor.model} actor.body.required 
+	 * @returns {Actor.model}                                 200 - Returns the actor
 	 * @returns {ValidationError}                         400 - Supplied parameters are invalid
 	 * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
 	 * @returns {DatabaseError}                           500 - Database error

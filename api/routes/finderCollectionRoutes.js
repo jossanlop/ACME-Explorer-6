@@ -26,9 +26,9 @@ module.exports = function (app) {
 
 	/**
 	 * Delete one Finder
-	 * @route DELETE /finderCollection?keyword=keyword
+	 * @route DELETE /finderCollection/{keyword}
 	 * @group Finder -  Finder Collection
-	 * @param {string} keyWord
+	 * @param {string} keyWord - keyword to filter the trips
 	 * @returns {string}                                  200 - The specified finder has been correctly removed
 	 * @returns {ValidationError}                         400 - Supplied parameters are invalid
 	 * @returns {UserAuthError}                           401 - User is not authorized to perform this operation

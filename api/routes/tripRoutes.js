@@ -77,7 +77,7 @@ module.exports = function (app) {
 
   /**
    * Get a Trip
-   * @route GET /trips/:ticker
+   * @route GET /trips/{ticker}
    * @group Trip - System trips
    * @returns {Trip.model}                                  200 - Returns the trip
    * @returns {ValidationError}                         400 - Supplied parameters are invalid
@@ -88,10 +88,10 @@ module.exports = function (app) {
 
   /**
    * Put a Trip
-   * @route PUT /trips/:ticker
+   * @route PUT /trips/{ticker}
    * @group Trip - System trips
-   * @param {string} ticker
-   * @param {Trip.Model} trip.body.required 
+   * @param {string} ticker.path
+   * @param {Trip.model} trip.body.required 
    * @returns {Trip.model}                                  200 - Returns the trip
    * @returns {ValidationError}                         400 - Supplied parameters are invalid
    * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
@@ -101,9 +101,9 @@ module.exports = function (app) {
 
   /**
  * Delete a Trip
- * @route DELETE /trips/:ticker
+ * @route DELETE /trips/{ticker}
  * @group Trip - System trips
- * @param {string} ticker
+ * @param {string} ticker.path
  * @returns {ValidationError}                         400 - Supplied parameters are invalid
  * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
  * @returns {DatabaseError}                           500 - Database error
@@ -116,9 +116,9 @@ module.exports = function (app) {
 
   /**
    * Get all Trips from Manager
-   * @route GET /trips/:manager_id
+   * @route GET /trips/{manager_id}
    * @group Trip - System trips
-   * @param {String} manager_id
+   * @param {String} manager_id.path
    * @returns {string}                                  200 - Returns the trip
    * @returns {ValidationError}                         400 - Supplied parameters are invalid
    * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
@@ -130,9 +130,9 @@ module.exports = function (app) {
 
   /**
    * Cancel a Trips published but not started and without applications
-   * @route PUT /trips/cancel/:ticker
+   * @route PUT /trips/cancel/{ticker}
    * @group Trip - System trips
-   * @param {String} ticker
+   * @param {String} ticker.path
    * @returns {string}                                  200 - Returns the trip
    * @returns {ValidationError}                         400 - Supplied parameters are invalid
    * @returns {UserAuthError}                           401 - User is not authorized to perform this operation

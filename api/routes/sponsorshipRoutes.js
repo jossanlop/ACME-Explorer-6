@@ -56,9 +56,9 @@ module.exports = function(app) {
 
   /**
    * Update an sponsorship. It is only valid for sponsors and they can update only theirs sponsorships.
-   * @route PUT /sponsorships
+   * @route PUT /sponsorships/{sponsorshipId}
    * @group Sponsorship - System sponsorships
-   * @param {string} sponsorshipId - Sponsorship identifier
+   * @param {string} sponsorshipId.path - Sponsorship identifier
    * @returns {Sponsorship.model}                       200 - Returns the sponsorship stored
    * @returns {ValidationError}                         400 - Supplied parameters are invalid
    * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
@@ -67,9 +67,9 @@ module.exports = function(app) {
    */
   /**
    * Delete an sponsorship. It is only valid for sponsors and they can delete only theirs sponsorships.
-   * @route DELETE /sponsorships
+   * @route DELETE /sponsorships/{sponsorshipId}
    * @group Sponsorship - System sponsorships
-   * @param {string} sponsorshipId - Sponsorship identifier
+   * @param {string} sponsorshipId.path - Sponsorship identifier
    * @returns {Sponsorship.model}                       200 - Returns the message: 'Sponsorship successfully deleted'
    * @returns {ValidationError}                         400 - Supplied parameters are invalid
    * @returns {UserAuthError}                           401 - User is not authorized to perform this operation

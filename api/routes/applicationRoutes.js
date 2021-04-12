@@ -19,15 +19,6 @@ module.exports = function (app) {
   //   .post(application.create_an_application);
 
   /**
-   * Post an application 
-   *    RequiredRoles: to be a customer
-   *
-   * @section applications
-   * @type get post
-   * @url /v2/applications
-   */
-
-  /**
    * Get your applications
    * @route GET /applications
    * @group Application - System trips applications
@@ -62,23 +53,6 @@ module.exports = function (app) {
   //   .put(application.update_an_application) 
   //   .delete(application.delete_an_application);
 
-  /**
-   * Delete an application if it is not delivered
-   *    RequiredRoles: to be the customer that posted the application
-   * Put an application with the proper clerk assignment (only if the application has not previously assigned); 
-   * also to update the delivery moment.
-   *    RequiredRoles: clerk
-   * Get an specific application.
-   *    RequiredRoles: to be a proper customer
-   * 
-   * @section applications
-   * @type put delete
-   * @url /v1/applications/:applicationId
-   */
-
-
-
-  
   /**
    * Get an application by ID. It is only available for managers, and managers only can read their applications.
    * @route GET /applications/{applicationId}
@@ -120,9 +94,9 @@ module.exports = function (app) {
 
   /**
    * Update an application status by ID to accept it. An explorer that has an application that has been accepted (in DUE status), pays for it and then the application goes from DUE to ACCEPTED status, so its status must be updated.
-   * @route PUT /applications-pay
+   * @route PUT /applications-pay/{applicationId}
    * @group Application - System trips applications
-   * @param {string} applicationId - Application identifier
+   * @param {string} applicationId.path - Application identifier
    * @returns {Application.model}                       200 - Returns the application updated
    * @returns {ValidationError}                         400 - Supplied parameters are invalid
    * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
@@ -134,9 +108,9 @@ module.exports = function (app) {
   
   /**
    * Update an application status by ID to cancel it. An explorer that has an application that has been rejected, can cancel it, so its status must be updated.
-   * @route PUT /applications-cancel
+   * @route PUT /applications-cancel/{applicationId}
    * @group Application - System trips applications
-   * @param {string} applicationId - Application identifier
+   * @param {string} applicationId.path - Application identifier
    * @returns {Application.model}                       200 - Returns the application updated
    * @returns {ValidationError}                         400 - Supplied parameters are invalid
    * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
@@ -148,9 +122,9 @@ module.exports = function (app) {
 
   /**
    * Update an application status by ID to set it as due.
-   * @route PUT /applications-due
+   * @route PUT /applications-due/{applicationId}
    * @group Application - System trips applications
-   * @param {string} applicationId - Application identifier
+   * @param {string} applicationId.path - Application identifier
    * @returns {Application.model}                       200 - Returns the application updated
    * @returns {ValidationError}                         400 - Supplied parameters are invalid
    * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
@@ -162,9 +136,9 @@ module.exports = function (app) {
 
   /**
    * Update an application status by ID to reject it.
-   * @route PUT /applications-reject
+   * @route PUT /applications-reject/{applicationId}
    * @group Application - System trips applications
-   * @param {string} applicationId - Application identifier
+   * @param {string} applicationId.path - Application identifier
    * @returns {Application.model}                       200 - Returns the application updated
    * @returns {ValidationError}                         400 - Supplied parameters are invalid
    * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
