@@ -11,7 +11,7 @@ var authController = require('../controllers/authController');
 
 exports.search_list_all_trips = function (req, res) {
 
-  if (JSON.stringify(req.query).length === 2) { //si query vacío
+  if (JSON.stringify(req.body).length === 2) { //si query vacío
     Trip.find({ publish: true }, function (err, list_all_trips) {
       if (err) {
         res.status(500).send(err);
@@ -24,29 +24,29 @@ exports.search_list_all_trips = function (req, res) {
     // Guardar query params + resultados 
     // Ventaja: no tener que llamar al find siempre
   } else { //si tienes query params
-    if (!isNaN(req.query.minPrice)) {
+    if (!isNaN(req.body.minPrice)) {
       req.query.minPrice = parseInt(req.query.minPrice);
     }
-    if (!isNaN(req.query.maxPrice)) {
+    if (!isNaN(req.body.maxPrice)) {
       req.query.maxPrice = parseInt(req.query.maxPrice);
     }
-    if (!isNaN(req.query.minDate)) {
+    if (!isNaN(req.body.minDate)) {
       // req.query.minDate = new Date(req.query.minDate);
     }
-    if (!isNaN(req.query.maxDate)) {
+    if (!isNaN(req.body.maxDate)) {
       // req.query.maxDate = new Date(req.query.maxDate);
     }
 
     //Guardamos un nuevo finder aquí con los query Params
     //guardar cacheado resultados d eun primera búsqeuda -> mirar requisitos 
-    var new_finder = new finderCollection(req.query);
+    var new_finder = new finderCollection(req.body);
     // new_finder.dateRange.push(req.query.minDate, req.query.maxDate);
-    if (!isNaN(req.query.minPrice) && !isNaN(req.query.maxPrice)) {
-      new_finder.priceRange.push(req.query.minPrice, req.query.maxPrice);
+    if (!isNaN(req.body.minPrice) && !isNaN(req.body.maxPrice)) {
+      new_finder.priceRange.push(req.body.minPrice, req.body.maxPrice);
     }
 
-    if (req.query.minDate && req.query.maxDate) {
-      new_finder.dateRange.push(String(req.query.minDate), String(req.query.maxDate));
+    if (req.body.minDate && req.body.maxDate) {
+      new_finder.dateRange.push(String(req.body.minDate), String(req.body.maxDate));
     }
 
     Trip.find({
@@ -58,16 +58,16 @@ exports.search_list_all_trips = function (req, res) {
             {
               price:
               {
-                $lte: req.query.maxPrice,
-                $gte: req.query.minPrice
+                $lte: req.body.maxPrice,
+                $gte: req.body.minPrice
               }
             },
             //Si el date esta en su range
             {
               start_date:
               {
-                $lte: req.query.maxDate,
-                $gte: req.query.minDate
+                $lte: req.body.maxDate,
+                $gte: req.body.minDate
               }
             },
             //Si el keyWord está dentro de ticker, title o description
@@ -76,21 +76,21 @@ exports.search_list_all_trips = function (req, res) {
                 {
                   ticker:
                   {
-                    $regex: `${req.query.keyWord}`,
+                    $regex: `${req.body.keyWord}`,
                     $options: "i"
                   }
                 },
                 {
                   title:
                   {
-                    $regex: `${req.query.keyWord}`,
+                    $regex: `${req.body.keyWord}`,
                     $options: "i"
                   }
                 },
                 {
                   description:
                   {
-                    $regex: `${req.query.keyWord}`,
+                    $regex: `${req.body.keyWord}`,
                     $options: "i"
                   }
                 }
