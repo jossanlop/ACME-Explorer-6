@@ -11,7 +11,7 @@ module.exports = function (app) {
 	  * @property {Array.<integer>} priceRange  - Period that the finder is kept in cache for all users
 	  * @property {Array.<string>} dateRange  - Period that the finder is kept in cache for all users
 	  * @property {Array.<string>} results  - Period that the finder is kept in cache for all users
-	  * @property {Date} timestamp  - Period that the finder is kept in cache for all users
+	  * @property {string} timestamp  - Period that the finder is kept in cache for all users
 	*/
 
 	/**

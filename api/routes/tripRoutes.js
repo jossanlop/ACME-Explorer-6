@@ -5,42 +5,42 @@ module.exports = function (app) {
 
   /**
    * @typedef Trip
-    * @property {string} ticker               - Unique identifier for this configuration parameter
-    * @property {string} title  - Period that the finder is kept in cache for all users
-    * @property {string} description  - Period that the finder is kept in cache for all users
-    * @property {integer} price  - Period that the finder is kept in cache for all users
-    * @property {Array.<integer>} requirements  - Period that the finder is kept in cache for all users
-    * @property {Date} start_date  - Period that the finder is kept in cache for all users
-    * @property {Boolean} publish  - Period that the finder is kept in cache for all users
-    * @property {Date} end_date  - Period that the finder is kept in cache for all users
-    * @property {Stage.model} stages  - Period that the finder is kept in cache for all users
-  
-    * @property {Array.<integer>} priceRange  - Period that the finder is kept in cache for all users
-    * @property {Array.<string>} dateRange  - Period that the finder is kept in cache for all users
-    * @property {Array.<string>} results  - Period that the finder is kept in cache for all users
-    * @property {Date} timestamp  - Period that the finder is kept in cache for all users
-    */
+    * @property {string} ticker               - Unique identifier for this trip
+    * @property {string} title  - Title of the trip
+    * @property {string} description  - Description of the trip
+    * @property {integer} price  - Price of the trip
+    * @property {Array.<integer>} requirements  - List of the requirements that implies the trip
+    * @property {string} start_date  - Date when trip starts
+    * @property {Boolean} publish  - Boolean that indicates if the trip is published or not
+    * @property {Boolean} cancelled  - Boolean that indicates if the trip is cancelled or not
+    * @property {string} end_date  - Date when trip ends
+    * @property {Array.<string>} picture  - List of pictures of the trip
+    * @property {string} cancelReason  - Date when trip ends
+    * @property {integer} manager_id  - Manager that organise the trip
+    * @property {Stage.model} stages  - Stages that compounds the trip
+    * @property {Array.<Sponsorship.model>} sponsorship  - Sponsorships associated with the trip
+  */
 
   /**
    * @typedef Stage
-   * @property {string} title               - Unique identifier for this configuration parameter
-   * @property {Array.<string>} description - Unique identifier for this configuration parameter
-   * @property {integer} price               - Unique identifier for this configuration parameter
+   * @property {string} title               - Title of the stage
+   * @property {string} description - Description of the stage
+   * @property {integer} price               - Price of the stage
    */
 
   /**
  * @typedef Sponsorship
- * @property {ObjectId} sponsor_id               - Unique identifier for this configuration parameter
- * @property {string} banner - Unique identifier for this configuration parameter
- * @property {string} link               - Unique identifier for this configuration parameter
- * @property {string} payed               - Unique identifier for this configuration parameter
+ * @property {ObjectId} sponsor_id               - Unique identifier for this sponsorship
+ * @property {string} banner - String that corresponds with the sponsorship banner
+ * @property {string} link               - Link to the page sponsored
+ * @property {Boolean} payed               - Boolean that indicates if the sponsorship is payed
   */
 
   /**
    * Get the Trips
    * @route GET /trips
    * @group Trip - System configuration parameters
-   * @returns {string}                                  200 - Returns the configParam identifier
+   * @returns {string}                                  200 - Returns the trip
    * @returns {ValidationError}                         400 - Supplied parameters are invalid
    * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
    * @returns {DatabaseError}                           500 - Database error
@@ -51,7 +51,7 @@ module.exports = function (app) {
  * Post a Trips
  * @route POST /trips
  * @group Trip - System configuration parameters
- * @returns {Trip.model}                                  200 - Returns the configParam identifier
+ * @returns {Trip.model}                                  200 - Returns the trip
  * @returns {ValidationError}                         400 - Supplied parameters are invalid
  * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
  * @returns {DatabaseError}                           500 - Database error
@@ -65,7 +65,7 @@ module.exports = function (app) {
   * Search in trips
   * @route GET /trips/finder
   * @group Trip - System configuration parameters
-  * @returns {string}                                  200 - Returns the configParam identifier
+  * @returns {string}                                  200 - Returns the trip
   * @returns {ValidationError}                         400 - Supplied parameters are invalid
   * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
   * @returns {DatabaseError}                           500 - Database error
@@ -79,7 +79,7 @@ module.exports = function (app) {
    * Get a Trip
    * @route GET /trips/:ticker
    * @group Trip - System configuration parameters
-   * @returns {Trip.model}                                  200 - Returns the configParam identifier
+   * @returns {Trip.model}                                  200 - Returns the trip
    * @returns {ValidationError}                         400 - Supplied parameters are invalid
    * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
    * @returns {DatabaseError}                           500 - Database error
@@ -92,7 +92,7 @@ module.exports = function (app) {
    * @group Trip - System configuration parameters
    * @param {string} ticker
    * @param {Trip.Model} trip.body.required 
-   * @returns {Trip.model}                                  200 - Returns the configParam identifier
+   * @returns {Trip.model}                                  200 - Returns the trip
    * @returns {ValidationError}                         400 - Supplied parameters are invalid
    * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
    * @returns {DatabaseError}                           500 - Database error
@@ -119,7 +119,7 @@ module.exports = function (app) {
    * @route GET /trips/:manager_id
    * @group Trip - System configuration parameters
    * @param {String} manager_id
-   * @returns {string}                                  200 - Returns the configParam identifier
+   * @returns {string}                                  200 - Returns the trip
    * @returns {ValidationError}                         400 - Supplied parameters are invalid
    * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
    * @returns {DatabaseError}                           500 - Database error
@@ -133,7 +133,7 @@ module.exports = function (app) {
    * @route PUT /trips/cancel/:ticker
    * @group Trip - System configuration parameters
    * @param {String} ticker
-   * @returns {string}                                  200 - Returns the configParam identifier
+   * @returns {string}                                  200 - Returns the trip
    * @returns {ValidationError}                         400 - Supplied parameters are invalid
    * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
    * @returns {DatabaseError}                           500 - Database error

@@ -15,34 +15,34 @@ module.exports = function (app) {
      * Get the configParam
      * @route GET /configParams
      * @group configParam - System configuration parameters
-     * @param {string}  userToken.query.required          - User JWT token
      * @returns {ConfigParam.model}                                  200 - Returns system configuration parameters
      * @returns {ValidationError}                         400 - Supplied parameters are invalid
      * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
      * @returns {DatabaseError}                           500 - Database error
+     * @security bearerAuth
      */
 
     /**
-     * Update the configParam
+     * Update the configParam. Only available for administrators
      * @route PUT /configParams
      * @group configParam - System configuration parameters
-     * @param {string}  userToken.query.required          - User JWT token
      * @param {ConfigParam.model} configParam.body.required   - Updated configuration parameters
      * @returns {string}                                  200 - Returns the configParam identifier
      * @returns {ValidationError}                         400 - Supplied parameters are invalid
      * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
      * @returns {DatabaseError}                           500 - Database error
+     * @security bearerAuth
      */
     /**
-     * Create a configParam
+     * Create a configParam. Only available for administrators
      * @route POST /configParams
      * @group configParam - Create a system configuration parameters
-     * @param {string}  userToken.query.required          - User JWT token
      * @param {ConfigParam.model} configParam.body.required   - Create a configuration parameters
      * @returns {string}                                  200 - Returns the configParam identifier
      * @returns {ValidationError}                         400 - Supplied parameters are invalid
      * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
      * @returns {DatabaseError}                           500 - Database error
+     * @security bearerAuth
      */
     app.route('/v2/configParams')
         .get(configParams.read_an_configParam)
