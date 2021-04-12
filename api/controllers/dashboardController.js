@@ -260,7 +260,8 @@ exports.averagePriceFinders = async (req, res) => {
 exports.topTenKeywordsFinders = async (req, res) => {
     try {
         const docs = await Finderschema.aggregate([
-            
+            {$sortByCount: "$keyWord"},
+            {$limit:10}
         ]).exec();
 
         if (docs.length > 0) {

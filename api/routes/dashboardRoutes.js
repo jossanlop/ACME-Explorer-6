@@ -10,11 +10,11 @@ module.exports = function(app) {
     *    
 	* @section dashboard
 	* @type get 
-	* @url /v1/trips-managed-per-manager
+	* @url /v2/trips-managed-per-manager
   */
 
 
-    app.route('/v1/trips-managed-per-manager')
+    app.route('/v2/trips-managed-per-manager')
     .get(authController.verifyUser(["ADMINISTRATOR"]), dashboard.tripsManagedPerManager)
  
     /**
@@ -24,10 +24,10 @@ module.exports = function(app) {
     *    
 	* @section dashboard
 	* @type get 
-	* @url /v1/applications-per-trip
+	* @url /v2/applications-per-trip
     */
 
-    app.route('/v1/applications-per-trip')
+    app.route('/v2/applications-per-trip')
     .get(authController.verifyUser(["ADMINISTRATOR"]), dashboard.applicationsPerTrip)
 
     /**
@@ -37,10 +37,10 @@ module.exports = function(app) {
     *    
 	* @section dashboard
 	* @type get 
-	* @url /v1/trips-managed-per-manager
+	* @url /v2/trips-managed-per-manager
     */
 
-    app.route('/v1/price-per-trips')
+    app.route('/v2/price-per-trips')
     .get(authController.verifyUser(["ADMINISTRATOR"]), dashboard.pricePerTrips)
 
     /**
@@ -49,10 +49,10 @@ module.exports = function(app) {
     *    
 	* @section dashboard
 	* @type get 
-	* @url /v1/applications-by-status
+	* @url /v2/applications-by-status
     */
 
-    app.route('/v1/applications-by-status')
+    app.route('/v2/applications-by-status')
     .get(authController.verifyUser(["ADMINISTRATOR"]), dashboard.applicationsByStatus)
  
     /**
@@ -61,10 +61,10 @@ module.exports = function(app) {
     *    
 	* @section dashboard
 	* @type get 
-	* @url /v1/average-price-finders
+	* @url /v2/average-price-finders
     */
 
-    app.route('/v1/average-price-finders')
+    app.route('/v2/average-price-finders')
     .get(authController.verifyUser(["ADMINISTRATOR"]), dashboard.averagePriceFinders)
 
 
@@ -74,10 +74,10 @@ module.exports = function(app) {
     *    
 	* @section dashboard
 	* @type get 
-	* @url /v1/top-ten-keywords-finders
+	* @url /v2/top-ten-keywords-finders
     */
 
-    app.route('/v1/top-ten-keywords-finders')
+    app.route('/v2/top-ten-keywords-finders')
     .get(authController.verifyUser(["ADMINISTRATOR"]), dashboard.topTenKeywordsFinders) 
 }
 
