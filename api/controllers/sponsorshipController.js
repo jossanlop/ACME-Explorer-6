@@ -6,7 +6,7 @@ var mongoose = require('mongoose'),
 
 //manager/administrator pueden acceder a todas las sponsorships
 exports.list_all_sponsorships =  function(req, res) {
-      Sponsorship.find({payed:true}, function(err, sponsorship) {
+      Sponsorship.find({paid:true}, function(err, sponsorship) {
         if (err){
           res.status(500).send(err);
         }

@@ -35,7 +35,7 @@ module.exports = function (app) {
  * @property {ObjectId} sponsor_id               - Unique identifier for this sponsorship
  * @property {string} banner - String that corresponds with the sponsorship banner
  * @property {string} link               - Link to the page sponsored
- * @property {Boolean} payed               - Boolean that indicates if the sponsorship is payed
+ * @property {Boolean} paid               - Boolean that indicates if the sponsorship is paid
   */
 
   /**
