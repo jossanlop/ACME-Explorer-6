@@ -146,6 +146,33 @@ module.exports = function (app) {
   app.route('/v2/applications-cancel/:applicationId')
     .put(authController.verifyUser(["EXPLORER"]), application.cancel_an_application);
 
+  /**
+   * Update an application status by ID to set it as due.
+   * @route PUT /applications-due
+   * @group Application - System trips applications
+   * @param {string} applicationId - Application identifier
+   * @returns {Application.model}                       200 - Returns the application updated
+   * @returns {ValidationError}                         400 - Supplied parameters are invalid
+   * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
+   * @returns {DatabaseError}                           500 - Database error
+   * @security bearerAuth
+   */
+  app.route('/v2/applications-due/:applicationId')
+  .put(authController.verifyUser(["EXPLORER"]), application.due_an_application);
+
+  /**
+   * Update an application status by ID to reject it.
+   * @route PUT /applications-reject
+   * @group Application - System trips applications
+   * @param {string} applicationId - Application identifier
+   * @returns {Application.model}                       200 - Returns the application updated
+   * @returns {ValidationError}                         400 - Supplied parameters are invalid
+   * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
+   * @returns {DatabaseError}                           500 - Database error
+   * @security bearerAuth
+   */
+  app.route('/v2/applications-reject/:applicationId')
+  .put(authController.verifyUser(["EXPLORER"]), application.reject_an_application);
 
   // app.route('/v1/myapplications')
   //.get(application.list_my_applications); //añadir ownership para el explorer
