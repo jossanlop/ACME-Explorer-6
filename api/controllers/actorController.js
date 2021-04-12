@@ -248,92 +248,46 @@ exports.read_an_actor = function (req, res) {
       if (authenticatedUserId == req.params.actorId) {
         res.status(200).json(actor);
       } else {
-        res.status(403).send('The Actor is trying to update an Actor that is not himself!');
+        res.status(403).send('You are trying to access information from others actors!');
       }
     }
   });
 
 };
 
-exports.update_a_verified_actor = function (req, res) {
-  //Customer and Clerks can update theirselves, administrators can update any actor
+exports.update_a_verified_actor = async function (req, res) {
   console.log('Starting to update the actor v2...');
-  Actor.findById(req.params.actorId, async function (err, actor) {
+  var idToken = req.headers['idtoken']; 
+  var authenticatedUserId = await authController.getUserId(idToken);
+  Actor.findById(authenticatedUserId, async function (err, actor) {
     if (err) {
       res.send(err);
     } else {
-      console.log(req.headers);
-      console.log(actor);
-      var idToken = req.headers['idtoken']; //WE NEED the FireBase custom token in the req.header['idToken']... it is created by FireBase!!
-      if (actor.role.includes('EXPLORER') || actor.role.includes('MANAGER') || actor.role.includes('SPONSOR')) {
-        var authenticatedUserId = await authController.getUserId(idToken);
-          var new_actor = new Actor();
-          new_actor.name = actor.name;
-          new_actor.surname = actor.surname;
-          new_actor.address = actor.address;
-          new_actor.phone = actor.phone;
-        if (authenticatedUserId == req.params.actorId) {
+      if (actor.role.includes('EXPLORER') || actor.role.includes('MANAGER') || actor.role.includes('SPONSOR')|| actor.role.includes('ADMINISTRATOR')) {
+            if (err) {
+              res.send(err);
+            } else {
+          actor.name = req.body.name;
+          actor.surname = req.body.surname;
+          actor.address = req.body.address;
+          actor.phone = req.body.phone;
           Actor.findOneAndUpdate({
-            _id: req.params.actorId
-          }, new_actor, {
+            _id: authenticatedUserId
+          }, actor, {
             new: true
           }, function (err, actor) {
             if (err) {
               res.send(err);
             } else {
-              console.log(req.headers);
-              res.json(actor);
+              res.status(200).json(actor);
             }
           });
-        } else {
-          res.status(403); //Auth error
-          res.send('The Actor is trying to update an Actor that is not himself!');
-        }
-      } else if (actor.role.includes('ADMINISTRATOR')) {
-        var new_actor = new Actor();
-        new_actor.name = actor.name;
-        new_actor.surname = actor.surname;
-        new_actor.address = actor.address;
-        new_actor.phone = actor.phone;
-        Actor.findOneAndUpdate({
-          _id: req.params.actorId
-        }, new_actor, {
-          new: true
-        }, function (err, actor) {
-          if (err) {
-            res.send(err);
-          } else {
-            res.json(actor);
-          }
-        });
-      } else {
+      }}
+       else {
         res.status(405); //Not allowed
         res.send('The Actor has unidentified roles');
-      }
-    }
-  });
-
-};
-
-exports.validate_an_actor = function (req, res) {
-  //Check that the user is an Administrator and if not: res.status(403); "an access token is valid, but requires more privileges"
-  console.log("Validating an actor with id: " + req.params.actorId)
-  Actor.findOneAndUpdate({
-    _id: req.params.actorId
-  }, {
-    $set: {
-      "validated": "true"
-    }
-  }, {
-    new: true
-  }, function (err, actor) {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.json(actor);
-    }
-  });
-};
+      }}});
+  }
 
 exports.delete_an_actor = function (req, res) {
   Actor.deleteOne({

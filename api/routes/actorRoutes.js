@@ -50,16 +50,15 @@ module.exports = function (app) {
 	 .get(actors.read_an_actor);
 	/**
 	 * Put an Actor from id
-	 * @route PUT /actors/{actorId}
+	 * @route PUT /actors/
 	 * @group Actor - System actors
-	 * @param {String} actorId.path
 	 * @param {Actor.model} actor.body.required 
 	 * @returns {Actor}                                 200 - Returns the actor
 	 * @returns {ValidationError}                         400 - Supplied parameters are invalid
 	 * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
 	 * @returns {DatabaseError}                           500 - Database error
 	 */
-	app.route('/v2/actors/:actorId')
+	app.route('/v2/actors/')
 		.put(authController.verifyUser(["ADMINISTRATOR",
 			"EXPLORER",
 			"MANAGER", "SPONSOR"
@@ -83,17 +82,4 @@ module.exports = function (app) {
 		.post(actors.create_an_actor_v2);
 
 
-	/**
-	 * Put an Actor validation
-	 * @route PUT /actors/{actorId}/validate
-	 * @group Actor - System actors
-	 * @param {string} actorId.path 
-	 * @param {Actor.model} actor.body.required 
-	 * @returns {Actor.model}                                 200 - Returns the actor
-	 * @returns {ValidationError}                         400 - Supplied parameters are invalid
-	 * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
-	 * @returns {DatabaseError}                           500 - Database error
-	 */
-	app.route('/v1/actors/:actorId/validate')
-		.put(actors.validate_an_actor)
 };

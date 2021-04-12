@@ -21,6 +21,13 @@ module.exports = function (app) {
     * @property {Array.<Sponsorship.model>} sponsorship  - Sponsorships associated with the trip
   */
 
+  	/**
+	  * @typedef Finder
+	  * @property {string} keyWord  			- Keyword specified in the search of trips
+	  * @property {Array.<integer>} priceRange  - Price range filter for the trips
+	  * @property {Array.<string>} dateRange 	- Date range filter for the trips
+	*/
+
   /**
    * @typedef Stage
    * @property {string} title               - Title of the stage
@@ -51,7 +58,8 @@ module.exports = function (app) {
  * Post a Trips
  * @route POST /trips
  * @group Trip - System trips
- * @returns {Trip.model}                                  200 - Returns the trip
+ * @param {Trip.model} Trip.body.required
+ * @returns {string}                                  200 - Returns the trip
  * @returns {ValidationError}                         400 - Supplied parameters are invalid
  * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
  * @returns {DatabaseError}                           500 - Database error
@@ -65,6 +73,7 @@ module.exports = function (app) {
   * Search in trips
   * @route GET /trips/finder
   * @group Trip - System trips
+  * @param {Finder.model} Finder.body.required
   * @returns {string}                                  200 - Returns the trip
   * @returns {ValidationError}                         400 - Supplied parameters are invalid
   * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
