@@ -66,29 +66,6 @@ exports.list_all_applications = async function (req, res) {
             applications.forEach(async function (app, index, array) {
               //find con and { $and: [{_id: app.trip_id}, {manager_id: authenticatedUserId} ]}
               await Trip.findOne({ _id: app.trip_id }, function (err, trip_of_app) {
-                if (String(trip_of_app.manager_id) === String(authenticatedUserId)) {
-                  applicationsResult.push(app);
-                }
-              });
-              if (index == array.length - 1) {
-                res.send(applicationsResult);
-              }
-            });
-          }
-        });
-      }
-      else if (actor.role == "MANAGER") {
-        //if user is manager    
-        var applicationsResult = [];
-
-        Application.find({}, async function (err, applications) {
-          if (err) {
-            res.status(500).send(err);
-          }
-          else {
-            applications.forEach(async function (app, index, array) {
-              //find con and { $and: [{_id: app.trip_id}, {manager_id: authenticatedUserId} ]}
-              await Trip.findOne({ _id: app.trip_id }, function (err, trip_of_app) {
                 if (err) {
                   res.status(500).send(err);
                 }
@@ -151,6 +128,10 @@ exports.list_all_applications = async function (req, res) {
     console.log(err);
     // res.status(500).send(err);
     }
+    }
+    else if(trip == null)
+    {
+      res.status(404).send("El trip no existe, no puedes aplicar");
     }
     else {
     if (trip.publish) {
@@ -239,6 +220,90 @@ exports.list_all_applications = async function (req, res) {
       else {
         res.status(405); //Not allowed
         res.send('The user is trying to cancel an application from other explorer');
+      }
+    });
+  };
+
+  exports.reject_an_application = async function (req, res) {
+    var idToken = req.headers['idtoken'];
+    var authenticatedUserId = await authController.getUserId(idToken);
+    Application.findOne({ _id: req.params.applicationId }, function (err, app) {
+      if (err) 
+      {
+        res.status(500).send(err);
+      }
+      else{
+        if(trip === null)
+        {
+           res.status(404).send("trip not found");
+        }
+        else{
+          Trip.findOne({_id:app.trip_id}, function(err, trip {
+            if (String(authenticatedUserId) === String(trip.manager_id)) {
+              if (app.status == 'PENDING') {
+                app.status = 'REJECTED';
+                Application.findOneAndUpdate({ _id: app._id }, app, function (err, app_upd) {
+                if (err) {
+                  res.status(500).send(err);
+                }
+                else {
+                  res.status(200).send(app_upd);
+                }
+                });
+              }
+              else {
+                res.status(403); //Not allowed
+                res.send('The user is trying to cancel an application with incorrect status');
+              }
+            }
+            else {
+              res.status(405); //Not allowed
+              res.send('The user is trying to cancel an application from other explorer');
+            }
+          });
+        }
+      }
+    });
+  };
+
+  exports.due_an_application = async function (req, res) {
+    var idToken = req.headers['idtoken'];
+    var authenticatedUserId = await authController.getUserId(idToken);
+    Application.findOne({ _id: req.params.applicationId }, function (err, app) {
+      if (err) 
+      {
+        res.status(500).send(err);
+      }
+      else{
+        if(trip === null)
+        {
+           res.status(404).send("trip not found");
+        }
+        else{
+          Trip.findOne({_id:app.trip_id}, function(err, trip {
+            if (String(authenticatedUserId) === String(trip.manager_id)) {
+              if (app.status == 'PENDING') {
+                app.status = 'REJECTED';
+                Application.findOneAndUpdate({ _id: app._id }, app, function (err, app_upd) {
+                if (err) {
+                  res.status(500).send(err);
+                }
+                else {
+                  res.status(200).send(app_upd);
+                }
+                });
+              }
+              else {
+                res.status(403); //Not allowed
+                res.send('The user is trying to cancel an application with incorrect status');
+              }
+            }
+            else {
+              res.status(405); //Not allowed
+              res.send('The user is trying to cancel an application from other explorer');
+            }
+          });
+        }
       }
     });
   };

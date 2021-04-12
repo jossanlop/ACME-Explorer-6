@@ -85,6 +85,11 @@ module.exports = function(app) {
   app.route('/v2/applications-cancel/:applicationId')
   .put(authController.verifyUser(["EXPLORER"]), application.cancel_an_application);
 
+  app.route('/v2/applications-due/:applicationId')
+  .put(authController.verifyUser(["EXPLORER"]), application.due_an_application);
+
+  app.route('/v2/applications-reject/:applicationId')
+  .put(authController.verifyUser(["EXPLORER"]), application.reject_an_application);
   /**
    * Get my applications.
    *    RequiredRoles: to be a proper customer
