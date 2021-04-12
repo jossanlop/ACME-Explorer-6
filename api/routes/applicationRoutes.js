@@ -90,32 +90,32 @@ module.exports = function (app) {
    * @returns {DatabaseError}                           500 - Database error
    * @security bearerAuth
    */
-  /**
-   * Update an application by ID. It is only available for managers, and managers only can update their applications.
-   * @route PUT /applications
-   * @group Application - System trips applications
-   * @param {string} applicationId - Application identifier
-   * @returns {Application.model}                       200 - Returns the application updated
-   * @returns {ValidationError}                         400 - Supplied parameters are invalid
-   * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
-   * @returns {DatabaseError}                           500 - Database error
-   * @security bearerAuth
-   */
-  /**
-   * Delete an application by ID.
-   * @route DELETE /applications
-   * @group Application - System trips applications
-   * @param {string} applicationId - Application identifier
-   * @returns {string}                                  200 - Returns this message: 'Application successfully deleted'
-   * @returns {ValidationError}                         400 - Supplied parameters are invalid
-   * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
-   * @returns {DatabaseError}                           500 - Database error
-   * @security bearerAuth
-   */
+  // /**
+  //  * Update an application by ID. It is only available for managers, and managers only can update their applications.
+  //  * @route PUT /applications
+  //  * @group Application - System trips applications
+  //  * @param {string} applicationId - Application identifier
+  //  * @returns {Application.model}                       200 - Returns the application updated
+  //  * @returns {ValidationError}                         400 - Supplied parameters are invalid
+  //  * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
+  //  * @returns {DatabaseError}                           500 - Database error
+  //  * @security bearerAuth
+  //  */
+  // /**
+  //  * Delete an application by ID.
+  //  * @route DELETE /applications
+  //  * @group Application - System trips applications
+  //  * @param {string} applicationId - Application identifier
+  //  * @returns {string}                                  200 - Returns this message: 'Application successfully deleted'
+  //  * @returns {ValidationError}                         400 - Supplied parameters are invalid
+  //  * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
+  //  * @returns {DatabaseError}                           500 - Database error
+  //  * @security bearerAuth
+  //  */
   app.route('/v2/applications/:applicationId')
-    .get(authController.verifyUser(["MANAGER"]), application.read_an_application)
-    .put(authController.verifyUser(["MANAGER"]), application.update_an_application)
-    .delete(authController.verifyUser(["MANAGER"]), application.delete_an_application);
+    .get(authController.verifyUser(["MANAGER"]), application.read_an_application);
+    //.put(authController.verifyUser(["MANAGER"]), application.update_an_application)
+    //.delete(authController.verifyUser(["MANAGER"]), application.delete_an_application);
 
 
   /**
@@ -158,7 +158,7 @@ module.exports = function (app) {
    * @security bearerAuth
    */
   app.route('/v2/applications-due/:applicationId')
-  .put(authController.verifyUser(["EXPLORER"]), application.due_an_application);
+  .put(authController.verifyUser(["MANAGER"]), application.due_an_application);
 
   /**
    * Update an application status by ID to reject it.
@@ -172,7 +172,7 @@ module.exports = function (app) {
    * @security bearerAuth
    */
   app.route('/v2/applications-reject/:applicationId')
-  .put(authController.verifyUser(["EXPLORER"]), application.reject_an_application);
+  .put(authController.verifyUser(["MANAGER"]), application.reject_an_application);
 
   // app.route('/v1/myapplications')
   //.get(application.list_my_applications); //añadir ownership para el explorer
