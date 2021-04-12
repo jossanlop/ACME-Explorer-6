@@ -31,7 +31,7 @@ module.exports = function (app) {
    * Get your applications
    * @route GET /applications
    * @group Application - System trips applications
-   * @returns {Array.<Application>}                     200 - Returns the application list, if you are an explorer, it returns the applications you have made on any trip, and if you are a manager, it returns the applications on any of your trips.
+   * @returns {Array.<Application.model>}                     200 - Returns the application list, if you are an explorer, it returns the applications you have made on any trip, and if you are a manager, it returns the applications on any of your trips.
    * @returns {ValidationError}                         400 - Supplied parameters are invalid
    * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
    * @returns {DatabaseError}                           500 - Database error

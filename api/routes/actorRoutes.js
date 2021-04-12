@@ -6,21 +6,21 @@ module.exports = function (app) {
 
 	/**
 	 * @typedef Actor
-	 * @property {string} name               - Unique identifier for this configuration parameter
-	 * @property {string} surname  - Period that the finder is kept in cache for all users
-	 * @property {string} email  - Period that the finder is kept in cache for all users
-	 * @property {string} password  - Period that the finder is kept in cache for all users
-	 * @property {string} preferredLanguage  - Period that the finder is kept in cache for all users
-	 * @property {string} phone  - Period that the finder is kept in cache for all users
-	 * @property {string} address  - Period that the finder is kept in cache for all users
-	 * @property {Array.<string>} role  - Period that the finder is kept in cache for all users
+	 * @property {string} name               - Name of the actor
+	 * @property {string} surname  - Surname of the actor
+	 * @property {string} email  - Email of the actor
+	 * @property {string} password  - Password of the actor
+	 * @property {string} preferredLanguage  - Preferred language of the actor for the system
+	 * @property {string} phone  - Phone of the actor (optional)
+	 * @property {string} address  - Address of the actor (optional)
+	 * @property {Array.<string>} role  - Role of the actor
 	 */
 
 	/**
 	 * Get the Actors
 	 * @route GET /actors
-	 * @group Actor - System configuration parameters
-	 * @returns {string}                                  200 - Returns the configParam identifier
+	 * @group Actor - System actors
+	 * @returns {string}                                  200 - Returns the actor
 	 * @returns {ValidationError}                         400 - Supplied parameters are invalid
 	 * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
 	 * @returns {DatabaseError}                           500 - Database error
@@ -39,8 +39,8 @@ module.exports = function (app) {
 	/**
 	 * Get an Actor from id
 	 * @route GET /actor/:actorId
-	 * @group Actor - System configuration parameters
-	 * @returns {Actor}                                 200 - Returns the configParam identifier
+	 * @group Actor - System actors
+	 * @returns {Actor.Model}                                 200 - Returns the actor
 	 * @returns {ValidationError}                         400 - Supplied parameters are invalid
 	 * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
 	 * @returns {DatabaseError}                           500 - Database error
@@ -48,9 +48,9 @@ module.exports = function (app) {
 	/**
 	 * Put an Actor from id
 	 * @route PUT /actor/:actorId
-	 * @group Actor - System configuration parameters
+	 * @group Actor - System actors
 	 * @param {Actor.Model} actor.body.required 
-	 * @returns {Actor}                                 200 - Returns the configParam identifier
+	 * @returns {Actor}                                 200 - Returns the actor
 	 * @returns {ValidationError}                         400 - Supplied parameters are invalid
 	 * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
 	 * @returns {DatabaseError}                           500 - Database error
@@ -69,9 +69,9 @@ module.exports = function (app) {
 	/**
 	 * Post an Actor
 	 * @route POST /actor/
-	 * @group Actor - System configuration parameters
+	 * @group Actor - System actors
 	 * @param {Actor.Model} actor.body.required 
-	 * @returns {Actor}                                 200 - Returns the configParam identifier
+	 * @returns {Actor.Model}                                 200 - Returns the actor
 	 * @returns {ValidationError}                         400 - Supplied parameters are invalid
 	 * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
 	 * @returns {DatabaseError}                           500 - Database error
@@ -83,9 +83,9 @@ module.exports = function (app) {
 	/**
 	 * Put an Actor validation
 	 * @route PUT /actor/:actorId/validate
-	 * @group Actor - System configuration parameters
+	 * @group Actor - System actors
 	 * @param {Actor.Model} actor.body.required 
-	 * @returns {Actor}                                 200 - Returns the configParam identifier
+	 * @returns {Actor.Model}                                 200 - Returns the actor
 	 * @returns {ValidationError}                         400 - Supplied parameters are invalid
 	 * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
 	 * @returns {DatabaseError}                           500 - Database error
