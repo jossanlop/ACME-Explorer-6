@@ -39,7 +39,7 @@ module.exports = function (app) {
   /**
    * Get the Trips
    * @route GET /trips
-   * @group Trip - System configuration parameters
+   * @group Trip - System trips
    * @returns {string}                                  200 - Returns the trip
    * @returns {ValidationError}                         400 - Supplied parameters are invalid
    * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
@@ -50,7 +50,7 @@ module.exports = function (app) {
   /**
  * Post a Trips
  * @route POST /trips
- * @group Trip - System configuration parameters
+ * @group Trip - System trips
  * @returns {Trip.model}                                  200 - Returns the trip
  * @returns {ValidationError}                         400 - Supplied parameters are invalid
  * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
@@ -64,7 +64,7 @@ module.exports = function (app) {
   /**
   * Search in trips
   * @route GET /trips/finder
-  * @group Trip - System configuration parameters
+  * @group Trip - System trips
   * @returns {string}                                  200 - Returns the trip
   * @returns {ValidationError}                         400 - Supplied parameters are invalid
   * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
@@ -78,7 +78,7 @@ module.exports = function (app) {
   /**
    * Get a Trip
    * @route GET /trips/:ticker
-   * @group Trip - System configuration parameters
+   * @group Trip - System trips
    * @returns {Trip.model}                                  200 - Returns the trip
    * @returns {ValidationError}                         400 - Supplied parameters are invalid
    * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
@@ -89,7 +89,7 @@ module.exports = function (app) {
   /**
    * Put a Trip
    * @route PUT /trips/:ticker
-   * @group Trip - System configuration parameters
+   * @group Trip - System trips
    * @param {string} ticker
    * @param {Trip.Model} trip.body.required 
    * @returns {Trip.model}                                  200 - Returns the trip
@@ -102,7 +102,7 @@ module.exports = function (app) {
   /**
  * Delete a Trip
  * @route DELETE /trips/:ticker
- * @group Trip - System configuration parameters
+ * @group Trip - System trips
  * @param {string} ticker
  * @returns {ValidationError}                         400 - Supplied parameters are invalid
  * @returns {UserAuthError}                           401 - User is not authorized to perform this operation
@@ -117,7 +117,7 @@ module.exports = function (app) {
   /**
    * Get all Trips from Manager
    * @route GET /trips/:manager_id
-   * @group Trip - System configuration parameters
+   * @group Trip - System trips
    * @param {String} manager_id
    * @returns {string}                                  200 - Returns the trip
    * @returns {ValidationError}                         400 - Supplied parameters are invalid
@@ -131,7 +131,7 @@ module.exports = function (app) {
   /**
    * Cancel a Trips published but not started and without applications
    * @route PUT /trips/cancel/:ticker
-   * @group Trip - System configuration parameters
+   * @group Trip - System trips
    * @param {String} ticker
    * @returns {string}                                  200 - Returns the trip
    * @returns {ValidationError}                         400 - Supplied parameters are invalid
